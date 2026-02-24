@@ -22,17 +22,18 @@
     "noUnusedParameters": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  /*components*/
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["src/*"],
-    "@components/*": ["src/components/*"],
-    "@pages/*": ["src/pages/*"],
-    "@constants/*": ["src/constants/*"],
-    "@contexts/*": ["src/contexts/*"],
-    "@data/*": ["src/data/*"]
+    "noUncheckedSideEffectImports": true,
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@constants/*": ["src/constants/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@data/*": ["src/data/*"]
+    }
   },
 
   "include": ["src"]

@@ -14,6 +14,10 @@ export default defineConfig({
       "@": "/src",
       "@assets": "/src/assets",
       "@components": "/src/components",
+      "@pages": "/src/pages",
+      "@data": "/src/data",
+      "@contexts": "/src/contexts",
+      "@constants": "/src/constants",
     },
   },
 });
