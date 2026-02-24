@@ -19,18 +19,6 @@ function FooterView() {
           </p>
         </div>
         <div>
-          <p className="footer-col-title">페이지</p>
-          <ul className="footer-links">
-            {PAGE_LINKS.map((link) => (
-              <li key={link.href}>
-                <a href={link.href} className="footer-link">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
           <p className="footer-col-title">소셜</p>
           <ul className="footer-links">
             {SOCIAL_LINKS.map((link) => (
