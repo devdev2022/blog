@@ -147,7 +147,7 @@
 .post-grid-thumbnail-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
 }
 
 .post-grid-body {
@@ -245,7 +245,7 @@
 .post-thread-thumbnail-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
 }
 
 .post-thread-body {
@@ -296,6 +296,44 @@
   color: var(--color-text-muted);
 }
 
+/* ===== 태그 필터 칩 ===== */
+.posts-tag-filter {
+  margin-bottom: 20px;
+}
+
+.posts-tag-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px 6px 14px;
+  background-color: var(--color-accent-light);
+  border: 1.5px solid var(--color-accent);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.posts-tag-filter-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.posts-tag-filter-remove:hover {
+  background-color: rgba(14, 165, 233, 0.2);
+}
+
 /* ===== 태그 클라우드 ===== */
 .tags-cloud {
   display: flex;
@@ -325,6 +363,13 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
   background-color: var(--color-accent-light);
+}
+
+.tag-pill.active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  font-weight: 700;
 }
 
 /* ===== 빈 상태 ===== */

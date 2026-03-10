@@ -3,6 +3,7 @@ import PostsPageView from "@pages/Posts/PostsPageView";
 import { allDummyPosts, postCategories } from "@/dummydata/dummyPosts";
 import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
+import { extractFirstImage } from "@/utils/extractFirstImage";
 
 const POSTS_PER_PAGE = 6;
 
@@ -11,6 +12,7 @@ function PostsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "thread">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedTag, setSelectedTag] = useState("");
   const [activeTab, setActiveTab] = useState<"posts" | "tags">("posts");
 
   useEffect(() => {
@@ -18,21 +20,25 @@ function PostsPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const filteredPosts =
-    selectedCategory === "all"
-      ? allDummyPosts
-      : allDummyPosts.filter(
-          (post) =>
-            post.category === selectedCategory ||
-            post.category?.startsWith(selectedCategory + "/"),
-        );
+  const filteredPosts = allDummyPosts
+    .filter(
+      (post) =>
+        selectedCategory === "all" ||
+        post.category === selectedCategory ||
+        post.category?.startsWith(selectedCategory + "/"),
+    )
+    .filter(
+      (post) => selectedTag === "" || post.tags.includes(selectedTag),
+    );
 
   const totalPosts = filteredPosts.length;
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-  const paginatedPosts = filteredPosts.slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE,
-  );
+  const paginatedPosts = filteredPosts
+    .slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE)
+    .map((post) => ({
+      ...post,
+      thumbnail: post.thumbnail ?? extractFirstImage(post.content),
+    }));
 
   const allTags = Array.from(
     new Set(allDummyPosts.flatMap((post) => post.tags)),
@@ -40,6 +46,13 @@ function PostsPage() {
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
+    setActiveTab("posts");
+    setCurrentPage(1);
+  };
+
+  const handleTagChange = (tag: string) => {
+    setSelectedTag((prev) => (prev === tag ? "" : tag));
+    setActiveTab("posts");
     setCurrentPage(1);
   };
 
@@ -56,10 +69,12 @@ function PostsPage() {
         totalPages={totalPages}
         totalPosts={totalPosts}
         selectedCategory={selectedCategory}
+        selectedTag={selectedTag}
         activeTab={activeTab}
         onViewModeChange={setViewMode}
         onPageChange={setCurrentPage}
         onCategoryChange={handleCategoryChange}
+        onTagChange={handleTagChange}
         onTabChange={setActiveTab}
       />
       <Footer />

@@ -1,6 +1,7 @@
 import type { Post, TechCategory, PostCategory } from "@/types/post";
 
 const p1content = `
+<img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800" alt="React Query 썸네일" />
 <h2 id="intro">들어가며</h2>
 <p>React Query(TanStack Query)는 서버 상태를 효율적으로 관리하기 위한 라이브러리입니다. 기존의 <code>useEffect</code> + <code>useState</code> 조합으로 API를 호출할 때 발생하는 여러 문제들을 해결해 줍니다.</p>
 <p>이 글에서는 React Query의 핵심 개념부터 실전 패턴까지 단계별로 살펴봅니다.</p>
@@ -96,6 +97,7 @@ mutation.mutate({ title: '새 포스트', content: '...' });</code></pre>
 `;
 
 const p2content = `
+<img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Vite TypeScript 썸네일" />
 <h2 id="intro">들어가며</h2>
 <p>Vite는 네이티브 ES 모듈을 활용한 차세대 프론트엔드 빌드 도구입니다. Webpack 대비 월등히 빠른 개발 서버 구동과 HMR(Hot Module Replacement)을 제공합니다. 이 글에서는 Vite + TypeScript 환경을 처음부터 구성하고, 실무에 바로 적용할 수 있는 ESLint 및 경로 별칭 설정까지 한 번에 다룹니다.</p>
 

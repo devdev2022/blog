@@ -50,10 +50,12 @@ interface PostsPageViewProps {
   totalPages: number;
   totalPosts: number;
   selectedCategory: string;
+  selectedTag: string;
   activeTab: "posts" | "tags";
   onViewModeChange: (mode: "grid" | "thread") => void;
   onPageChange: (page: number) => void;
   onCategoryChange: (slug: string) => void;
+  onTagChange: (tag: string) => void;
   onTabChange: (tab: "posts" | "tags") => void;
 }
 
@@ -113,10 +115,12 @@ function PostsPageView({
   totalPages,
   totalPosts,
   selectedCategory,
+  selectedTag,
   activeTab,
   onViewModeChange,
   onPageChange,
   onCategoryChange,
+  onTagChange,
   onTabChange,
 }: PostsPageViewProps) {
   const navigate = useNavigate();
@@ -153,13 +157,33 @@ function PostsPageView({
             /* 태그 탭 */
             <div className="tags-cloud">
               {allTags.map((tag) => (
-                <button key={tag} className="tag-pill">
+                <button
+                  key={tag}
+                  className={`tag-pill${selectedTag === tag ? " active" : ""}`}
+                  onClick={() => onTagChange(tag)}
+                >
                   {tag}
                 </button>
               ))}
             </div>
           ) : (
             <>
+              {/* 선택된 태그 필터 */}
+              {selectedTag && (
+                <div className="posts-tag-filter">
+                  <span className="posts-tag-filter-chip">
+                    #{selectedTag}
+                    <button
+                      className="posts-tag-filter-remove"
+                      onClick={() => onTagChange(selectedTag)}
+                      aria-label="태그 필터 해제"
+                    >
+                      ×
+                    </button>
+                  </span>
+                </div>
+              )}
+
               {/* 헤더: 전체보기 + 뷰 전환 */}
               <div className="posts-header">
                 <span className="posts-count-label">
