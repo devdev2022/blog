@@ -27,7 +27,7 @@
   color: var(--color-accent-hover);
 }
 
-.posts-grid {
+.recent-posts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-card-gap);

@@ -2,12 +2,39 @@ import type { Post, TechCategory } from "@/types/post";
 import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
 import RecentPostsSection from "@components/RecentPostsSection/RecentPostsSection";
+import GithubContributionSection from "@components/GithubContribution/GithubContributionSection";
+
 interface HomePageViewProps {
   recentPosts: Post[];
   techCategories: TechCategory[];
+  isLoading: boolean;
 }
 
-function HomePageView({ recentPosts, techCategories }: HomePageViewProps) {
+function RecentPostsSkeleton() {
+  return (
+    <section className="recent-posts-section">
+      <div className="section-header">
+        <h2 className="section-title">최근 포스트</h2>
+      </div>
+      <div className="recent-posts-grid">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={`skeleton-card-${i}`} className="post-card-skeleton">
+            <div className="skeleton skeleton-tag" />
+            <div className="skeleton skeleton-title" />
+            <div className="skeleton skeleton-excerpt" />
+            <div className="skeleton skeleton-meta" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HomePageView({
+  recentPosts,
+  techCategories,
+  isLoading,
+}: HomePageViewProps) {
   return (
     <>
       <Header />
@@ -41,24 +68,15 @@ function HomePageView({ recentPosts, techCategories }: HomePageViewProps) {
               GitHub
             </a>
           </div>
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <span className="hero-stat-number">3</span>
-              <span className="hero-stat-label">포스트</span>
-            </div>
-            <div className="hero-stat">
-              <span className="hero-stat-number">10+</span>
-              <span className="hero-stat-label">기술 스택</span>
-            </div>
-            <div className="hero-stat">
-              <span className="hero-stat-number">2026</span>
-              <span className="hero-stat-label">시작 연도</span>
-            </div>
-          </div>
+          <GithubContributionSection />
         </section>
 
         {/* 최근 포스트 섹션 */}
-        <RecentPostsSection posts={recentPosts} />
+        {isLoading ? (
+          <RecentPostsSkeleton />
+        ) : (
+          <RecentPostsSection posts={recentPosts} />
+        )}
         {/* 기술 스택 섹션 */}
         <section className="tech-stack-section">
           <div className="section-header">

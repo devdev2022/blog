@@ -1,0 +1,175 @@
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-border-light) 25%,
+    var(--color-border) 50%,
+    var(--color-border-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   메인 포스트 카드 스켈레톤 (썸네일 없음)
+   실제: .post-card { padding: 28px }
+   전역 line-height: 1.6, box-sizing: border-box 기준
+   ============================================================ */
+.post-card-skeleton {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tag: 0.75rem(12px) × 1.6 + padding 4px×2 = 27px | margin-bottom: 16px */
+.post-card-skeleton .skeleton-tag {
+  height: 27px;
+  width: 60px;
+  margin-bottom: 16px;
+}
+
+/* title: 1.0625rem(17px) × 1.45 × 1줄 ≈ 25px | margin-bottom: 10px */
+.post-card-skeleton .skeleton-title {
+  height: 25px;
+  width: 88%;
+  margin-bottom: 10px;
+}
+
+/* excerpt: 0.875rem(14px) × 1.65 × 3줄 = 69px */
+.post-card-skeleton .skeleton-excerpt {
+  height: 69px;
+  flex: 1;
+}
+
+/* meta: margin-top 20px + padding-top 16px + 0.8rem(12.8px) × 1.6 ≈ 20px → margin-top 36px */
+.post-card-skeleton .skeleton-meta {
+  height: 20px;
+  margin-top: 36px;
+}
+
+/* ============================================================
+   포스트 페이지 그리드 카드 스켈레톤
+   실제: .post-grid-card + thumbnail aspect-ratio 16/10
+   전역 line-height: 1.6, box-sizing: border-box 기준
+   ============================================================ */
+.post-grid-card-skeleton {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* thumbnail: aspect-ratio 16/10 (실제와 동일) */
+.post-grid-card-skeleton .skeleton-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+}
+
+/* body: padding 20px (실제와 동일) */
+.post-grid-card-skeleton .skeleton-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tag: 0.72rem(11.5px) × 1.6 + padding 3px×2 = 24px | margin-bottom: 10px */
+.post-grid-card-skeleton .skeleton-tag {
+  height: 24px;
+  width: 56px;
+  margin-bottom: 10px;
+}
+
+/* title: 0.9375rem(15px) × 1.45 × 2줄 = 44px | margin-bottom: 8px */
+.post-grid-card-skeleton .skeleton-title {
+  height: 44px;
+  width: 92%;
+  margin-bottom: 8px;
+}
+
+/* excerpt: 0.8125rem(13px) × 1.6 × 2줄 = 42px | margin-bottom: 14px */
+.post-grid-card-skeleton .skeleton-excerpt {
+  height: 42px;
+  margin-bottom: 14px;
+}
+
+/* meta: border-box 기준 content(19px) + padding-top(12px) + border(1px) = 32px */
+.post-grid-card-skeleton .skeleton-meta {
+  height: 32px;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 12px;
+  background-clip: content-box;
+}
+
+/* ============================================================
+   포스트 페이지 스레드 아이템 스켈레톤
+   실제: .post-thread-item { gap: 24px, padding: 24px 0 }
+   thumbnail: width 180px, height 120px (고정)
+   ============================================================ */
+.post-thread-item-skeleton {
+  display: flex;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.post-thread-item-skeleton:first-child {
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* thumbnail: width 180px, height 120px (실제와 동일) */
+.post-thread-item-skeleton .skeleton-thumbnail {
+  flex-shrink: 0;
+  width: 180px;
+  height: 120px;
+  border-radius: var(--radius-md);
+}
+
+/* body: flex:1, justify-content center (실제와 동일) */
+.post-thread-item-skeleton .skeleton-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* tag: 0.72rem(11.5px) × 1.6 + padding 3px×2 = 24px | margin-bottom: 10px */
+.post-thread-item-skeleton .skeleton-tag {
+  height: 24px;
+  width: 56px;
+  margin-bottom: 10px;
+}
+
+/* title: 1.0625rem(17px) × 1.4 × 1줄 ≈ 24px | margin-bottom: 8px */
+.post-thread-item-skeleton .skeleton-title {
+  height: 24px;
+  width: 75%;
+  margin-bottom: 8px;
+}
+
+/* excerpt: 0.875rem(14px) × 1.65 × 2줄 = 46px | margin-bottom: 12px */
+.post-thread-item-skeleton .skeleton-excerpt {
+  height: 46px;
+  margin-bottom: 12px;
+}
+
+/* meta: 0.8rem(12.8px) × 1.6 ≈ 20px */
+.post-thread-item-skeleton .skeleton-meta {
+  height: 20px;
+  width: 55%;
+}

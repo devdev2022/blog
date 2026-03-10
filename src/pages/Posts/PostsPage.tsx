@@ -1,24 +1,30 @@
-import { useState } from 'react';
-import PostsPageView from '@pages/Posts/PostsPageView';
-import { allDummyPosts, postCategories } from '@/dummydata/dummyPosts';
-import Header from '@components/Header/Header';
-import Footer from '@components/Footer/Footer';
+import { useState, useEffect } from "react";
+import PostsPageView from "@pages/Posts/PostsPageView";
+import { allDummyPosts, postCategories } from "@/dummydata/dummyPosts";
+import Header from "@components/Header/Header";
+import Footer from "@components/Footer/Footer";
 
 const POSTS_PER_PAGE = 6;
 
 function PostsPage() {
-  const [viewMode, setViewMode] = useState<'grid' | 'thread'>('grid');
+  const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"grid" | "thread">("grid");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [activeTab, setActiveTab] = useState<'posts' | 'tags'>('posts');
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [activeTab, setActiveTab] = useState<"posts" | "tags">("posts");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredPosts =
-    selectedCategory === 'all'
+    selectedCategory === "all"
       ? allDummyPosts
       : allDummyPosts.filter(
           (post) =>
             post.category === selectedCategory ||
-            post.category?.startsWith(selectedCategory + '/'),
+            post.category?.startsWith(selectedCategory + "/"),
         );
 
   const totalPosts = filteredPosts.length;
@@ -28,7 +34,9 @@ function PostsPage() {
     currentPage * POSTS_PER_PAGE,
   );
 
-  const allTags = Array.from(new Set(allDummyPosts.flatMap((post) => post.tags)));
+  const allTags = Array.from(
+    new Set(allDummyPosts.flatMap((post) => post.tags)),
+  );
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
@@ -39,6 +47,7 @@ function PostsPage() {
     <>
       <Header />
       <PostsPageView
+        isLoading={isLoading}
         posts={paginatedPosts}
         categories={postCategories}
         allTags={allTags}

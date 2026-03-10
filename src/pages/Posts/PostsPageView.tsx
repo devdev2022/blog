@@ -1,7 +1,46 @@
 import type { Post, PostCategory } from "@/types/post";
 import { getPaginationItems } from "@/utils/getPaginationItems";
 
+const SKELETON_COUNT = 6;
+
+function GridSkeleton() {
+  return (
+    <div className="posts-grid">
+      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+        <div key={`skeleton-grid-${i}`} className="post-grid-card-skeleton">
+          <div className="skeleton skeleton-thumbnail" />
+          <div className="skeleton-body">
+            <div className="skeleton skeleton-tag" />
+            <div className="skeleton skeleton-title" />
+            <div className="skeleton skeleton-excerpt" />
+            <div className="skeleton skeleton-meta" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ThreadSkeleton() {
+  return (
+    <div className="posts-thread">
+      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+        <div key={`skeleton-thread-${i}`} className="post-thread-item-skeleton">
+          <div className="skeleton skeleton-thumbnail" />
+          <div className="skeleton-body">
+            <div className="skeleton skeleton-tag" />
+            <div className="skeleton skeleton-title" />
+            <div className="skeleton skeleton-excerpt" />
+            <div className="skeleton skeleton-meta" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface PostsPageViewProps {
+  isLoading: boolean;
   posts: Post[];
   categories: PostCategory[];
   allTags: string[];
@@ -64,6 +103,7 @@ function CategoryTree({
 }
 
 function PostsPageView({
+  isLoading,
   posts,
   categories,
   allTags,
@@ -105,7 +145,9 @@ function PostsPageView({
             </button>
           </div>
 
-          {activeTab === "tags" ? (
+          {isLoading ? (
+            viewMode === "grid" ? <GridSkeleton /> : <ThreadSkeleton />
+          ) : activeTab === "tags" ? (
             /* 태그 탭 */
             <div className="tags-cloud">
               {allTags.map((tag) => (

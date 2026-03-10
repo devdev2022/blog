@@ -14,7 +14,7 @@ function RecentPostsSection({ posts }: RecentPostsSectionProps) {
           전체 보기 →
         </a>
       </div>
-      <div className="posts-grid">
+      <div className="recent-posts-grid">
         {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
