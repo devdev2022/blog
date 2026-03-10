@@ -2,6 +2,7 @@ import type { RouteMetaData } from '@/types/Routes';
 import HomePage from '@pages/Home/HomePage';
 import PostsPage from '@pages/Posts/PostsPage';
 import PostDetailPage from '@pages/PostDetail/PostDetailPage';
+import TagPage from '@pages/Tags/TagPage';
 
 export const PageRouters: RouteMetaData[] = [
   {
@@ -20,6 +21,12 @@ export const PageRouters: RouteMetaData[] = [
     path: '/posts/:slug',
     element: PostDetailPage,
     id: '02',
+    linkName: '',
+  },
+  {
+    path: '/tags/:tag',
+    element: TagPage,
+    id: '03',
     linkName: '',
   },
 ];

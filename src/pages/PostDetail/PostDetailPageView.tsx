@@ -106,22 +106,10 @@ function PostDetailPageView({
 
   const categoryLabel = post.category ? (CATEGORY_LABEL[post.category] ?? post.category) : null;
 
-  const heroStyle = post.thumbnail
-    ? { backgroundImage: `url(${post.thumbnail})` }
-    : undefined;
-
   return (
     <main className="post-detail-main">
       {/* ===== 히어로 (텍스트 전용) ===== */}
       <div className="post-detail-hero-text">
-        {categoryLabel && (
-          <span className="post-hero-category">{categoryLabel}</span>
-        )}
-        <h1 className="post-hero-title">{post.title}</h1>
-      </div>
-
-      {/* ===== 메타 바 ===== */}
-      <div className="post-detail-meta-bar">
         <nav className="post-detail-breadcrumb">
           <button className="breadcrumb-btn" onClick={() => navigate('/')}>홈</button>
           <span className="breadcrumb-sep">›</span>
@@ -133,6 +121,11 @@ function PostDetailPageView({
             </>
           )}
         </nav>
+        <h1 className="post-hero-title">{post.title}</h1>
+      </div>
+
+      {/* ===== 메타 바 ===== */}
+      <div className="post-detail-meta-bar">
         <div className="post-detail-meta-right">
           <span className="post-detail-date">{post.date}</span>
           <span className="meta-dot" />
@@ -161,7 +154,13 @@ function PostDetailPageView({
             <p className="post-content-tags-title">태그</p>
             <div className="post-content-tags">
               {post.tags.map((tag) => (
-                <span key={tag} className="post-content-tag-pill">{tag}</span>
+                <button
+                  key={tag}
+                  className="post-content-tag-pill"
+                  onClick={() => navigate(`/tags/${encodeURIComponent(tag)}`)}
+                >
+                  {tag}
+                </button>
               ))}
             </div>
           </div>
@@ -190,17 +189,8 @@ function PostDetailPageView({
                         className="sidebar-recent-item"
                         onClick={() => navigate(`/posts/${rp.slug}`)}
                       >
-                        <div className="sidebar-recent-thumb">
-                          {rp.thumbnail ? (
-                            <img src={rp.thumbnail} alt={rp.title} />
-                          ) : (
-                            <div className="sidebar-recent-thumb-placeholder" />
-                          )}
-                        </div>
-                        <div className="sidebar-recent-info">
-                          <p className="sidebar-recent-title">{rp.title}</p>
-                          <span className="sidebar-recent-date">{rp.date}</span>
-                        </div>
+                        <p className="sidebar-recent-title">{rp.title}</p>
+                        <span className="sidebar-recent-date">{rp.date}</span>
                       </button>
                     </li>
                   ))}

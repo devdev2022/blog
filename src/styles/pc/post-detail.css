@@ -12,7 +12,7 @@
   padding: 44px 0 8px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
 .post-hero-category {
@@ -40,7 +40,6 @@
 .post-detail-meta-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 16px 0 24px;
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 40px;
@@ -244,7 +243,7 @@
     border-color var(--transition-fast),
     color var(--transition-fast),
     background-color var(--transition-fast);
-  cursor: default;
+  cursor: pointer;
 }
 
 .post-content-tag-pill:hover {
@@ -351,8 +350,8 @@
 .sidebar-recent-item {
   width: 100%;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   padding: 10px 0;
   border-bottom: 1px solid var(--color-border-light);
   text-align: left;
@@ -364,36 +363,8 @@
   padding-bottom: 0;
 }
 
-.sidebar-recent-item:hover {
-  opacity: 0.75;
-}
-
-.sidebar-recent-thumb {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.sidebar-recent-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sidebar-recent-thumb-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
-}
-
-.sidebar-recent-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.sidebar-recent-item:hover .sidebar-recent-title {
+  color: var(--color-accent);
 }
 
 .sidebar-recent-title {
@@ -405,6 +376,7 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: color var(--transition-fast);
 }
 
 .sidebar-recent-date {
