@@ -1,3 +1,9 @@
+export interface TocItem {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
 export interface Post {
   id: number;
   title: string;
@@ -9,6 +15,7 @@ export interface Post {
   slug: string;
   thumbnail?: string;
   category?: string;
+  content?: string;
 }
 
 export interface TechItem {

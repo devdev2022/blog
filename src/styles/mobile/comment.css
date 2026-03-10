@@ -1,0 +1,57 @@
+/* ===== 모바일: 댓글 ===== */
+@media (max-width: 767px) {
+  .comment-section {
+    margin-top: 40px;
+    padding-top: 32px;
+  }
+
+  .comment-section-title {
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  .comment-box {
+    padding: 14px 16px;
+  }
+
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  /* 모바일에서 들여쓰기 축소 */
+  .comment-item {
+    margin-left: 0 !important;
+  }
+
+  /* 대신 배경색으로 중첩 구분 */
+  .comment-children .comment-box {
+    background-color: var(--color-border-light);
+    border-left: 3px solid var(--color-border);
+  }
+
+  .comment-children .comment-children .comment-box {
+    background-color: #f8fafc;
+    border-left: 3px solid var(--color-accent);
+  }
+
+  .comment-indent-line {
+    display: none;
+  }
+
+  .comment-input-author {
+    width: 100%;
+  }
+
+  .comment-form-wrapper {
+    padding: 16px;
+  }
+}
+
+/* ===== 태블릿 ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .comment-input-author {
+    width: 160px;
+  }
+}

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { Post, PostCategory } from "@/types/post";
 import { getPaginationItems } from "@/utils/getPaginationItems";
 
@@ -118,6 +119,7 @@ function PostsPageView({
   onCategoryChange,
   onTabChange,
 }: PostsPageViewProps) {
+  const navigate = useNavigate();
   const paginationItems = getPaginationItems(currentPage, totalPages);
   const selectedCategoryName =
     categories
@@ -283,7 +285,7 @@ function PostsPageView({
               ) : viewMode === "grid" ? (
                 <div className="posts-grid">
                   {posts.map((post) => (
-                    <article key={post.id} className="post-grid-card">
+                    <article key={post.id} className="post-grid-card" onClick={() => navigate(`/posts/${post.slug}`)} style={{ cursor: 'pointer' }}>
                       <div className="post-grid-thumbnail">
                         {post.thumbnail ? (
                           <img src={post.thumbnail} alt={post.title} />
@@ -306,7 +308,7 @@ function PostsPageView({
               ) : (
                 <div className="posts-thread">
                   {posts.map((post) => (
-                    <article key={post.id} className="post-thread-item">
+                    <article key={post.id} className="post-thread-item" onClick={() => navigate(`/posts/${post.slug}`)} style={{ cursor: 'pointer' }}>
                       <div className="post-thread-thumbnail">
                         {post.thumbnail ? (
                           <img src={post.thumbnail} alt={post.title} />

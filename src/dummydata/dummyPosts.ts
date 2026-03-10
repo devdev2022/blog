@@ -1,4 +1,365 @@
 import type { Post, TechCategory, PostCategory } from "@/types/post";
+
+const p1content = `
+<h2 id="intro">들어가며</h2>
+<p>React Query(TanStack Query)는 서버 상태를 효율적으로 관리하기 위한 라이브러리입니다. 기존의 <code>useEffect</code> + <code>useState</code> 조합으로 API를 호출할 때 발생하는 여러 문제들을 해결해 줍니다.</p>
+<p>이 글에서는 React Query의 핵심 개념부터 실전 패턴까지 단계별로 살펴봅니다.</p>
+
+<h2 id="why-react-query">왜 React Query인가?</h2>
+<p>클라이언트 상태와 서버 상태는 근본적으로 다릅니다. Redux 같은 클라이언트 상태 관리 도구로 서버 데이터를 관리하면 다음과 같은 문제가 생깁니다:</p>
+<ul>
+  <li>캐시 관리의 복잡성 증가</li>
+  <li>데이터 동기화 처리 어려움</li>
+  <li>로딩 / 에러 상태 보일러플레이트 반복</li>
+  <li>백그라운드 리패칭 구현 난이도</li>
+</ul>
+<p>React Query는 이 모든 문제를 선언적으로 해결합니다.</p>
+
+<h2 id="basic-usage">기본 사용법</h2>
+<p>React Query의 핵심은 <code>useQuery</code> 훅입니다. 간단한 예제를 살펴봅시다.</p>
+<pre><code>import { useQuery } from '@tanstack/react-query';
+
+function Posts() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['posts'],
+    queryFn: () => fetch('/api/posts').then(r =&gt; r.json()),
+  });
+
+  if (isLoading) return &lt;div&gt;로딩 중...&lt;/div&gt;;
+  if (error) return &lt;div&gt;에러 발생!&lt;/div&gt;;
+
+  return (
+    &lt;ul&gt;
+      {data.map(post =&gt; &lt;li key={post.id}&gt;{post.title}&lt;/li&gt;)}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+<p><code>queryKey</code>는 캐시 키 역할을 하며, <code>queryFn</code>은 실제 비동기 데이터 페칭 함수입니다.</p>
+
+<h2 id="caching">캐싱 전략</h2>
+<p>React Query는 기본적으로 데이터를 캐시에 저장하고, 재사용합니다. <code>staleTime</code>과 <code>gcTime</code>으로 캐싱 동작을 제어할 수 있습니다.</p>
+<pre><code>useQuery({
+  queryKey: ['posts'],
+  queryFn: fetchPosts,
+  staleTime: 1000 * 60 * 5,  // 5분 동안 신선한 상태 유지
+  gcTime: 1000 * 60 * 10,    // 10분 후 캐시 삭제
+});</code></pre>
+
+<h3 id="stale-time">staleTime</h3>
+<p>데이터가 "신선(fresh)"한 상태로 유지되는 시간입니다. 이 시간 내에는 새로운 요청이 발생해도 서버에 재요청하지 않고 캐시된 데이터를 사용합니다. 기본값은 <code>0</code>입니다.</p>
+
+<h3 id="gc-time">gcTime (구 cacheTime)</h3>
+<p>캐시가 메모리에서 제거되기까지의 시간입니다. 해당 queryKey를 사용하는 모든 컴포넌트가 unmount된 후 이 시간이 지나면 캐시가 삭제됩니다. 기본값은 <code>5분</code>입니다.</p>
+
+<h2 id="mutation">데이터 변경: useMutation</h2>
+<p>서버 데이터를 생성·수정·삭제할 때는 <code>useMutation</code>을 사용합니다. 성공 후 관련 쿼리를 무효화(invalidate)하여 최신 데이터를 다시 가져오도록 합니다.</p>
+<pre><code>const mutation = useMutation({
+  mutationFn: (newPost) =&gt;
+    fetch('/api/posts', {
+      method: 'POST',
+      body: JSON.stringify(newPost),
+    }),
+  onSuccess: () =&gt; {
+    // posts 쿼리를 무효화하여 목록 새로고침
+    queryClient.invalidateQueries({ queryKey: ['posts'] });
+  },
+});
+
+// 사용
+mutation.mutate({ title: '새 포스트', content: '...' });</code></pre>
+
+<h2 id="infinite-scroll">무한 스크롤</h2>
+<p><code>useInfiniteQuery</code>를 활용하면 복잡한 무한 스크롤을 간결하게 구현할 수 있습니다.</p>
+<pre><code>const {
+  data,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+} = useInfiniteQuery({
+  queryKey: ['posts'],
+  queryFn: ({ pageParam = 1 }) =&gt; fetchPage(pageParam),
+  getNextPageParam: (lastPage) =&gt; lastPage.nextPage ?? undefined,
+});</code></pre>
+<p>각 페이지의 데이터는 <code>data.pages</code> 배열에 순서대로 쌓입니다. <code>hasNextPage</code>로 다음 페이지 존재 여부를 확인하고, <code>fetchNextPage()</code>로 다음 페이지를 로드합니다.</p>
+
+<h2 id="summary">마무리</h2>
+<p>React Query는 서버 상태 관리의 복잡성을 크게 줄여주는 강력한 도구입니다. 핵심 개념을 정리하면 다음과 같습니다:</p>
+<ul>
+  <li><strong>useQuery</strong>: 데이터 조회 및 캐싱</li>
+  <li><strong>useMutation</strong>: 데이터 변경</li>
+  <li><strong>useInfiniteQuery</strong>: 무한 스크롤</li>
+  <li><strong>staleTime / gcTime</strong>: 캐싱 전략 제어</li>
+</ul>
+<blockquote>
+  <p>서버 상태는 React Query로, 클라이언트 UI 상태는 Zustand나 Context로 관리하는 것이 현재 가장 권장되는 패턴입니다.</p>
+</blockquote>
+`;
+
+const p2content = `
+<h2 id="intro">들어가며</h2>
+<p>Vite는 네이티브 ES 모듈을 활용한 차세대 프론트엔드 빌드 도구입니다. Webpack 대비 월등히 빠른 개발 서버 구동과 HMR(Hot Module Replacement)을 제공합니다. 이 글에서는 Vite + TypeScript 환경을 처음부터 구성하고, 실무에 바로 적용할 수 있는 ESLint 및 경로 별칭 설정까지 한 번에 다룹니다.</p>
+
+<h2 id="create-project">프로젝트 생성</h2>
+<p>다음 명령으로 Vite + TypeScript 템플릿을 생성합니다.</p>
+<pre><code>npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install</code></pre>
+<p>생성된 디렉토리 구조는 다음과 같습니다:</p>
+<pre><code>my-app/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── App.tsx
+│   └── main.tsx
+├── index.html
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts</code></pre>
+
+<h2 id="tsconfig">TypeScript 설정</h2>
+<p><code>tsconfig.json</code>에서 엄격 모드와 경로 별칭을 설정합니다.</p>
+<pre><code>{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"]
+    }
+  },
+  "include": ["src"]
+}</code></pre>
+
+<h3 id="path-alias-vite">Vite에 경로 별칭 등록</h3>
+<p><code>tsconfig.json</code>의 <code>paths</code>는 TypeScript에만 적용됩니다. Vite 번들러에도 동일한 별칭을 등록해야 합니다.</p>
+<pre><code>// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+    },
+  },
+});</code></pre>
+<p><code>path</code> 모듈 사용을 위해 타입 패키지도 설치합니다.</p>
+<pre><code>npm install -D @types/node</code></pre>
+
+<h2 id="eslint">ESLint 설정</h2>
+<p>Vite 기본 템플릿에는 ESLint가 포함되어 있습니다. <code>eslint.config.js</code>를 열어 규칙을 강화합니다.</p>
+<pre><code>import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  {
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+);</code></pre>
+
+<h2 id="summary">마무리</h2>
+<p>여기까지 Vite + TypeScript 개발 환경의 핵심 설정을 완료했습니다. 정리하면:</p>
+<ul>
+  <li><strong>tsconfig.json</strong>: strict 모드 + paths 별칭</li>
+  <li><strong>vite.config.ts</strong>: resolve.alias로 번들러 경로 매핑</li>
+  <li><strong>ESLint</strong>: TypeScript 엄격 규칙 + React Hooks 검사</li>
+</ul>
+<blockquote>
+  <p>경로 별칭은 <code>tsconfig.json</code>과 <code>vite.config.ts</code> 양쪽 모두 등록해야 합니다. 한 쪽만 설정하면 IDE 또는 빌드 중 오류가 발생합니다.</p>
+</blockquote>
+`;
+
+const p3content = `
+<h2 id="intro">들어가며</h2>
+<p>MySQL에서 쿼리 성능 문제의 대부분은 인덱스 설계에서 비롯됩니다. <code>EXPLAIN</code>을 실행했을 때 <code>type: ALL</code>(풀 테이블 스캔)이 보인다면 인덱스 최적화가 필요한 신호입니다. 이 글에서는 인덱스의 작동 원리부터 복합 인덱스, 커버링 인덱스까지 실전 예제로 정리합니다.</p>
+
+<h2 id="how-index-works">인덱스 작동 원리</h2>
+<p>MySQL InnoDB의 인덱스는 <strong>B-Tree</strong> 자료구조로 구현됩니다. 인덱스 노드를 따라 탐색하면 O(log N) 시간에 원하는 행을 찾을 수 있습니다.</p>
+<ul>
+  <li><strong>클러스터드 인덱스</strong>: PK 기준으로 실제 데이터가 정렬 저장됨 (테이블당 1개)</li>
+  <li><strong>세컨더리 인덱스</strong>: 지정 컬럼 기준 B-Tree, 리프 노드에 PK 값 저장</li>
+</ul>
+
+<h2 id="explain">EXPLAIN으로 실행 계획 보기</h2>
+<p>쿼리 앞에 <code>EXPLAIN</code>을 붙이면 MySQL이 실행 계획을 반환합니다.</p>
+<pre><code>EXPLAIN SELECT * FROM orders WHERE user_id = 42;</code></pre>
+<p>주요 컬럼:</p>
+<ul>
+  <li><code>type</code>: ALL(풀스캔) → index → range → ref → eq_ref → const 순으로 성능 좋음</li>
+  <li><code>key</code>: 실제 사용된 인덱스 이름</li>
+  <li><code>rows</code>: 예상 검사 행 수 (적을수록 좋음)</li>
+  <li><code>Extra</code>: Using index(커버링), Using filesort(정렬 주의) 등</li>
+</ul>
+
+<h2 id="composite-index">복합 인덱스</h2>
+<p>두 개 이상의 컬럼으로 구성된 인덱스입니다. <strong>왼쪽 접두사 규칙(Leftmost Prefix Rule)</strong>을 반드시 이해해야 합니다.</p>
+<pre><code>-- (user_id, created_at) 복합 인덱스 생성
+CREATE INDEX idx_user_created ON orders(user_id, created_at);
+
+-- ✅ 인덱스 사용 (왼쪽 컬럼부터 사용)
+SELECT * FROM orders WHERE user_id = 42 AND created_at &gt; '2026-01-01';
+
+-- ✅ 인덱스 부분 사용 (user_id만)
+SELECT * FROM orders WHERE user_id = 42;
+
+-- ❌ 인덱스 미사용 (첫 번째 컬럼 누락)
+SELECT * FROM orders WHERE created_at &gt; '2026-01-01';</code></pre>
+
+<h3 id="cardinality">카디널리티 고려</h3>
+<p>복합 인덱스 컬럼 순서는 <strong>카디널리티(중복도)가 높은 컬럼을 앞에</strong> 배치하는 것이 기본 원칙입니다. 단, WHERE 절 사용 빈도도 함께 고려해야 합니다.</p>
+
+<h2 id="covering-index">커버링 인덱스</h2>
+<p>쿼리에서 필요한 모든 컬럼이 인덱스에 포함되어 있으면, 실제 데이터 행에 접근하지 않고 인덱스만으로 결과를 반환합니다. <code>EXPLAIN</code>의 <code>Extra</code>에 <code>Using index</code>가 표시됩니다.</p>
+<pre><code>-- title, created_at 컬럼만 조회 → 커버링 인덱스 가능
+CREATE INDEX idx_covering ON posts(user_id, title, created_at);
+
+SELECT title, created_at FROM posts WHERE user_id = 1;</code></pre>
+
+<h2 id="summary">마무리</h2>
+<p>인덱스 최적화의 핵심을 정리합니다:</p>
+<ul>
+  <li>항상 <code>EXPLAIN</code>으로 실행 계획을 먼저 확인</li>
+  <li>복합 인덱스는 왼쪽 접두사 규칙 준수</li>
+  <li>카디널리티 높은 컬럼을 앞으로</li>
+  <li>자주 조회하는 컬럼 조합은 커버링 인덱스 검토</li>
+</ul>
+<blockquote>
+  <p>인덱스가 많다고 좋은 것이 아닙니다. INSERT/UPDATE/DELETE 시 인덱스도 함께 갱신되므로 쓰기 성능이 저하됩니다. 꼭 필요한 인덱스만 유지하세요.</p>
+</blockquote>
+`;
+
+const p7content = `
+<h2 id="intro">들어가며</h2>
+<p>이진 탐색(Binary Search)은 <strong>정렬된 배열</strong>에서 탐색 범위를 절반씩 줄여가며 원하는 값을 찾는 알고리즘입니다. 시간 복잡도는 O(log N)으로, 선형 탐색 O(N)에 비해 데이터가 많을수록 압도적으로 빠릅니다.</p>
+
+<h2 id="basic">기본 구현</h2>
+<p>가장 기본적인 형태입니다. 배열에서 <code>target</code>의 인덱스를 반환하고, 없으면 <code>-1</code>을 반환합니다.</p>
+<pre><code>function binarySearch(arr: number[], target: number): number {
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left &lt;= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    if (arr[mid] === target) return mid;
+    if (arr[mid] &lt; target) left = mid + 1;
+    else right = mid - 1;
+  }
+
+  return -1;
+}</code></pre>
+<blockquote>
+  <p><code>mid = (left + right) / 2</code>는 left, right가 매우 클 때 오버플로우가 발생할 수 있습니다. <code>left + Math.floor((right - left) / 2)</code>로 작성하는 것이 안전합니다.</p>
+</blockquote>
+
+<h2 id="lower-upper-bound">Lower Bound / Upper Bound</h2>
+<p>실무와 알고리즘 문제에서 더 자주 쓰이는 패턴입니다.</p>
+
+<h3 id="lower-bound">Lower Bound</h3>
+<p><code>target</code> 이상인 값이 처음 등장하는 인덱스를 반환합니다.</p>
+<pre><code>function lowerBound(arr: number[], target: number): number {
+  let left = 0;
+  let right = arr.length;
+
+  while (left &lt; right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (arr[mid] &lt; target) left = mid + 1;
+    else right = mid;
+  }
+
+  return left;
+}</code></pre>
+
+<h3 id="upper-bound">Upper Bound</h3>
+<p><code>target</code>을 초과하는 값이 처음 등장하는 인덱스를 반환합니다.</p>
+<pre><code>function upperBound(arr: number[], target: number): number {
+  let left = 0;
+  let right = arr.length;
+
+  while (left &lt; right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (arr[mid] &lt;= target) left = mid + 1;
+    else right = mid;
+  }
+
+  return left;
+}</code></pre>
+<p>두 함수를 조합하면 <code>target</code>의 등장 횟수를 O(log N)에 구할 수 있습니다: <code>upperBound(arr, target) - lowerBound(arr, target)</code></p>
+
+<h2 id="parametric-search">파라메트릭 서치</h2>
+<p>이진 탐색의 강력한 응용입니다. <strong>"최솟값 중 조건을 만족하는 최댓값"</strong> 같은 최적화 문제를 이진 탐색으로 풀 수 있습니다.</p>
+<p>핵심 아이디어: 답이 될 수 있는 범위에 이진 탐색을 적용하고, <strong>조건 함수(predicate)가 true/false로 단조 증가</strong>하면 적용 가능합니다.</p>
+<pre><code>// 예시: 공유기 설치 (최소 거리의 최댓값)
+function canInstall(houses: number[], n: number, minDist: number): boolean {
+  let count = 1;
+  let last = houses[0];
+
+  for (const house of houses) {
+    if (house - last &gt;= minDist) {
+      count++;
+      last = house;
+    }
+  }
+
+  return count &gt;= n;
+}
+
+function solve(houses: number[], n: number): number {
+  houses.sort((a, b) =&gt; a - b);
+  let left = 1;
+  let right = houses[houses.length - 1] - houses[0];
+  let answer = 0;
+
+  while (left &lt;= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    if (canInstall(houses, n, mid)) {
+      answer = mid;
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  return answer;
+}</code></pre>
+
+<h2 id="summary">마무리</h2>
+<p>이진 탐색 유형 정리:</p>
+<ul>
+  <li><strong>기본형</strong>: 정렬된 배열에서 값의 인덱스 탐색</li>
+  <li><strong>Lower/Upper Bound</strong>: 범위 내 개수, 중복 원소 처리</li>
+  <li><strong>파라메트릭 서치</strong>: 최적화 문제를 결정 문제로 변환</li>
+</ul>
+<blockquote>
+  <p>이진 탐색이 적용 가능한지 판단하는 기준은 <strong>"탐색 범위가 단조 증가/감소하는가"</strong>입니다. 이 조건이 성립하면 거의 항상 이진 탐색을 적용할 수 있습니다.</p>
+</blockquote>
+`;
+
 import { calcReadingTime } from "@/utils/calcReadingTime";
 
 const p1excerpt =
@@ -53,6 +414,7 @@ export const dummyPosts: Post[] = [
     readingTime: calcReadingTime(p1excerpt),
     slug: "react-query-server-state",
     category: "frontend/react",
+    content: p1content,
   },
   {
     id: 2,
@@ -64,6 +426,7 @@ export const dummyPosts: Post[] = [
     readingTime: calcReadingTime(p2excerpt),
     slug: "vite-typescript-setup",
     category: "frontend/web",
+    content: p2content,
   },
   {
     id: 3,
@@ -75,6 +438,7 @@ export const dummyPosts: Post[] = [
     readingTime: calcReadingTime(p3excerpt),
     slug: "mysql-index-optimization",
     category: "database",
+    content: p3content,
   },
 ];
 
@@ -89,6 +453,7 @@ export const allDummyPosts: Post[] = [
     readingTime: calcReadingTime(p1excerpt),
     slug: "react-query-server-state",
     category: "frontend/react",
+    content: p1content,
   },
   {
     id: 2,
@@ -100,6 +465,7 @@ export const allDummyPosts: Post[] = [
     readingTime: calcReadingTime(p2excerpt),
     slug: "vite-typescript-setup",
     category: "frontend/web",
+    content: p2content,
   },
   {
     id: 3,
@@ -111,6 +477,7 @@ export const allDummyPosts: Post[] = [
     readingTime: calcReadingTime(p3excerpt),
     slug: "mysql-index-optimization",
     category: "database",
+    content: p3content,
   },
   {
     id: 4,
@@ -155,6 +522,7 @@ export const allDummyPosts: Post[] = [
     readingTime: calcReadingTime(p7excerpt),
     slug: "binary-search",
     category: "cs",
+    content: p7content,
   },
   {
     id: 8,
