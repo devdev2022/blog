@@ -1,0 +1,63 @@
+@media (max-width: 767px) {
+  .header-inner {
+    padding: 0 16px;
+  }
+
+  .header-logo {
+    font-size: 1.125rem;
+  }
+
+  .header-nav {
+    gap: 16px;
+  }
+
+  .header-nav-link {
+    font-size: 0.875rem;
+  }
+
+  .header-login-btn {
+    padding: 7px 12px;
+    font-size: 0.8125rem;
+    gap: 6px;
+  }
+
+  .github-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 모바일에서 로그인 버튼 텍스트 숨기고 아이콘만 표시 */
+  .header-login-btn span {
+    display: none;
+  }
+
+  .header-icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .header-icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .header-avatar-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .header-dropdown {
+    right: -4px;
+    width: 260px;
+  }
+
+  .header-dropdown-arrow {
+    right: 12px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header-inner {
+    padding: 0 24px;
+  }
+}

@@ -3,6 +3,7 @@ import HomePage from '@pages/Home/HomePage';
 import PostsPage from '@pages/Posts/PostsPage';
 import PostDetailPage from '@pages/PostDetail/PostDetailPage';
 import TagPage from '@pages/Tags/TagPage';
+import AuthCallbackPage from '@pages/AuthCallback/AuthCallbackPage';
 
 export const PageRouters: RouteMetaData[] = [
   {
@@ -27,6 +28,12 @@ export const PageRouters: RouteMetaData[] = [
     path: '/tags/:tag',
     element: TagPage,
     id: '03',
+    linkName: '',
+  },
+  {
+    path: '/auth/callback',
+    element: AuthCallbackPage,
+    id: '04',
     linkName: '',
   },
 ];

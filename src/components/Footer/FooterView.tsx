@@ -1,9 +1,3 @@
-const PAGE_LINKS = [
-  { label: "홈", href: "/" },
-  { label: "포스트", href: "/posts" },
-  { label: "소개", href: "/about" },
-];
-
 const SOCIAL_LINKS = [{ label: "GitHub", href: "https://github.com" }];
 
 function FooterView() {

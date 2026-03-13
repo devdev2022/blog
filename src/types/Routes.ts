@@ -5,5 +5,6 @@ export interface RouteMetaData {
   element?: ComponentType;
   id: string;
   linkName: string;
+  protected?: boolean;
   childElements?: RouteMetaData[];
 }
