@@ -1,44 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import type { Post, PostCategory } from "@/types/post";
 import { getPaginationItems } from "@/utils/getPaginationItems";
-
-const SKELETON_COUNT = 6;
-
-function GridSkeleton() {
-  return (
-    <div className="posts-grid">
-      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-        <div key={`skeleton-grid-${i}`} className="post-grid-card-skeleton">
-          <div className="skeleton skeleton-thumbnail" />
-          <div className="skeleton-body">
-            <div className="skeleton skeleton-tag" />
-            <div className="skeleton skeleton-title" />
-            <div className="skeleton skeleton-excerpt" />
-            <div className="skeleton skeleton-meta" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ThreadSkeleton() {
-  return (
-    <div className="posts-thread">
-      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-        <div key={`skeleton-thread-${i}`} className="post-thread-item-skeleton">
-          <div className="skeleton skeleton-thumbnail" />
-          <div className="skeleton-body">
-            <div className="skeleton skeleton-tag" />
-            <div className="skeleton skeleton-title" />
-            <div className="skeleton skeleton-excerpt" />
-            <div className="skeleton skeleton-meta" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+import GridSkeleton from "@/pages/Posts/component/GridSkeleton";
+import ThreadSkeleton from "@/pages/Posts/component/ThreadSkeleton";
+import CategoryTree from "@/pages/Posts/component/CategoryTree";
 
 interface PostsPageViewProps {
   isLoading: boolean;
@@ -59,68 +24,6 @@ interface PostsPageViewProps {
   onTabChange: (tab: "posts" | "tags") => void;
 }
 
-function CategoryTree({
-  categories,
-  selectedCategory,
-  totalPosts,
-  onCategoryChange,
-}: {
-  categories: PostCategory[];
-  selectedCategory: string;
-  totalPosts: number;
-  onCategoryChange: (slug: string) => void;
-}) {
-  if (categories.length === 0) {
-    return (
-      <ul className="category-tree">
-        <li className="category-tree-item">
-          <button
-            className="category-tree-btn active"
-            onClick={() => onCategoryChange("all")}
-          >
-            전체 보기
-            <span className="category-tree-count">{totalPosts}</span>
-          </button>
-        </li>
-      </ul>
-    );
-  }
-
-  return (
-    <ul className="category-tree">
-      {categories.map((cat) => (
-        <li key={cat.slug} className="category-tree-item">
-          <button
-            className={`category-tree-btn${selectedCategory === cat.slug ? " active" : ""}`}
-            onClick={() => onCategoryChange(cat.slug)}
-          >
-            {cat.name}
-            {cat.count !== undefined && (
-              <span className="category-tree-count">{cat.count}</span>
-            )}
-          </button>
-          {cat.children && cat.children.length > 0 && (
-            <ul className="category-tree-children">
-              {cat.children.map((child) => (
-                <li key={child.slug} className="category-tree-item">
-                  <button
-                    className={`category-tree-btn child${selectedCategory === child.slug ? " active" : ""}`}
-                    onClick={() => onCategoryChange(child.slug)}
-                  >
-                    {child.name}
-                    {child.count !== undefined && (
-                      <span className="category-tree-count">{child.count}</span>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 function PostsPageView({
   isLoading,
