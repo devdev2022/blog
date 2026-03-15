@@ -17,6 +17,8 @@
 ## Architecture
 
 - Presentational/Container 패턴으로 기능/화면으로 관심사 분리 (단, 폴더에 index.ts 배럴 파일을 만들지 않는다. 컴포넌트는 파일 경로로 직접 import한다)
+- 화면(View) 컴포넌트는 useState/useEffect를 직접 사용하지 않는다. (단, 드롭다운 열림/닫힘처럼 순수 UI 상태는 해당 컴포넌트가 직접 관리한다.)
+- 페이지 View의 복잡도가 올라가 하위 컴포넌트가 필요할 경우, 해당 페이지 경로에 component/ 폴더를 만들어 관리한다.
 
 ## CSS Styles
 
