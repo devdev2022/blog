@@ -59,16 +59,33 @@ interface PostsPageViewProps {
   onTabChange: (tab: "posts" | "tags") => void;
 }
 
-
 function CategoryTree({
   categories,
   selectedCategory,
+  totalPosts,
   onCategoryChange,
 }: {
   categories: PostCategory[];
   selectedCategory: string;
+  totalPosts: number;
   onCategoryChange: (slug: string) => void;
 }) {
+  if (categories.length === 0) {
+    return (
+      <ul className="category-tree">
+        <li className="category-tree-item">
+          <button
+            className="category-tree-btn active"
+            onClick={() => onCategoryChange("all")}
+          >
+            전체 보기
+            <span className="category-tree-count">{totalPosts}</span>
+          </button>
+        </li>
+      </ul>
+    );
+  }
+
   return (
     <ul className="category-tree">
       {categories.map((cat) => (
@@ -152,20 +169,37 @@ function PostsPageView({
           </div>
 
           {isLoading ? (
-            viewMode === "grid" ? <GridSkeleton /> : <ThreadSkeleton />
+            viewMode === "grid" ? (
+              <GridSkeleton />
+            ) : (
+              <ThreadSkeleton />
+            )
           ) : activeTab === "tags" ? (
             /* 태그 탭 */
-            <div className="tags-cloud">
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  className={`tag-pill${selectedTag === tag ? " active" : ""}`}
-                  onClick={() => onTagChange(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+            allTags.length === 0 ? (
+              <div className="tags-empty">
+                <div className="posts-empty-icon">
+                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 20a4 4 0 0 1 4-4h20l20 16-20 16H14a4 4 0 0 1-4-4V20z" stroke="currentColor" strokeWidth="2.5" />
+                    <circle cx="20" cy="32" r="3" fill="currentColor" opacity="0.5" />
+                  </svg>
+                </div>
+                <p className="posts-empty-title">태그가 없습니다</p>
+                <p className="posts-empty-desc">아직 등록된 태그가 없어요.</p>
+              </div>
+            ) : (
+              <div className="tags-cloud">
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    className={`tag-pill${selectedTag === tag ? " active" : ""}`}
+                    onClick={() => onTagChange(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            )
           ) : (
             <>
               {/* 선택된 태그 필터 */}
@@ -189,7 +223,7 @@ function PostsPageView({
                 <span className="posts-count-label">
                   {selectedCategoryName} <strong>{totalPosts}</strong>
                 </span>
-                <div className="posts-view-toggle">
+                <div className="posts-view-toggle" style={{ visibility: totalPosts === 0 ? "hidden" : "visible" }}>
                   <button
                     className={`view-toggle-btn${viewMode === "grid" ? " active" : ""}`}
                     onClick={() => onViewModeChange("grid")}
@@ -305,11 +339,50 @@ function PostsPageView({
 
               {/* 포스트 목록 */}
               {posts.length === 0 ? (
-                <div className="posts-empty">포스트가 없습니다.</div>
+                <div className="posts-empty">
+                  <div className="posts-empty-icon">
+                    <svg
+                      viewBox="0 0 64 64"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="10"
+                        y="12"
+                        width="44"
+                        height="40"
+                        rx="4"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      />
+                      <path
+                        d="M22 28h20M22 36h14"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M22 20h8"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <p className="posts-empty-title">포스트가 없습니다</p>
+                  <p className="posts-empty-desc">
+                    이 카테고리에 아직 작성된 포스트가 없어요.
+                  </p>
+                </div>
               ) : viewMode === "grid" ? (
                 <div className="posts-grid">
                   {posts.map((post) => (
-                    <article key={post.id} className="post-grid-card" onClick={() => navigate(`/posts/${post.slug}`)} style={{ cursor: 'pointer' }}>
+                    <article
+                      key={post.id}
+                      className="post-grid-card"
+                      onClick={() => navigate(`/posts/${post.slug}`)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <div className="post-grid-thumbnail">
                         {post.thumbnail ? (
                           <img src={post.thumbnail} alt={post.title} />
@@ -332,7 +405,12 @@ function PostsPageView({
               ) : (
                 <div className="posts-thread">
                   {posts.map((post) => (
-                    <article key={post.id} className="post-thread-item" onClick={() => navigate(`/posts/${post.slug}`)} style={{ cursor: 'pointer' }}>
+                    <article
+                      key={post.id}
+                      className="post-thread-item"
+                      onClick={() => navigate(`/posts/${post.slug}`)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <div className="post-thread-thumbnail">
                         {post.thumbnail ? (
                           <img src={post.thumbnail} alt={post.title} />
@@ -422,6 +500,7 @@ function PostsPageView({
           <CategoryTree
             categories={categories}
             selectedCategory={selectedCategory}
+            totalPosts={totalPosts}
             onCategoryChange={onCategoryChange}
           />
         </aside>

@@ -27,9 +27,7 @@ function PostsPage() {
         post.category === selectedCategory ||
         post.category?.startsWith(selectedCategory + "/"),
     )
-    .filter(
-      (post) => selectedTag === "" || post.tags.includes(selectedTag),
-    );
+    .filter((post) => selectedTag === "" || post.tags.includes(selectedTag));
 
   const totalPosts = filteredPosts.length;
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);

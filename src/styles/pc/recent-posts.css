@@ -55,3 +55,57 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+
+/* ===== 최근 포스트 빈 상태 ===== */
+.recent-posts-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 0 80px;
+  gap: 12px;
+}
+
+.recent-posts-empty-icon {
+  width: 56px;
+  height: 56px;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  margin-bottom: 8px;
+}
+
+.recent-posts-empty-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.recent-posts-empty-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.recent-posts-empty-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.recent-posts-empty-link {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.recent-posts-empty-link:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
