@@ -4,22 +4,22 @@
   flex: 1;
   width: 100%;
   background-color: var(--color-bg);
-  padding: 60px 0 80px;
+  padding: 36px 0 60px; /* mobile base */
 }
 
 .account-container {
   max-width: 680px;
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 16px; /* mobile base */
 }
 
 /* 페이지 제목 */
 .account-page-title {
-  font-size: 1.75rem;
+  font-size: 1.375rem; /* mobile base */
   font-weight: 800;
   color: var(--color-text-primary);
   letter-spacing: -0.03em;
-  margin-bottom: 40px;
+  margin-bottom: 28px; /* mobile base */
 }
 
 /* 프로필 아바타 */
@@ -31,8 +31,8 @@
 
 .account-avatar-btn {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px; /* mobile base */
+  height: 80px; /* mobile base */
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -93,8 +93,8 @@
   gap: 10px;
   background-color: var(--color-border-light);
   border-radius: var(--radius-md);
-  padding: 14px 20px;
-  margin-bottom: 40px;
+  padding: 12px 16px; /* mobile base */
+  margin-bottom: 28px; /* mobile base */
 }
 
 .account-media-banner-icon {
@@ -113,14 +113,14 @@
 }
 
 .account-media-banner-text {
-  font-size: 0.9375rem;
+  font-size: 0.875rem; /* mobile base */
   color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 /* 폼 필드 공통 */
 .account-field {
-  margin-bottom: 32px;
+  margin-bottom: 24px; /* mobile base */
 }
 
 .account-field-label {
@@ -133,10 +133,10 @@
 
 .account-field-input {
   width: 100%;
-  padding: 14px 18px;
+  padding: 12px 14px; /* mobile base */
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: 0.9375rem;
+  font-size: 0.9rem; /* mobile base */
   color: var(--color-text-primary);
   background-color: #ffffff;
   transition: border-color var(--transition-fast),
@@ -163,7 +163,7 @@
 
 .account-username-at {
   position: absolute;
-  left: 18px;
+  left: 14px; /* mobile base */
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -172,16 +172,16 @@
 }
 
 .account-field-input--username {
-  padding-left: 42px;
+  padding-left: 36px; /* mobile base */
 }
 
 /* 텍스트에어리어 */
 .account-field-textarea {
   width: 100%;
-  padding: 14px 18px;
+  padding: 12px 14px; /* mobile base */
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: 0.9375rem;
+  font-size: 0.9rem; /* mobile base */
   color: var(--color-text-primary);
   background-color: #ffffff;
   resize: vertical;
@@ -213,11 +213,13 @@
 .account-submit-wrap {
   display: flex;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: 4px; /* mobile base */
 }
 
 .account-submit-btn {
-  padding: 12px 36px;
+  width: 100%; /* mobile base */
+  padding: 14px; /* mobile base */
+  text-align: center; /* mobile base */
   background-color: var(--color-accent);
   color: #ffffff;
   border-radius: var(--radius-sm);
@@ -278,9 +280,9 @@
 .account-modal {
   background-color: var(--color-bg-card);
   border-radius: var(--radius-lg);
-  padding: 32px 28px 28px;
+  padding: 24px 20px 20px; /* mobile base */
   width: 100%;
-  max-width: 400px;
+  max-width: calc(100% - 32px); /* mobile base */
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
 }
 
@@ -337,4 +339,67 @@
 
 .account-modal-btn-danger:hover {
   background-color: #dc2626;
+}
+
+/* ===== Desktop (1024px+) ===== */
+@media (min-width: 1024px) {
+  .account-main {
+    padding: 60px 0 80px;
+  }
+
+  .account-container {
+    padding: 0 40px;
+  }
+
+  .account-page-title {
+    font-size: 1.75rem;
+    margin-bottom: 40px;
+  }
+
+  .account-avatar-btn {
+    width: 100px;
+    height: 100px;
+  }
+
+  .account-media-banner {
+    padding: 14px 20px;
+    margin-bottom: 40px;
+  }
+
+  .account-media-banner-text {
+    font-size: 0.9375rem;
+  }
+
+  .account-field {
+    margin-bottom: 32px;
+  }
+
+  .account-field-input,
+  .account-field-textarea {
+    padding: 14px 18px;
+    font-size: 0.9375rem;
+  }
+
+  .account-field-input--username {
+    padding-left: 42px;
+  }
+
+  .account-username-at {
+    left: 18px;
+  }
+
+  .account-submit-btn {
+    width: auto;
+    padding: 12px 36px;
+    text-align: center;
+  }
+
+  .account-submit-wrap {
+    margin-top: 8px;
+  }
+
+  .account-modal {
+    max-width: 400px;
+    padding: 32px 28px 28px;
+  }
 }

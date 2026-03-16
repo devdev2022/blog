@@ -22,7 +22,8 @@
   position: relative;
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 40px 36px 36px;
+  padding: 32px 24px 28px; /* mobile base */
+  margin: 0 16px; /* mobile base */
   width: 100%;
   max-width: 360px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
@@ -121,9 +122,10 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 767px) {
+/* ===== Desktop (1024px+) ===== */
+@media (min-width: 1024px) {
   .login-modal {
-    margin: 0 16px;
-    padding: 32px 24px 28px;
+    padding: 40px 36px 36px;
+    margin: 0;
   }
 }

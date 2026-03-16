@@ -22,10 +22,13 @@
 
 ## CSS Styles
 
-- 스타일은 PC버전 및 모바일 버전으로 나눈다.
 - 태그의 스타일 적용 방식은 다음과 같이 className으로 적용한다. <div className="social-link">
-- CSS은 반응형으로 설계하며, 모바일은 767px이하, 태블릿은 768px ~ 1023px, 데스크톱은 1024px을 기준으로 한다.
-- css import는 main.tsx에서 import.meta.glob("./styles/\*_/_.css", { eager: true });를 사용하여 모든 css를 들고온다.
+- CSS는 mobile-first 반응형으로 설계한다. 기본 스타일은 모바일 기준으로 작성하고, 미디어 쿼리로 상위 breakpoint를 재정의한다.
+  - 모바일: 기본 스타일 (미디어 쿼리 없음)
+  - 태블릿: @media (min-width: 768px)
+  - 데스크톱: @media (min-width: 1024px)
+- css는 컴포넌트/페이지 단위로 styles/ 폴더에 단일 파일로 관리한다 (pc/mobile 분리 없음).
+- css import는 main.tsx에서 import.meta.glob("./styles/*.css", { eager: true });를 사용하여 모든 css를 들고온다.
 
 ## Project Structure
 
@@ -35,9 +38,7 @@ src/
 ├── components/    # 공통 컴포넌트(Header, Footer)
 ├── pages/         # 페이지
 ├── contexts/      # 전역 컨텍스트
-├── styles/
-│   ├── mobile/    # 모바일 전용 스타일
-│   └── pc/        # PC 전용 스타일
+├── styles/        # 컴포넌트/페이지별 CSS (mobile-first, 단일 파일)
 ├── data/          # 페이지 라우트 데이터
 ├── dummydata/     # 디자인 구현용 더미용 데이터
 ├── constants/     # 에러코드 또는 에러 메세지 모음

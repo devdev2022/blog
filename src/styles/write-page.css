@@ -18,8 +18,8 @@
   height: 52px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 2px;
+  padding: 0 12px; /* mobile base */
+  gap: 1px; /* mobile base */
   flex-shrink: 0;
   flex-wrap: wrap;
 }
@@ -154,6 +154,17 @@
   background: #f0f2f5;
 }
 
+/* 모바일 전용 select 스타일 */
+.write-toolbar-select--type {
+  min-width: 68px;
+  font-size: 0.75rem;
+}
+
+.write-toolbar-select--font {
+  min-width: 72px;
+  font-size: 0.75rem;
+}
+
 /* 색상 버튼 */
 .write-toolbar-color-btn {
   position: relative;
@@ -166,7 +177,6 @@
   height: 0;
   pointer-events: none;
 }
-
 
 /* 파일 입력 (hidden) */
 .write-toolbar-file-input {
@@ -199,7 +209,7 @@
 .write-inner {
   max-width: 760px;
   margin: 0 auto;
-  padding: 36px 40px 40px;
+  padding: 24px 16px 40px; /* mobile base */
 }
 
 /* 카테고리 그룹 (메인 + 서브 나란히) */
@@ -291,7 +301,7 @@
   padding: 6px 0;
   border: none;
   outline: none;
-  font-size: 2rem;
+  font-size: 1.5rem; /* mobile base */
   font-weight: 700;
   color: var(--color-text-primary);
   background: transparent;
@@ -626,7 +636,7 @@
 .write-link-modal {
   background: #fff;
   border-radius: var(--radius-md);
-  padding: 24px 28px;
+  padding: 20px 20px; /* mobile base */
   width: 400px;
   max-width: calc(100vw - 40px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
@@ -710,7 +720,7 @@
 .write-alert {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 28px 28px 24px;
+  padding: 24px 20px 20px; /* mobile base */
   width: 100%;
   max-width: 320px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
@@ -925,7 +935,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
+  padding: 0 16px; /* mobile base */
   z-index: 100;
 }
 
@@ -945,11 +955,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 8px 10px; /* mobile base */
   border: none;
   background: transparent;
   color: var(--color-text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8125rem; /* mobile base */
   font-weight: 500;
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -959,8 +969,8 @@
 }
 
 .write-bottom-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 15px; /* mobile base */
+  height: 15px; /* mobile base */
   flex-shrink: 0;
 }
 
@@ -974,11 +984,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
+  padding: 8px 14px; /* mobile base */
   border: 1px solid var(--color-border);
   background: #fff;
   color: var(--color-text-primary);
-  font-size: 0.875rem;
+  font-size: 0.8125rem; /* mobile base */
   font-weight: 500;
   cursor: pointer;
   border-radius: 24px;
@@ -1011,10 +1021,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 28px;
+  padding: 8px 20px; /* mobile base */
   background: #1c1c2e;
   color: #fff;
-  font-size: 0.9375rem;
+  font-size: 0.875rem; /* mobile base */
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -1024,4 +1034,59 @@
 
 .write-publish-btn:hover {
   background: #2e2e46;
+}
+
+/* ===== Tablet (768px+) ===== */
+@media (min-width: 768px) {
+  .write-inner {
+    padding: 32px 28px 40px;
+  }
+}
+
+/* ===== Desktop (1024px+) ===== */
+@media (min-width: 1024px) {
+  .write-toolbar {
+    padding: 0 20px;
+    gap: 2px;
+  }
+
+  .write-inner {
+    padding: 36px 40px 40px;
+  }
+
+  .write-title-input {
+    font-size: 2rem;
+  }
+
+  .write-bottom-bar {
+    padding: 0 28px;
+  }
+
+  .write-bottom-btn {
+    padding: 8px 14px;
+    font-size: 0.875rem;
+  }
+
+  .write-bottom-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .write-temp-save-btn {
+    padding: 8px 18px;
+    font-size: 0.875rem;
+  }
+
+  .write-publish-btn {
+    padding: 9px 28px;
+    font-size: 0.9375rem;
+  }
+
+  .write-link-modal {
+    padding: 24px 28px;
+  }
+
+  .write-alert {
+    padding: 28px 28px 24px;
+  }
 }

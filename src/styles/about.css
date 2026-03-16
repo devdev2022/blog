@@ -5,23 +5,25 @@
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 40px;
+  padding: 0 20px; /* mobile base */
 }
 
 /* --- 프로필 섹션 --- */
 .about-profile-section {
   display: flex;
-  align-items: flex-start;
-  gap: 48px;
-  padding: 80px 0 72px;
+  flex-direction: column; /* mobile base */
+  align-items: center; /* mobile base */
+  text-align: center; /* mobile base */
+  gap: 24px; /* mobile base */
+  padding: 48px 0 56px; /* mobile base */
   border-bottom: 1px solid var(--color-border-light);
   margin-bottom: var(--spacing-section);
 }
 
 .about-profile-avatar {
   flex-shrink: 0;
-  width: 120px;
-  height: 120px;
+  width: 96px; /* mobile base */
+  height: 96px; /* mobile base */
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
   display: flex;
@@ -70,7 +72,7 @@
 }
 
 .about-profile-name {
-  font-size: 2.5rem;
+  font-size: 1.875rem; /* mobile base */
   font-weight: 800;
   color: var(--color-text-primary);
   letter-spacing: -0.03em;
@@ -86,7 +88,7 @@
 }
 
 .about-profile-bio {
-  font-size: 1rem;
+  font-size: 0.9375rem; /* mobile base */
   color: var(--color-text-secondary);
   line-height: 1.8;
   max-width: 560px;
@@ -96,6 +98,8 @@
 .about-profile-links {
   display: flex;
   gap: 12px;
+  justify-content: center; /* mobile base */
+  flex-wrap: wrap; /* mobile base */
 }
 
 .about-link-btn {
@@ -170,11 +174,11 @@
 
 .about-timeline-item {
   display: flex;
-  gap: 24px;
+  gap: 0; /* mobile base */
 }
 
 .about-timeline-dot-wrap {
-  display: flex;
+  display: none; /* mobile base */
   flex-direction: column;
   align-items: center;
   padding-top: 4px;
@@ -210,11 +214,15 @@
 
 .about-timeline-content {
   flex: 1;
-  padding-bottom: 40px;
+  padding: 20px; /* mobile base */
+  background-color: var(--color-bg-card); /* mobile base */
+  border: 1px solid var(--color-border-light); /* mobile base */
+  border-radius: var(--radius-lg); /* mobile base */
+  margin-bottom: 12px; /* mobile base */
 }
 
 .about-timeline-item:last-child .about-timeline-content {
-  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .about-timeline-header {
@@ -284,7 +292,7 @@
 /* --- 프로젝트 그리드 --- */
 .about-project-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr; /* mobile base */
   gap: 20px;
 }
 
@@ -382,7 +390,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px 24px 24px;
+  padding: 16px 18px 20px; /* mobile base */
   flex: 1;
 }
 
@@ -427,7 +435,7 @@
 .about-skills-section {
   background-color: var(--color-bg-secondary);
   border-radius: var(--radius-lg);
-  padding: 48px 56px;
+  padding: 32px 24px; /* mobile base */
   border: 1px solid var(--color-border-light);
 }
 
@@ -443,22 +451,127 @@
 
 .about-skill-group {
   display: flex;
+  flex-direction: column; /* mobile base */
   align-items: flex-start;
-  gap: 24px;
+  gap: 10px; /* mobile base */
 }
 
 .about-skill-category {
-  min-width: 140px;
+  min-width: unset; /* mobile base */
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding-top: 8px;
+  padding-top: 0; /* mobile base */
 }
 
 .about-skill-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* ===== Tablet (768px+) ===== */
+@media (min-width: 768px) {
+  .about-main {
+    padding: 0 32px;
+  }
+
+  .about-profile-section {
+    gap: 32px;
+  }
+
+  .about-profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .about-profile-name {
+    font-size: 2rem;
+  }
+
+  .about-project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-skills-section {
+    padding: 40px 40px;
+  }
+}
+
+/* ===== Desktop (1024px+) ===== */
+@media (min-width: 1024px) {
+  .about-main {
+    padding: 0 40px;
+  }
+
+  .about-profile-section {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    padding: 80px 0 72px;
+    gap: 48px;
+  }
+
+  .about-profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .about-profile-name {
+    font-size: 2.5rem;
+  }
+
+  .about-profile-bio {
+    font-size: 1rem;
+  }
+
+  .about-profile-links {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+  }
+
+  .about-timeline-dot-wrap {
+    display: flex;
+  }
+
+  .about-timeline-item {
+    gap: 24px;
+  }
+
+  .about-timeline-content {
+    padding-bottom: 40px;
+    padding: 0 0 40px 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .about-timeline-item:last-child .about-timeline-content {
+    padding-bottom: 0;
+  }
+
+  .about-project-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .about-project-card-body {
+    padding: 20px 24px 24px;
+  }
+
+  .about-skills-section {
+    padding: 48px 56px;
+  }
+
+  .about-skill-group {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .about-skill-category {
+    min-width: 140px;
+    padding-top: 8px;
+  }
 }
