@@ -137,6 +137,18 @@
   color: var(--color-text-muted);
 }
 
+.comment-edited {
+  font-size: 0.72rem;
+  color: #c0c7d0;
+}
+
+/* ===== 액션 버튼 그룹 ===== */
+.comment-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
 /* ===== 답글 버튼 ===== */
 .comment-reply-btn {
   display: flex;
@@ -159,6 +171,44 @@
   color: var(--color-accent);
   background-color: var(--color-accent-light);
   border-color: rgba(14, 165, 233, 0.3);
+}
+
+/* ===== 수정/삭제 버튼 ===== */
+.comment-edit-btn,
+.comment-delete-btn {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.comment-edit-btn {
+  color: var(--color-text-muted);
+}
+
+.comment-edit-btn:hover,
+.comment-edit-btn.active {
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
+  border-color: rgba(14, 165, 233, 0.3);
+}
+
+.comment-delete-btn {
+  color: var(--color-text-muted);
+}
+
+.comment-delete-btn:hover,
+.comment-delete-btn.active {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 
 /* ===== 댓글 본문 ===== */
@@ -184,6 +234,78 @@
   border-top: 1px dashed var(--color-border);
 }
 
+/* ===== 인라인 삭제 비밀번호 폼 ===== */
+.comment-delete-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-border);
+}
+
+.comment-delete-password-form .comment-input-password {
+  width: 100%;
+  max-width: 260px;
+}
+
+/* ===== 인라인 수정 폼 ===== */
+.comment-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-border);
+}
+
+/* ===== 삭제 확인 모달 ===== */
+.comment-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.comment-modal {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: 28px 24px 24px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+.comment-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.comment-modal-msg {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.comment-modal-password {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ===== 에러 메시지 ===== */
+.comment-error-msg {
+  font-size: 0.8rem;
+  color: #ef4444;
+  margin: 0;
+}
+
 /* ===== 댓글 작성 폼 ===== */
 .comment-form-wrapper {
   padding: 24px;
@@ -205,8 +327,14 @@
   gap: 10px;
 }
 
+/* ===== 이름 + 비밀번호 한 줄 배치 ===== */
+.comment-form-top-row {
+  display: flex;
+  gap: 8px;
+}
+
 .comment-input-author {
-  width: 200px;
+  width: 180px;
   padding: 9px 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -221,6 +349,52 @@
 .comment-input-author:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.comment-input-password {
+  width: 160px;
+  padding: 9px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
+  outline: none;
+}
+
+.comment-input-password:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+/* 수정/삭제 확인 폼에서 비밀번호 입력은 전체 너비 */
+.comment-edit-form .comment-input-password,
+.comment-delete-confirm .comment-input-password {
+  width: 100%;
+  max-width: 260px;
+}
+
+/* ===== 위험 버튼 (삭제 확인) ===== */
+.comment-btn-danger {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #ef4444;
+  transition: background-color var(--transition-fast);
+}
+
+.comment-btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.comment-btn-danger:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
 }
 
 .comment-input-content {

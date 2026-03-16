@@ -44,8 +44,26 @@
     width: 100%;
   }
 
+  .comment-input-password {
+    width: 100%;
+  }
+
+  .comment-form-top-row {
+    flex-direction: column;
+  }
+
   .comment-form-wrapper {
     padding: 16px;
+  }
+
+  .comment-edit-form .comment-input-password,
+  .comment-delete-password-form .comment-input-password {
+    max-width: 100%;
+  }
+
+  .comment-modal {
+    max-width: calc(100vw - 48px);
+    padding: 24px 20px 20px;
   }
 }
 
