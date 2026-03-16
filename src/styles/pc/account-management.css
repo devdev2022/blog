@@ -1,0 +1,340 @@
+/* ===== Account Management Page ===== */
+
+.account-main {
+  flex: 1;
+  width: 100%;
+  background-color: var(--color-bg);
+  padding: 60px 0 80px;
+}
+
+.account-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 페이지 제목 */
+.account-page-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.03em;
+  margin-bottom: 40px;
+}
+
+/* 프로필 아바타 */
+.account-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.account-avatar-btn {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.account-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.account-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-light) 0%,
+    var(--color-accent) 100%
+  );
+}
+
+.account-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  border-radius: 50%;
+}
+
+.account-avatar-btn:hover .account-avatar-overlay {
+  opacity: 1;
+}
+
+.account-avatar-camera-icon {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.account-avatar-file-input {
+  display: none;
+}
+
+/* 미디어 안내 배너 */
+.account-media-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 40px;
+}
+
+.account-media-banner-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.account-media-banner-text {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* 폼 필드 공통 */
+.account-field {
+  margin-bottom: 32px;
+}
+
+.account-field-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.account-field-input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  background-color: #ffffff;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  font-family: inherit;
+}
+
+.account-field-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.account-field-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* 유저네임 @ 접두사 */
+.account-username-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.account-username-at {
+  position: absolute;
+  left: 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.account-field-input--username {
+  padding-left: 42px;
+}
+
+/* 텍스트에어리어 */
+.account-field-textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  background-color: #ffffff;
+  resize: vertical;
+  min-height: 140px;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  font-family: inherit;
+  line-height: 1.7;
+}
+
+.account-field-textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.account-field-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* 힌트 텍스트 */
+.account-field-hint {
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+/* 저장 버튼 */
+.account-submit-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.account-submit-btn {
+  padding: 12px 36px;
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.account-submit-btn:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.account-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* 탈퇴하기 버튼 */
+.account-withdrawal-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.account-withdrawal-btn {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  font-family: inherit;
+}
+
+.account-withdrawal-btn:hover {
+  color: #ef4444;
+}
+
+/* 탈퇴 확인 모달 */
+.account-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.account-modal {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px 28px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
+}
+
+.account-modal-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+.account-modal-msg {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.account-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.account-modal-btn-cancel {
+  padding: 9px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border: 1.5px solid var(--color-border);
+  background: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+  font-family: inherit;
+}
+
+.account-modal-btn-cancel:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-primary);
+}
+
+.account-modal-btn-danger {
+  padding: 9px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #ef4444;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  font-family: inherit;
+}
+
+.account-modal-btn-danger:hover {
+  background-color: #dc2626;
+}

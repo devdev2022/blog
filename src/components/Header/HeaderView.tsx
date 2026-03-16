@@ -20,6 +20,7 @@ interface HeaderViewProps {
   onBellClick: () => void;
   onNotificationClick: (postSlug: string, commentId: number) => void;
   onWriteClick: () => void;
+  onAccountClick: () => void;
   onAdminClick: () => void;
 }
 
@@ -54,6 +55,7 @@ function HeaderView({
   onBellClick,
   onNotificationClick,
   onWriteClick,
+  onAccountClick,
   onAdminClick,
 }: HeaderViewProps) {
   return (
@@ -99,7 +101,9 @@ function HeaderView({
                   {notificationCount > 0 && (
                     <span
                       className="header-bell-badge"
-                      style={notificationCount > 9 ? { right: "-6px" } : undefined}
+                      style={
+                        notificationCount > 9 ? { right: "-6px" } : undefined
+                      }
                     >
                       {notificationCount > 9 ? "9+" : notificationCount}
                     </span>
@@ -186,7 +190,10 @@ function HeaderView({
                       <span className="header-dropdown-username">
                         {user.username}
                       </span>
-                      <button className="header-dropdown-account-btn">
+                      <button
+                        className="header-dropdown-account-btn"
+                        onClick={onAccountClick}
+                      >
                         계정관리
                       </button>
                     </div>

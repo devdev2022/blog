@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { dummyComments } from '@/dummydata/dummyComments';
-import HeaderView from './HeaderView';
+import { useState, useRef, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { dummyComments } from "@/dummydata/dummyComments";
+import HeaderView from "./HeaderView";
 
 export interface NotificationItem {
   id: number;
-  type: '댓글' | '답글';
+  type: "댓글" | "답글";
   author: string;
   content: string;
   date: string;
@@ -20,7 +20,7 @@ function Header() {
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
 
-  const ownerName = user?.username ?? 'KHS';
+  const ownerName = user?.username ?? "KHS";
 
   const notifications = useMemo<NotificationItem[]>(() => {
     return Object.entries(dummyComments)
@@ -29,13 +29,13 @@ function Header() {
           .filter((c) => c.author !== ownerName)
           .map((c) => ({
             id: c.id,
-            type: (c.parentId === null ? '댓글' : '답글') as '댓글' | '답글',
+            type: (c.parentId === null ? "댓글" : "답글") as "댓글" | "답글",
             author: c.author,
             content: c.content,
             date: c.date,
             postSlug: slug,
             commentId: c.id,
-          }))
+          })),
       )
       .sort((a, b) => b.date.localeCompare(a.date));
   }, [ownerName]);
@@ -47,15 +47,18 @@ function Header() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
       if (bellRef.current && !bellRef.current.contains(e.target as Node)) {
         setNotificationOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogoutClick = () => {
@@ -91,11 +94,15 @@ function Header() {
       }}
       onWriteClick={() => {
         setDropdownOpen(false);
-        navigate('/write');
+        navigate("/write");
+      }}
+      onAccountClick={() => {
+        setDropdownOpen(false);
+        navigate("/account");
       }}
       onAdminClick={() => {
         setDropdownOpen(false);
-        navigate('/admin');
+        navigate("/admin");
       }}
     />
   );

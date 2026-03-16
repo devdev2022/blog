@@ -6,6 +6,7 @@ import TagPage from '@pages/Tags/TagPage';
 import AuthCallbackPage from '@pages/AuthCallback/AuthCallbackPage';
 import WritePage from '@pages/Write/WritePage';
 import AboutPage from '@pages/About/AboutPage';
+import AccountManagementPage from '@pages/AccountManagement/AccountManagementPage';
 
 export const PageRouters: RouteMetaData[] = [
   {
@@ -48,6 +49,13 @@ export const PageRouters: RouteMetaData[] = [
     path: '/write',
     element: WritePage,
     id: '05',
+    linkName: '',
+    protected: true,
+  },
+  {
+    path: '/account',
+    element: AccountManagementPage,
+    id: '07',
     linkName: '',
     protected: true,
   },
