@@ -5,6 +5,7 @@ import PostDetailPage from '@pages/PostDetail/PostDetailPage';
 import TagPage from '@pages/Tags/TagPage';
 import AuthCallbackPage from '@pages/AuthCallback/AuthCallbackPage';
 import WritePage from '@pages/Write/WritePage';
+import AboutPage from '@pages/About/AboutPage';
 
 export const PageRouters: RouteMetaData[] = [
   {
@@ -18,6 +19,12 @@ export const PageRouters: RouteMetaData[] = [
     element: PostsPage,
     id: '01',
     linkName: '포스트',
+  },
+  {
+    path: '/about',
+    element: AboutPage,
+    id: '06',
+    linkName: '소개',
   },
   {
     path: '/posts/:slug',
