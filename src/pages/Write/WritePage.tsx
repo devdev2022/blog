@@ -19,6 +19,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import FontFamily from '@tiptap/extension-font-family';
 import { VideoExtension } from '@/extensions/VideoExtension';
 import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
+import { FontSizeExtension } from '@/extensions/FontSizeExtension';
 
 import WritePageView from './WritePageView';
 import { postCategories } from '@/dummydata/dummyPosts';
@@ -61,6 +62,7 @@ function WritePage() {
       TextStyle,
       Color,
       FontFamily,
+      FontSizeExtension,
     ],
     onUpdate({ editor }) {
       setContent(editor.getHTML());

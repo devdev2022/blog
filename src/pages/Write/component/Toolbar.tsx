@@ -11,6 +11,13 @@ const TEXT_TYPE_OPTIONS = [
   { label: "제목 3", value: "heading3" },
 ];
 
+const DEFAULT_FONT_SIZE = 16;
+
+const FONT_SIZE_OPTIONS = [10, 11, 12, 13, 14, 16, 18, 20, 24, 28, 32, 36, 42, 48, 56, 64, 72].map(
+  (s) => ({ label: `${s}`, value: `${s}px` })
+);
+
+
 const FONT_FAMILY_OPTIONS = [
   { label: "기본서체", value: "" },
   { label: "Pretendard", value: "Pretendard, sans-serif" },
@@ -18,6 +25,12 @@ const FONT_FAMILY_OPTIONS = [
   { label: "Georgia", value: "Georgia, serif" },
   { label: "Courier New", value: "'Courier New', monospace" },
 ];
+
+function getCurrentFontSize(editor: Editor | null): string {
+  if (!editor) return `${DEFAULT_FONT_SIZE}px`;
+  const fontSize = editor.getAttributes("textStyle").fontSize as string | undefined;
+  return fontSize || `${DEFAULT_FONT_SIZE}px`;
+}
 
 function getTextTypeValue(editor: Editor | null): string {
   if (!editor) return "paragraph";
@@ -32,6 +45,7 @@ interface ToolbarSelectProps {
   options: { label: string; value: string }[];
   onChange: (value: string) => void;
   minWidth?: number;
+  listClassName?: string;
 }
 
 function ToolbarSelect({
@@ -39,6 +53,7 @@ function ToolbarSelect({
   options,
   onChange,
   minWidth,
+  listClassName,
 }: ToolbarSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -81,7 +96,7 @@ function ToolbarSelect({
         </svg>
       </button>
       {isOpen && (
-        <ul className="write-toolbar-dropdown-list">
+        <ul className={`write-toolbar-dropdown-list${listClassName ? ` ${listClassName}` : ""}`}>
           {options.map((opt) => (
             <li
               key={opt.value}
@@ -186,6 +201,11 @@ function Toolbar({ editor, onVideoAdd }: ToolbarProps) {
     }
   };
 
+  const handleFontSizeChange = (value: string) => {
+    if (!editor) return;
+    editor.chain().focus().setFontSize(value).run();
+  };
+
   const handleFontFamilyChange = (value: string) => {
     if (!editor) return;
     if (value) {
@@ -247,6 +267,7 @@ function Toolbar({ editor, onVideoAdd }: ToolbarProps) {
 
   const currentTextType = getTextTypeValue(editor);
   const currentFontFamily = editor?.getAttributes("textStyle").fontFamily ?? "";
+  const currentFontSize = getCurrentFontSize(editor);
 
   return (
     <div className="write-toolbar">
@@ -315,6 +336,15 @@ function Toolbar({ editor, onVideoAdd }: ToolbarProps) {
         options={FONT_FAMILY_OPTIONS}
         onChange={handleFontFamilyChange}
         minWidth={120}
+      />
+
+      {/* 글자 크기 */}
+      <ToolbarSelect
+        value={currentFontSize}
+        options={FONT_SIZE_OPTIONS}
+        onChange={handleFontSizeChange}
+        minWidth={68}
+        listClassName="write-toolbar-dropdown-list--scroll"
       />
 
       <div className="write-toolbar-divider" />

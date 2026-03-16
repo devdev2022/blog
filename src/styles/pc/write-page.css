@@ -130,10 +130,17 @@
   padding: 4px 0;
 }
 
+.write-toolbar-dropdown-list--scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .write-toolbar-dropdown-item {
   padding: 8px 14px;
   font-size: 0.875rem;
   color: var(--color-text-primary);
+  background: #fff;
   cursor: pointer;
   white-space: nowrap;
   transition: background var(--transition-fast);
@@ -159,6 +166,7 @@
   height: 0;
   pointer-events: none;
 }
+
 
 /* 파일 입력 (hidden) */
 .write-toolbar-file-input {
