@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import type { UserInfo } from "@/api/auth/auth";
+import type { NotificationItem } from "./Header";
 
 interface HeaderViewProps {
   user: UserInfo | null;
@@ -7,12 +8,17 @@ interface HeaderViewProps {
   dropdownOpen: boolean;
   dropdownRef: RefObject<HTMLDivElement | null>;
   logoutConfirmOpen: boolean;
+  notificationOpen: boolean;
+  notificationCount: number;
+  notifications: NotificationItem[];
+  bellRef: RefObject<HTMLDivElement | null>;
   onLoginClick: () => void;
   onLogoutClick: () => void;
   onLogoutConfirm: () => void;
   onLogoutCancel: () => void;
   onProfileClick: () => void;
   onBellClick: () => void;
+  onNotificationClick: (postSlug: string, commentId: number) => void;
   onWriteClick: () => void;
   onAdminClick: () => void;
 }
@@ -25,18 +31,28 @@ const NAV_ITEMS = [
 
 const BLOG_NAME = "KHS.dev";
 
+function formatDate(dateStr: string) {
+  const [_year, month, day] = dateStr.split("-").map(Number);
+  return `${month}월 ${day}일`;
+}
+
 function HeaderView({
   user,
   isLoading,
   dropdownOpen,
   dropdownRef,
   logoutConfirmOpen,
+  notificationOpen,
+  notificationCount,
+  notifications,
+  bellRef,
   onLoginClick,
   onLogoutClick,
   onLogoutConfirm,
   onLogoutCancel,
   onProfileClick,
   onBellClick,
+  onNotificationClick,
   onWriteClick,
   onAdminClick,
 }: HeaderViewProps) {
@@ -63,23 +79,92 @@ function HeaderView({
             <div className="header-spinner" />
           ) : user ? (
             <div className="header-user-area">
-              {/* <button
-                className="header-icon-btn"
-                onClick={onBellClick}
-                aria-label="알림"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              <div className="header-bell-wrap" ref={bellRef}>
+                <button
+                  className="header-icon-btn"
+                  onClick={onBellClick}
+                  aria-label="알림"
                 >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </button> */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  </svg>
+                  {notificationCount > 0 && (
+                    <span
+                      className="header-bell-badge"
+                      style={notificationCount > 9 ? { right: "-6px" } : undefined}
+                    >
+                      {notificationCount > 9 ? "9+" : notificationCount}
+                    </span>
+                  )}
+                </button>
+
+                {notificationOpen && (
+                  <div className="notification-popup">
+                    <div className="notification-popup-arrow" />
+                    <div className="notification-popup-header">
+                      <span className="notification-popup-title">알림</span>
+                    </div>
+                    <div className="notification-popup-list">
+                      {notifications.length === 0 ? (
+                        <p className="notification-popup-empty">
+                          새 알림이 없습니다.
+                        </p>
+                      ) : (
+                        notifications.map((item) => (
+                          <div
+                            key={item.id}
+                            className="notification-item"
+                            onClick={() =>
+                              onNotificationClick(item.postSlug, item.commentId)
+                            }
+                          >
+                            <div className="notification-item-avatar">
+                              <div className="notification-item-avatar-placeholder">
+                                {item.author.charAt(0)}
+                              </div>
+                              <span className="notification-item-type-badge">
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                              </span>
+                            </div>
+                            <div className="notification-item-body">
+                              <span className="notification-item-label">
+                                {item.type}
+                              </span>
+                              <p className="notification-item-text">
+                                <strong>{item.author}</strong>님이 {item.type}을
+                                남겼어요
+                              </p>
+                              <p className="notification-item-preview">
+                                {item.content}
+                              </p>
+                            </div>
+                            <span className="notification-item-date">
+                              {formatDate(item.date)}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <div className="header-user" ref={dropdownRef}>
                 <button

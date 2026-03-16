@@ -54,6 +54,11 @@
   .header-dropdown-arrow {
     right: 12px;
   }
+
+  .notification-popup {
+    width: calc(100vw - 32px);
+    right: -40px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

@@ -70,6 +70,7 @@ interface CommentItemProps {
   allComments: Comment[];
   depth: number;
   replyTo: number | null;
+  highlightCommentId: number | null;
   onReplyTo: (id: number | null) => void;
   onAddComment: (author: string, content: string, parentId: number | null) => void;
 }
@@ -79,6 +80,7 @@ function CommentItem({
   allComments,
   depth,
   replyTo,
+  highlightCommentId,
   onReplyTo,
   onAddComment,
 }: CommentItemProps) {
@@ -88,10 +90,10 @@ function CommentItem({
   const indentPx = Math.min(depth, 3) * 24;
 
   return (
-    <div className="comment-item" style={{ marginLeft: indentPx }}>
+    <div id={`comment-${comment.id}`} className="comment-item" style={{ marginLeft: indentPx }}>
       {depth > 0 && <div className="comment-indent-line" />}
 
-      <div className="comment-box">
+      <div className={`comment-box${highlightCommentId === comment.id ? ' comment-box--highlight' : ''}`}>
         {/* 헤더 */}
         <div className="comment-header">
           <div
@@ -144,6 +146,7 @@ function CommentItem({
               allComments={allComments}
               depth={depth + 1}
               replyTo={replyTo}
+              highlightCommentId={highlightCommentId}
               onReplyTo={onReplyTo}
               onAddComment={onAddComment}
             />
@@ -158,6 +161,7 @@ function CommentItem({
 interface CommentSectionViewProps {
   comments: Comment[];
   replyTo: number | null;
+  highlightCommentId: number | null;
   onReplyTo: (id: number | null) => void;
   onAddComment: (author: string, content: string, parentId: number | null) => void;
 }
@@ -165,6 +169,7 @@ interface CommentSectionViewProps {
 function CommentSectionView({
   comments,
   replyTo,
+  highlightCommentId,
   onReplyTo,
   onAddComment,
 }: CommentSectionViewProps) {
@@ -188,6 +193,7 @@ function CommentSectionView({
               allComments={comments}
               depth={0}
               replyTo={replyTo}
+              highlightCommentId={highlightCommentId}
               onReplyTo={onReplyTo}
               onAddComment={onAddComment}
             />

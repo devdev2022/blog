@@ -130,19 +130,19 @@
 /* 알림 배지 */
 .header-bell-badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  min-width: 16px;
-  height: 16px;
+  top: 0px;
+  right: 0px;
+  min-width: 19px;
+  height: 19px;
   padding: 0 4px;
-  border-radius: 8px;
-  background-color: #ef4444;
+  border-radius: 9px;
+  background-color: #e53e3e;
   color: #ffffff;
-  font-size: 0.625rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  line-height: 16px;
+  line-height: 15px;
   text-align: center;
-  border: 1.5px solid #ffffff;
+  border: 2px solid #ffffff;
   pointer-events: none;
 }
 
@@ -309,6 +309,157 @@
 
 .header-dropdown-logout-btn:hover {
   background-color: #f4f5f7;
+}
+
+/* 알림 벨 래퍼 */
+.header-bell-wrap {
+  position: relative;
+}
+
+/* 알림 팝업 */
+.notification-popup {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -4px;
+  width: 360px;
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.notification-popup-arrow {
+  position: absolute;
+  top: -7px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  background-color: #ffffff;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  transform: rotate(45deg);
+}
+
+.notification-popup-header {
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notification-popup-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.notification-popup-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-popup-empty {
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* 알림 개별 항목 */
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.notification-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.notification-item-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-item-type-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #4299e1;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-item-type-badge svg {
+  width: 9px;
+  height: 9px;
+  stroke: #ffffff;
+}
+
+.notification-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.notification-item-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #4299e1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.notification-item-text {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.notification-item-text strong {
+  font-weight: 600;
+}
+
+.notification-item-preview {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-item-date {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
 }
 
 /* 로그아웃 확인 다이얼로그 */

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { allDummyPosts, postCategories } from '@/dummydata/dummyPosts';
 import Header from '@/components/Header/Header';
@@ -8,6 +8,7 @@ import PostDetailPageView from './PostDetailPageView';
 function PostDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { hash } = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
   const post = allDummyPosts.find((p) => p.slug === slug) ?? null;
@@ -22,6 +23,14 @@ function PostDetailPage() {
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, [slug]);
+
+  useEffect(() => {
+    if (isLoading || !hash) return;
+    const el = document.querySelector(hash);
+    if (el) {
+      setTimeout(() => el.scrollIntoView({ behavior: 'instant', block: 'center' }), 100);
+    }
+  }, [isLoading, hash]);
 
   useEffect(() => {
     if (!post && !isLoading) {

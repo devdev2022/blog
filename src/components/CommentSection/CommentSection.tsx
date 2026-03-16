@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import type { Comment } from '@/types/comment';
 import { dummyComments } from '@/dummydata/dummyComments';
 import CommentSectionView from './CommentSectionView';
@@ -12,6 +13,10 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     dummyComments[postSlug] ?? [],
   );
   const [replyTo, setReplyTo] = useState<number | null>(null);
+  const { hash } = useLocation();
+  const highlightCommentId = hash.startsWith('#comment-')
+    ? Number(hash.replace('#comment-', ''))
+    : null;
 
   const handleAddComment = (
     author: string,
@@ -37,6 +42,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     <CommentSectionView
       comments={comments}
       replyTo={replyTo}
+      highlightCommentId={highlightCommentId}
       onReplyTo={handleSetReplyTo}
       onAddComment={handleAddComment}
     />

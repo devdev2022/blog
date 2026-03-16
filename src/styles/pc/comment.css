@@ -75,6 +75,28 @@
   border-color: #d1d5db;
 }
 
+@keyframes comment-highlight-pulse {
+  0% {
+    border-width: 1px;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+  60% {
+    border-width: 1px;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+  100% {
+    border-width: 1px;
+    border-color: var(--color-border);
+    box-shadow: none;
+  }
+}
+
+.comment-box--highlight {
+  animation: comment-highlight-pulse 1.5s ease-out forwards;
+}
+
 /* ===== 댓글 헤더 ===== */
 .comment-header {
   display: flex;
