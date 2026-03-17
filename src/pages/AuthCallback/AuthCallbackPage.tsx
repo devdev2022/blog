@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 function AuthCallbackPage() {
   const [searchParams] = useSearchParams();
-  const { sessionData, isLoading } = useAuth();
+  const { user, accessToken, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const isPopup = !!window.opener;
@@ -14,9 +14,9 @@ function AuthCallbackPage() {
     if (isLoading) return;
 
     if (isPopup) {
-      if (sessionData) {
+      if (user && accessToken) {
         window.opener.postMessage(
-          { type: "AUTH_SUCCESS", user: sessionData.user, accessToken: sessionData.accessToken, isNewUser },
+          { type: "AUTH_SUCCESS", user, accessToken, isNewUser },
           window.location.origin
         );
       } else {
@@ -28,7 +28,7 @@ function AuthCallbackPage() {
 
     // 팝업이 아닌 경우 fallback
     navigate("/", { replace: true });
-  }, [isLoading, sessionData, isPopup, isNewUser, navigate]);
+  }, [isLoading, user, accessToken, isPopup, isNewUser, navigate]);
 
   return null;
 }

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useLogin } from '@/hooks/useLogin';
 import LoginModalView from './LoginModalView';
 
 interface LoginModalProps {
@@ -7,7 +7,7 @@ interface LoginModalProps {
 }
 
 function LoginModal({ onClose }: LoginModalProps) {
-  const { login } = useAuth();
+  const login = useLogin();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

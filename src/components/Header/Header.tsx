@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hooks";
+import { openLoginModal } from "@/store/modalSlice";
 import { useAuth } from "@/contexts/AuthContext";
-import { dummyComments } from "@/dummydata/dummyComments";
 import HeaderView from "./HeaderView";
+
+//resources
+import { dummyComments } from "@/dummydata/dummyComments";
 
 export interface NotificationItem {
   id: number;
@@ -15,7 +19,8 @@ export interface NotificationItem {
 }
 
 function Header() {
-  const { user, isLoading, openLoginModal, logout } = useAuth();
+  const dispatch = useAppDispatch();
+  const { user, isLoading, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -82,7 +87,7 @@ function Header() {
       notificationCount={notificationCount}
       notifications={notifications}
       bellRef={bellRef}
-      onLoginClick={openLoginModal}
+      onLoginClick={() => dispatch(openLoginModal())}
       onLogoutClick={handleLogoutClick}
       onLogoutConfirm={handleLogoutConfirm}
       onLogoutCancel={() => setLogoutConfirmOpen(false)}

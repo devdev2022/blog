@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import type { Comment } from '@/types/comment';
-import { dummyComments } from '@/dummydata/dummyComments';
-import { useAuth } from '@/contexts/AuthContext';
-import CommentSectionView from './CommentSectionView';
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import CommentSectionView from "./CommentSectionView";
+
+//resouce
+import type { Comment } from "@/types/comment";
+import { dummyComments } from "@/dummydata/dummyComments";
 
 const BLOG_OWNER_GITHUB_ID = Number(import.meta.env.VITE_BLOG_OWNER_GITHUB_ID);
 
@@ -21,8 +23,8 @@ function CommentSection({ postSlug }: CommentSectionProps) {
 
   const isOwner = Boolean(user && user.github_id === BLOG_OWNER_GITHUB_ID);
 
-  const highlightCommentId = hash.startsWith('#comment-')
-    ? Number(hash.replace('#comment-', ''))
+  const highlightCommentId = hash.startsWith("#comment-")
+    ? Number(hash.replace("#comment-", ""))
     : null;
 
   const handleAddComment = (
@@ -37,7 +39,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
       author,
       password,
       content,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
     };
     setComments((prev) => [...prev, newComment]);
     setReplyTo(null);
@@ -51,7 +53,11 @@ function CommentSection({ postSlug }: CommentSectionProps) {
   const getDescendantIds = (id: number, allComments: Comment[]): number[] => {
     const children = allComments.filter((c) => c.parentId === id);
     return children.reduce<number[]>(
-      (acc, child) => [...acc, child.id, ...getDescendantIds(child.id, allComments)],
+      (acc, child) => [
+        ...acc,
+        child.id,
+        ...getDescendantIds(child.id, allComments),
+      ],
       [],
     );
   };
@@ -66,11 +72,17 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     return true;
   };
 
-  const handleEditComment = (id: number, password: string, newContent: string): boolean => {
+  const handleEditComment = (
+    id: number,
+    password: string,
+    newContent: string,
+  ): boolean => {
     const target = comments.find((c) => c.id === id);
     if (!target || target.password !== password) return false;
     setComments((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, content: newContent, isEdited: true } : c)),
+      prev.map((c) =>
+        c.id === id ? { ...c, content: newContent, isEdited: true } : c,
+      ),
     );
     return true;
   };

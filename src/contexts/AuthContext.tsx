@@ -6,24 +6,18 @@ import {
   useCallback,
 } from "react";
 import type { ReactNode } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UserInfo, RefreshResult } from "@/api/auth/auth";
-import {
-  useRefreshAccessToken,
-  useLogout,
-  authSessionQueryOptions,
-} from "@/query/auth";
+import { refreshAccessToken, serverLogout } from "@/api/auth/auth";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const SESSION_QUERY_KEY = ["auth", "session"] as const;
 
 interface AuthContextType {
   user: UserInfo | null;
   accessToken: string | null;
   sessionData: RefreshResult | undefined;
   isLoading: boolean;
-  loginModalOpen: boolean;
-  openLoginModal: () => void;
-  closeLoginModal: () => void;
   login: () => void;
   logout: () => void;
   setAuth: (user: UserInfo, accessToken: string) => void;
@@ -33,20 +27,24 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
-  // undefined = sessionData에서 파생, null = 명시적 로그아웃, UserInfo = 로그인 후 직접 세팅
   const [explicitUser, setExplicitUser] = useState<UserInfo | null | undefined>(
     undefined,
   );
-  const [explicitToken, setExplicitToken] = useState<string | null | undefined>(
-    undefined,
-  );
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [explicitToken, setExplicitToken] = useState<
+    string | null | undefined
+  >(undefined);
 
-  // 앱 초기화 시 refreshToken 쿠키로 세션 복원
-  const { data: sessionData, isLoading } = useRefreshAccessToken();
-  const { mutateAsync: logoutMutate } = useLogout();
+  const { data: sessionData, isLoading } = useQuery({
+    queryKey: SESSION_QUERY_KEY,
+    queryFn: refreshAccessToken,
+    retry: false,
+    staleTime: Infinity,
+  });
 
-  // useEffect 없이 동기적으로 파생 → isLoading=false 직후 flash 없음
+  const { mutateAsync: logoutMutate } = useMutation({
+    mutationFn: (token: string) => serverLogout(token),
+  });
+
   const user =
     explicitUser !== undefined ? explicitUser : (sessionData?.user ?? null);
   const accessToken =
@@ -55,8 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       : (sessionData?.accessToken ?? null);
 
   const login = useCallback(() => {
-    setLoginModalOpen(false);
-
     const width = 600;
     const height = 700;
     const left = Math.round(window.screenX + (window.outerWidth - width) / 2);
@@ -93,8 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
+    if (!accessToken) return;
     try {
-      await logoutMutate(accessToken!);
+      await logoutMutate(accessToken);
     } catch {
       // 서버 로그아웃 실패 시 쿠키는 남지만, 토큰 만료 후 자동 무효화됨
     } finally {
@@ -117,29 +114,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // 만료 1분 전 silent refresh
     const msUntilRefresh = exp * 1000 - Date.now() - 60 * 1000;
     if (msUntilRefresh > 0) {
       timers.push(
         setTimeout(() => {
           queryClient
-            .fetchQuery(authSessionQueryOptions)
+            .fetchQuery({
+              queryKey: SESSION_QUERY_KEY,
+              queryFn: refreshAccessToken,
+            })
             .then(({ accessToken: newToken, user: newUser }) => {
               setExplicitToken(newToken);
               setExplicitUser(newUser);
             })
-            .catch(() => {}); // 아직 유효하므로 무시
+            .catch(() => {});
         }, msUntilRefresh),
       );
     }
 
-    // 만료 시점에 재시도 → 실패 시 로그아웃
     const msUntilExpiry = exp * 1000 - Date.now();
     if (msUntilExpiry > 0) {
       timers.push(
         setTimeout(() => {
           queryClient
-            .fetchQuery(authSessionQueryOptions)
+            .fetchQuery({
+              queryKey: SESSION_QUERY_KEY,
+              queryFn: refreshAccessToken,
+            })
             .then(({ accessToken: newToken, user: newUser }) => {
               setExplicitToken(newToken);
               setExplicitUser(newUser);
@@ -153,7 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     return () => timers.forEach(clearTimeout);
-  }, [accessToken]);
+  }, [accessToken, queryClient]);
 
   const setAuth = useCallback((userInfo: UserInfo, token: string) => {
     setExplicitUser(userInfo);
@@ -167,9 +168,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessToken,
         sessionData,
         isLoading,
-        loginModalOpen,
-        openLoginModal: () => setLoginModalOpen(true),
-        closeLoginModal: () => setLoginModalOpen(false),
         login,
         logout,
         setAuth,
