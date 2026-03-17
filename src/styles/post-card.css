@@ -1,10 +1,18 @@
+.post-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .post-card {
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 28px;
   cursor: pointer;
-  transition: box-shadow var(--transition-base), transform var(--transition-base),
+  transition:
+    box-shadow var(--transition-base),
+    transform var(--transition-base),
     border-color var(--transition-base);
   display: flex;
   flex-direction: column;
