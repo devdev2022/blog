@@ -979,6 +979,29 @@
   color: var(--color-text-primary);
 }
 
+/* 취소 버튼 */
+.write-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 24px;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.write-cancel-btn:hover {
+  background: #f0f2f5;
+  color: var(--color-text-primary);
+}
+
 /* 임시저장 버튼 */
 .write-temp-save-btn {
   display: inline-flex;
@@ -1070,6 +1093,11 @@
   .write-bottom-btn svg {
     width: 16px;
     height: 16px;
+  }
+
+  .write-cancel-btn {
+    padding: 8px 18px;
+    font-size: 0.875rem;
   }
 
   .write-temp-save-btn {

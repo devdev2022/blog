@@ -78,6 +78,10 @@ function WritePage() {
     // TODO: API 연동
   };
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   const handlePublish = async () => {
     const doc = new DOMParser().parseFromString(content, 'text/html');
 
@@ -115,6 +119,7 @@ function WritePage() {
       onCategoryChange={setCategory}
       onTempSave={handleTempSave}
       onPublish={handlePublish}
+      onCancel={handleCancel}
       onVideoAdd={handleVideoAdd}
     />
   );

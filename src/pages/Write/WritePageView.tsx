@@ -19,6 +19,7 @@ interface WritePageViewProps {
   onCategoryChange: (value: string) => void;
   onTempSave: () => void;
   onPublish: () => void;
+  onCancel: () => void;
   onVideoAdd: (blobUrl: string, file: File) => void;
 }
 
@@ -32,6 +33,7 @@ function WritePageView({
   onCategoryChange,
   onTempSave,
   onPublish,
+  onCancel,
   onVideoAdd,
 }: WritePageViewProps) {
   return (
@@ -69,10 +71,13 @@ function WritePageView({
       {/* 하단 바 */}
       <div className="write-bottom-bar">
         <div className="write-bottom-left">
-          <PreviewModal title={title} editor={editor} />
+          <button className="write-cancel-btn" onClick={onCancel}>
+            취소
+          </button>
         </div>
 
         <div className="write-bottom-right">
+          <PreviewModal title={title} editor={editor} />
           <button className="write-temp-save-btn" onClick={onTempSave}>
             임시저장
             <span className="write-temp-badge">{tempSaveCount}</span>
