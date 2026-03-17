@@ -6,23 +6,23 @@ import Footer from '@/components/Footer/Footer';
 import PostDetailPageView from './PostDetailPageView';
 
 function PostDetailPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { hash } = useLocation();
   const [isLoading, setIsLoading] = useState(true);
 
-  const post = allDummyPosts.find((p) => p.slug === slug) ?? null;
-  const postIndex = post ? allDummyPosts.findIndex((p) => p.slug === slug) : -1;
+  const post = allDummyPosts.find((p) => p.id === id) ?? null;
+  const postIndex = post ? allDummyPosts.findIndex((p) => p.id === id) : -1;
   const prevPost = postIndex > 0 ? allDummyPosts[postIndex - 1] : null;
   const nextPost = postIndex < allDummyPosts.length - 1 ? allDummyPosts[postIndex + 1] : null;
-  const recentPosts = allDummyPosts.filter((p) => p.slug !== slug).slice(0, 5);
+  const recentPosts = allDummyPosts.filter((p) => p.id !== id).slice(0, 5);
 
   useEffect(() => {
     setIsLoading(true);
     window.scrollTo(0, 0);
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
-  }, [slug]);
+  }, [id]);
 
   useEffect(() => {
     if (isLoading || !hash) return;

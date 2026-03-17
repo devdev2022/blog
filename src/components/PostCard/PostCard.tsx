@@ -7,7 +7,7 @@ interface PostCardProps {
 
 function PostCard({ post }: PostCardProps) {
   return (
-    <Link to={`/posts/${post.slug}`} className="post-card-link">
+    <Link to={`/posts/${post.id}`} className="post-card-link">
       <article className="post-card">
         <span className="post-card-tag">{post.tag}</span>
         <h3 className="post-card-title">{post.title}</h3>

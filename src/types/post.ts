@@ -5,14 +5,13 @@ export interface TocItem {
 }
 
 export interface Post {
-  id: number;
+  id: string;
   title: string;
   excerpt: string;
   tag: string;
   tags: string[];
   date: string;
   readingTime: number;
-  slug: string;
   thumbnail?: string;
   category?: string;
   content?: string;

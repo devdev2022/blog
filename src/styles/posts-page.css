@@ -430,7 +430,9 @@
   color: var(--color-text-secondary);
   background: none;
   cursor: pointer;
-  transition: border-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .posts-empty-all-btn:hover {
@@ -514,6 +516,10 @@
 
 .category-tree-item {
   margin: 0;
+}
+
+.category-tree > .category-tree-item + .category-tree-item {
+  margin-top: 10px;
 }
 
 .category-tree-btn {

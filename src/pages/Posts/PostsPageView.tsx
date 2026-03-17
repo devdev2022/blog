@@ -283,7 +283,7 @@ function PostsPageView({
                     <article
                       key={post.id}
                       className="post-grid-card"
-                      onClick={() => navigate(`/posts/${post.slug}`)}
+                      onClick={() => navigate(`/posts/${post.id}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <div className="post-grid-thumbnail">
@@ -311,7 +311,7 @@ function PostsPageView({
                     <article
                       key={post.id}
                       className="post-thread-item"
-                      onClick={() => navigate(`/posts/${post.slug}`)}
+                      onClick={() => navigate(`/posts/${post.id}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <div className="post-thread-thumbnail">

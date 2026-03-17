@@ -4,6 +4,7 @@ import CommentForm from './CommentForm';
 import EditForm from './EditForm';
 import DeletePasswordForm from './DeletePasswordForm';
 import DeleteModal from './DeleteModal';
+import { getInitials } from '@/utils/getInitials';
 
 const AVATAR_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 function getAvatarColor(name: string): string {
@@ -94,12 +95,20 @@ function CommentItem({
 
       <div className={`comment-box${highlightCommentId === comment.id ? ' comment-box--highlight' : ''}`}>
         <div className="comment-header">
-          <div
-            className="comment-avatar"
-            style={{ backgroundColor: getAvatarColor(comment.author) }}
-          >
-            {comment.author.charAt(0)}
-          </div>
+          {comment.avatarUrl ? (
+            <img
+              className="comment-avatar comment-avatar--image"
+              src={comment.avatarUrl}
+              alt={comment.author}
+            />
+          ) : (
+            <div
+              className="comment-avatar"
+              style={{ backgroundColor: getAvatarColor(comment.author) }}
+            >
+              {getInitials(comment.author)}
+            </div>
+          )}
           <div className="comment-meta">
             <span className="comment-author">{comment.author}</span>
             <span className="comment-date">{comment.date}</span>

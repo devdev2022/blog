@@ -28,7 +28,7 @@ export const PageRouters: RouteMetaData[] = [
     linkName: '소개',
   },
   {
-    path: '/posts/:slug',
+    path: '/posts/:id',
     element: PostDetailPage,
     id: '02',
     linkName: '',

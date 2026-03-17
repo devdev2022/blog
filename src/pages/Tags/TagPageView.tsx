@@ -123,7 +123,7 @@ function TagPageView({
             <article
               key={post.id}
               className="post-grid-card"
-              onClick={() => navigate(`/posts/${post.slug}`)}
+              onClick={() => navigate(`/posts/${post.id}`)}
               style={{ cursor: 'pointer' }}
             >
               <div className="post-grid-thumbnail">
@@ -151,7 +151,7 @@ function TagPageView({
             <article
               key={post.id}
               className="tag-post-item"
-              onClick={() => navigate(`/posts/${post.slug}`)}
+              onClick={() => navigate(`/posts/${post.id}`)}
             >
               <div className="tag-post-thumb">
                 {post.thumbnail ? (

@@ -187,7 +187,7 @@ function PostDetailPageView({
                     <li key={rp.id}>
                       <button
                         className="sidebar-recent-item"
-                        onClick={() => navigate(`/posts/${rp.slug}`)}
+                        onClick={() => navigate(`/posts/${rp.id}`)}
                       >
                         <p className="sidebar-recent-title">{rp.title}</p>
                         <span className="sidebar-recent-date">{rp.date}</span>
@@ -231,7 +231,7 @@ function PostDetailPageView({
           {prevPost ? (
             <button
               className="post-nav-card post-nav-prev"
-              onClick={() => navigate(`/posts/${prevPost.slug}`)}
+              onClick={() => navigate(`/posts/${prevPost.id}`)}
             >
               <span className="post-nav-direction">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -246,7 +246,7 @@ function PostDetailPageView({
           {nextPost ? (
             <button
               className="post-nav-card post-nav-next"
-              onClick={() => navigate(`/posts/${nextPost.slug}`)}
+              onClick={() => navigate(`/posts/${nextPost.id}`)}
             >
               <span className="post-nav-direction">
                 다음 글
@@ -261,7 +261,7 @@ function PostDetailPageView({
       )}
 
       {/* ===== 댓글 섹션 ===== */}
-      <CommentSection postSlug={post.slug} />
+      <CommentSection postSlug={post.id} />
     </main>
   );
 }
