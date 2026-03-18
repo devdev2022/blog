@@ -1,9 +1,15 @@
 import api from "../axiosInstance";
 
+export interface TechStackCategoryItem {
+  id: string;
+  name: string;
+}
+
 export interface TechStackItem {
   id: string;
   name: string;
   iconUrl: string | null;
+  category: TechStackCategoryItem | null;
 }
 
 export interface ProfileResponse {

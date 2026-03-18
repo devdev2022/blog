@@ -1,4 +1,5 @@
-import type { Post, TechCategory } from "@/types/post";
+import type { Post } from "@/types/post";
+import type { TechStackItem } from "@/api/about/about";
 import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
 import RecentPostsSection from "@components/RecentPostsSection/RecentPostsSection";
@@ -6,7 +7,7 @@ import GithubContributionSection from "@components/GithubContribution/GithubCont
 
 interface HomePageViewProps {
   recentPosts: Post[];
-  techCategories: TechCategory[];
+  techStacks: TechStackItem[];
   isLoading: boolean;
 }
 
@@ -32,7 +33,7 @@ function RecentPostsSkeleton() {
 
 function HomePageView({
   recentPosts,
-  techCategories,
+  techStacks,
   isLoading,
 }: HomePageViewProps) {
   return (
@@ -82,20 +83,38 @@ function HomePageView({
           <div className="section-header">
             <h2 className="section-title">기술 스택</h2>
           </div>
-          <div className="tech-categories">
-            {techCategories.map((cat) => (
-              <div key={cat.category} className="tech-category">
-                <p className="tech-category-title">{cat.category}</p>
-                <div className="tech-list">
-                  {cat.items.map((item) => (
-                    <span key={item.name} className="tech-badge">
-                      {item.name}
-                    </span>
-                  ))}
-                </div>
+          {techStacks.length === 0 ? (
+            <p className="tech-stack-empty">등록된 데이터가 없습니다.</p>
+          ) : (() => {
+            const CATEGORY_ORDER = ["Frontend", "Backend", "DevOps", "Tools", "etc"];
+            const grouped = techStacks.reduce<Record<string, typeof techStacks>>((acc, t) => {
+              const key = t.category?.name ?? "etc";
+              if (!acc[key]) acc[key] = [];
+              acc[key].push(t);
+              return acc;
+            }, {});
+            const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+              const ai = CATEGORY_ORDER.indexOf(a);
+              const bi = CATEGORY_ORDER.indexOf(b);
+              return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
+            });
+            return (
+              <div className="tech-categories">
+                {sortedEntries.map(([categoryName, items]) => (
+                  <div key={categoryName}>
+                    <p className="tech-category-title">{categoryName}</p>
+                    <div className="tech-list">
+                      {items.map((ts) => (
+                        <span key={ts.id} className="tech-badge">
+                          {ts.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </section>
       </main>
       <Footer />

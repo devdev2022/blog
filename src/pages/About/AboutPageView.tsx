@@ -347,7 +347,7 @@ function AboutPageView({
           <h2 className="about-section-title">기술 스택</h2>
           {isTechLoading ? (
             <div className="about-skills-grid">
-              {Array.from({ length: 3 }).map((_, i) => (
+              {Array.from({ length: 2 }).map((_, i) => (
                 <div key={i} className="about-skill-group">
                   <span className="skeleton skeleton--text skeleton--short" />
                   <div className="about-skill-list">
@@ -360,15 +360,36 @@ function AboutPageView({
             </div>
           ) : techStacks.length === 0 ? (
             <p className="about-empty-text">데이터가 없습니다.</p>
-          ) : (
-            <div className="about-skill-list">
-              {techStacks.map((t) => (
-                <span key={t.id} className="tech-badge">
-                  {t.name}
-                </span>
-              ))}
-            </div>
-          )}
+          ) : (() => {
+            const CATEGORY_ORDER = ["Frontend", "Backend", "DevOps", "Tools", "etc"];
+            const grouped = techStacks.reduce<Record<string, typeof techStacks>>((acc, t) => {
+              const key = t.category?.name ?? "etc";
+              if (!acc[key]) acc[key] = [];
+              acc[key].push(t);
+              return acc;
+            }, {});
+            const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+              const ai = CATEGORY_ORDER.indexOf(a);
+              const bi = CATEGORY_ORDER.indexOf(b);
+              return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
+            });
+            return (
+              <div className="tech-categories">
+                {sortedEntries.map(([categoryName, items]) => (
+                  <div key={categoryName}>
+                    <p className="tech-category-title">{categoryName}</p>
+                    <div className="tech-list">
+                      {items.map((t) => (
+                        <span key={t.id} className="tech-badge">
+                          {t.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </section>
       </main>
       <Footer />
