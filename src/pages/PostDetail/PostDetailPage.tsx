@@ -115,6 +115,8 @@ function PostDetailPage() {
         nextPost={nextPost}
         recentPosts={recentPosts}
         categories={categories}
+        onEdit={() => navigate(`/posts/${id}/edit`)}
+        onDelete={() => {}}
       />
       <Footer />
     </>

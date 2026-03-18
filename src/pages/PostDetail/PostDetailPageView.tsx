@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Post, PostCategory } from '@/types/post';
 import CommentSection from '@/components/CommentSection/CommentSection';
@@ -82,6 +83,53 @@ function SidebarCategoryTree({
   );
 }
 
+/* ---- 수정/삭제 메뉴 ---- */
+function PostActionMenu({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
+
+  return (
+    <div className="post-action-menu" ref={menuRef}>
+      <button
+        className="post-action-trigger"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="게시글 관리"
+      >
+        <span className="post-action-dot" />
+        <span className="post-action-dot" />
+        <span className="post-action-dot" />
+      </button>
+      {open && (
+        <div className="post-action-dropdown">
+          <button className="post-action-item" onClick={() => { setOpen(false); onEdit(); }}>
+            수정
+          </button>
+<button className="post-action-item post-action-item--delete" onClick={() => { setOpen(false); onDelete(); }}>
+            삭제
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface PostDetailPageViewProps {
   isLoading: boolean;
   post: Post | null;
@@ -89,6 +137,8 @@ interface PostDetailPageViewProps {
   nextPost: Post | null;
   recentPosts: Post[];
   categories: PostCategory[];
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 function PostDetailPageView({
@@ -98,6 +148,8 @@ function PostDetailPageView({
   nextPost,
   recentPosts,
   categories,
+  onEdit,
+  onDelete,
 }: PostDetailPageViewProps) {
   const navigate = useNavigate();
 
@@ -130,6 +182,12 @@ function PostDetailPageView({
           <span className="post-detail-date">{post.date}</span>
           <span className="meta-dot" />
           <span className="post-detail-reading">{post.readingTime}분 읽기</span>
+          {(onEdit || onDelete) && (
+            <PostActionMenu
+              onEdit={onEdit ?? (() => {})}
+              onDelete={onDelete ?? (() => {})}
+            />
+          )}
         </div>
       </div>
 

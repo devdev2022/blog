@@ -90,6 +90,79 @@
   flex-shrink: 0;
 }
 
+/* ===== 수정/삭제 메뉴 ===== */
+.post-action-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.post-action-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.post-action-trigger:hover {
+  background-color: var(--color-border-light);
+}
+
+.post-action-dot {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #6b7280;
+  flex-shrink: 0;
+}
+
+.post-action-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 148px;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.post-action-item {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.post-action-item:hover {
+  background-color: var(--color-border-light);
+}
+
+.post-action-item--delete {
+  color: #ef4444;
+}
+
+.post-action-item--delete:hover {
+  background-color: #fef2f2;
+}
+
 /* ===== 2컬럼 레이아웃 ===== */
 .post-detail-layout {
   display: flex;
