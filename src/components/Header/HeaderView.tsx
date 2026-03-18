@@ -178,7 +178,7 @@ function HeaderView({
                 >
                   <img
                     className="header-avatar-img"
-                    src={user.avatar_url}
+                    src={user.profile_avatar}
                     alt={user.username}
                   />
                 </button>

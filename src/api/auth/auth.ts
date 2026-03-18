@@ -3,7 +3,7 @@ import api from "../axiosInstance";
 export interface UserInfo {
   github_id: number;
   username: string;
-  avatar_url: string;
+  profile_avatar: string;
 }
 
 export interface RefreshResult {

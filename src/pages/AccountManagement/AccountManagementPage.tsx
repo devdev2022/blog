@@ -10,7 +10,7 @@ function AccountManagementPage() {
   const [nickname, setNickname] = useState(user?.username ?? "");
   const [bio, setBio] = useState("");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user?.avatar_url ?? null,
+    user?.profile_avatar ?? null,
   );
   const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
 

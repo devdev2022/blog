@@ -8,6 +8,7 @@
 }
 
 .skeleton {
+  display: block;
   background: linear-gradient(
     90deg,
     var(--color-border-light) 25%,
@@ -17,6 +18,34 @@
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   border-radius: var(--radius-sm);
+}
+
+.skeleton--circle {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton--title {
+  height: 28px;
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+.skeleton--text {
+  height: 18px;
+  width: 90%;
+  margin-bottom: 8px;
+}
+
+.skeleton--short {
+  width: 40%;
+}
+
+.skeleton--badge {
+  height: 32px;
+  width: 72px;
+  border-radius: 999px;
 }
 
 /* ============================================================

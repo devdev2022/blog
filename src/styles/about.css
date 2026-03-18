@@ -25,7 +25,11 @@
   width: 96px; /* mobile base */
   height: 96px; /* mobile base */
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-light) 0%,
+    var(--color-accent) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,6 +42,42 @@
   font-weight: 800;
   color: var(--color-accent);
   letter-spacing: -0.03em;
+}
+
+.about-profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.about-profile-avatar--editable {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-profile-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.about-profile-avatar--editable:hover .about-profile-avatar-overlay {
+  opacity: 1;
+}
+
+.about-profile-avatar--uploading .about-profile-avatar-overlay {
+  opacity: 1;
 }
 
 .about-profile-info {
@@ -67,8 +107,13 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .about-profile-name {
@@ -110,8 +155,11 @@
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast),
-    color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .about-link-btn:hover {
@@ -270,6 +318,112 @@
   margin-bottom: 14px;
 }
 
+/* --- bio 편집 --- */
+.about-bio-wrapper {
+  position: relative;
+  display: block;
+  margin-bottom: 28px;
+}
+
+.about-bio-text-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.about-bio-edit-btn {
+  position: absolute;
+  top: 0;
+  right: -24px;
+  opacity: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  transition:
+    opacity var(--transition-fast),
+    background-color var(--transition-fast);
+  color: #71859b;
+}
+
+.about-bio-text-wrap:hover .about-bio-edit-btn {
+  opacity: 1;
+}
+
+.about-bio-edit-btn:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.about-bio-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.about-bio-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+
+.about-bio-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.about-bio-btn {
+  padding: 6px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color var(--transition-fast);
+}
+
+.about-bio-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.about-bio-btn--save {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+.about-bio-btn--save:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+}
+
+.about-bio-btn--cancel {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.about-bio-btn--cancel:hover:not(:disabled) {
+  border-color: var(--color-text-secondary);
+}
+
+/* --- 빈 데이터 --- */
+.about-empty-text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+}
+
 /* --- 태그 --- */
 .about-tag-list {
   display: flex;
@@ -304,7 +458,9 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   overflow: hidden;
-  transition: box-shadow var(--transition-base), border-color var(--transition-base),
+  transition:
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
     transform var(--transition-base);
   cursor: pointer;
 }
@@ -339,8 +495,12 @@
 }
 
 @keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .about-project-preview-img {
@@ -360,7 +520,9 @@
 
 .about-project-card:hover .about-project-preview-img--loaded {
   transform: scale(1.02);
-  transition: opacity var(--transition-base), transform 0.4s ease;
+  transition:
+    opacity var(--transition-base),
+    transform 0.4s ease;
 }
 
 .about-project-preview-fallback {
@@ -409,7 +571,9 @@
 .about-project-arrow {
   font-size: 1rem;
   color: var(--color-border);
-  transition: color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .about-project-card:hover .about-project-arrow {
@@ -508,7 +672,7 @@
 
   .about-profile-section {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     text-align: left;
     padding: 80px 0 72px;
     gap: 48px;
