@@ -1,8 +1,7 @@
 export interface Comment {
-  id: number;
-  parentId: number | null;
+  id: string;
+  parentId: string | null;
   author: string;
-  password: string;
   avatarUrl?: string | null;
   content: string;
   date: string;

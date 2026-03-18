@@ -1,44 +1,109 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { allDummyPosts, postCategories } from '@/dummydata/dummyPosts';
-import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
-import PostDetailPageView from './PostDetailPageView';
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { usePostDetail, usePostCategories } from "@/query/posts";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import PostDetailPageView from "./PostDetailPageView";
+import { extractFirstImage } from "@/utils/extractFirstImage";
+import type { Post, PostCategory } from "@/types/post";
+import type { PostListItem, CategoryItem } from "@/api/posts/posts";
+
+function toReadingTime(html: string): number {
+  const text = html.replace(/<[^>]+>/g, "");
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function toExcerpt(html: string): string {
+  const text = html.replace(/<[^>]+>/g, "").trim();
+  return text.length > 120 ? text.slice(0, 120) + "..." : text;
+}
+
+function toPost(item: PostListItem): Post {
+  const mainName =
+    item.subCategory?.mainCategory?.name ?? item.mainCategory?.name ?? "";
+  const subName = item.subCategory?.name ?? "";
+  const category = mainName && subName ? `${mainName}/${subName}` : mainName;
+  const tags = item.tags.map((t) => t.name);
+  const thumbnail =
+    item.media.find((m) => m.type === "image")?.url ??
+    extractFirstImage(item.content);
+
+  return {
+    id: item.id,
+    title: item.title,
+    excerpt: toExcerpt(item.content),
+    tag: tags[0] ?? "",
+    tags,
+    date: item.createdAt.toString().slice(0, 10),
+    readingTime: toReadingTime(item.content),
+    thumbnail,
+    category,
+    content: item.content,
+  };
+}
+
+function toPostCategories(categories: CategoryItem[]): PostCategory[] {
+  const all: PostCategory = {
+    name: "전체 보기",
+    slug: "all",
+    count: categories.reduce(
+      (sum, c) =>
+        sum +
+        c.postCount +
+        c.subCategories.reduce((s, sc) => s + sc.postCount, 0),
+      0,
+    ),
+  };
+
+  const children = categories.map((c) => ({
+    name: c.name,
+    slug: c.slug,
+    count: c.postCount + c.subCategories.reduce((s, sc) => s + sc.postCount, 0),
+    children: c.subCategories.map((sc) => ({
+      name: sc.name,
+      slug: sc.slug,
+      count: sc.postCount,
+    })),
+  }));
+
+  return [all, ...children];
+}
 
 function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { hash } = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const post = allDummyPosts.find((p) => p.id === id) ?? null;
-  const postIndex = post ? allDummyPosts.findIndex((p) => p.id === id) : -1;
-  const prevPost = postIndex > 0 ? allDummyPosts[postIndex - 1] : null;
-  const nextPost = postIndex < allDummyPosts.length - 1 ? allDummyPosts[postIndex + 1] : null;
-  const recentPosts = allDummyPosts.filter((p) => p.id !== id).slice(0, 5);
+  const { data, isLoading } = usePostDetail(id ?? "");
+  const { data: categoryData } = usePostCategories();
 
   useEffect(() => {
-    setIsLoading(true);
     window.scrollTo(0, 0);
-    const timer = setTimeout(() => setIsLoading(false), 600);
-    return () => clearTimeout(timer);
   }, [id]);
 
   useEffect(() => {
-    if (isLoading || !hash) return;
+    if (isLoading || !hash || !data) return;
     const el = document.querySelector(hash);
     if (el) {
-      setTimeout(() => el.scrollIntoView({ behavior: 'instant', block: 'center' }), 100);
+      setTimeout(
+        () => el.scrollIntoView({ behavior: "instant", block: "center" }),
+        100,
+      );
     }
-  }, [isLoading, hash]);
+  }, [isLoading, hash, data]);
 
   useEffect(() => {
-    if (!post && !isLoading) {
-      navigate('/posts');
+    if (!isLoading && !data) {
+      navigate("/posts");
     }
-  }, [post, isLoading, navigate]);
+  }, [data, isLoading, navigate]);
 
-  if (!post && !isLoading) return null;
+  const post = data ? toPost(data.post) : null;
+  const prevPost = data?.prevPost ? toPost(data.prevPost) : null;
+  const nextPost = data?.nextPost ? toPost(data.nextPost) : null;
+  const recentPosts = data?.recentPosts.map(toPost) ?? [];
+  const categories = categoryData ? toPostCategories(categoryData) : [];
 
   return (
     <>
@@ -49,7 +114,7 @@ function PostDetailPage() {
         prevPost={prevPost}
         nextPost={nextPost}
         recentPosts={recentPosts}
-        categories={postCategories}
+        categories={categories}
       />
       <Footer />
     </>

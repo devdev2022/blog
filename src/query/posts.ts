@@ -3,6 +3,7 @@ import {
   fetchPosts,
   fetchCategories,
   fetchTags,
+  fetchPostById,
   type PostListParams,
 } from "@/api/posts/posts";
 
@@ -26,4 +27,12 @@ export const usePostTags = () =>
     queryKey: ["posts", "tags"],
     queryFn: fetchTags,
     staleTime: 1000 * 60 * 10,
+  });
+
+export const usePostDetail = (id: string) =>
+  useQuery({
+    queryKey: ["posts", id],
+    queryFn: () => fetchPostById(id),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id,
   });

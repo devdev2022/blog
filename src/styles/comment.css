@@ -51,45 +51,17 @@
   padding: 4px 0;
 }
 
-/* 모바일에서 들여쓰기 제거 */
-.comment-item {
-  margin-left: 0 !important;
-}
-
-/* 중첩 들여쓰기 좌측 라인 (모바일에서 숨김) */
-.comment-indent-line {
-  display: none;
-  position: absolute;
-  left: -13px;
-  top: 0;
-  bottom: 16px;
-  width: 2px;
-  background-color: var(--color-border);
-  border-radius: 2px;
-}
-
 .comment-box {
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 14px 16px; /* mobile base */
+  padding: 14px 16px;
   margin-bottom: 8px;
   transition: border-color var(--transition-fast);
 }
 
 .comment-box:hover {
   border-color: #d1d5db;
-}
-
-/* 모바일에서 배경색으로 중첩 구분 */
-.comment-children .comment-box {
-  background-color: var(--color-border-light);
-  border-left: 3px solid var(--color-border);
-}
-
-.comment-children .comment-children .comment-box {
-  background-color: #f8fafc;
-  border-left: 3px solid var(--color-accent);
 }
 
 @keyframes comment-highlight-pulse {
@@ -233,6 +205,14 @@
   border-color: rgba(239, 68, 68, 0.25);
 }
 
+/* ===== @멘션 ===== */
+.comment-mention {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-right: 6px;
+}
+
 /* ===== 댓글 본문 ===== */
 .comment-content {
   font-size: 0.9rem;
@@ -242,11 +222,26 @@
   word-break: break-word;
 }
 
-/* ===== 자식 댓글 래퍼 ===== */
+/* ===== 자식 댓글 래퍼 - CSS 트리 구조 ===== */
 .comment-children {
   display: flex;
   flex-direction: column;
   gap: 0;
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 2px solid var(--color-border);
+}
+
+/* 1단계 대댓글 */
+.comment-children .comment-box {
+  background-color: var(--color-bg-subtle, #f9fafb);
+}
+
+/* 2단계 이상: 추가 들여쓰기 없이 flatten */
+.comment-children .comment-children {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: none;
 }
 
 /* ===== 인라인 답글 폼 ===== */
@@ -351,6 +346,46 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* ===== 로그인 유저 댓글 폼 ===== */
+.comment-form-owner-box {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-card);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.comment-form-owner-box:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.comment-form-owner-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 8px;
+}
+
+.comment-owner-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.comment-input-content--owner {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4px 14px 12px;
+  min-height: 60px;
+}
+
+.comment-input-content--owner:focus {
+  border: none;
+  box-shadow: none;
 }
 
 /* ===== 이름 + 비밀번호 한 줄 배치 ===== */
@@ -570,22 +605,9 @@
     font-size: 0.875rem;
   }
 
-  .comment-item {
-    margin-left: revert !important;
-  }
-
-  .comment-children .comment-box {
-    background-color: var(--color-bg-card);
-    border-left: 1px solid var(--color-border);
-  }
-
-  .comment-children .comment-children .comment-box {
-    background-color: var(--color-bg-card);
-    border-left: 1px solid var(--color-border);
-  }
-
-  .comment-indent-line {
-    display: block;
+  .comment-children {
+    margin-left: 20px;
+    padding-left: 20px;
   }
 
   .comment-input-author {

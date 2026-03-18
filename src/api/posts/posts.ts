@@ -63,6 +63,18 @@ export interface CategoryItem {
 }
 
 
+export interface PostDetailResponse {
+  post: PostListItem;
+  prevPost: PostListItem | null;
+  nextPost: PostListItem | null;
+  recentPosts: PostListItem[];
+}
+
+export async function fetchPostById(id: string): Promise<PostDetailResponse> {
+  const res = await api.get<PostDetailResponse>(`/posts/${id}`);
+  return res.data;
+}
+
 export async function fetchPosts(
   params: PostListParams = {},
 ): Promise<PostListResponse> {

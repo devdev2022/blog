@@ -1,18 +1,21 @@
 import { useState } from 'react';
 
 interface DeletePasswordFormProps {
-  onSubmit: (password: string) => boolean;
+  onSubmit: (password: string) => Promise<boolean>;
   onCancel: () => void;
 }
 
 function DeletePasswordForm({ onSubmit, onCancel }: DeletePasswordFormProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password.trim()) return;
-    const ok = onSubmit(password.trim());
+    setIsLoading(true);
+    const ok = await onSubmit(password.trim());
+    setIsLoading(false);
     if (!ok) setError('비밀번호가 일치하지 않습니다.');
   };
 
@@ -35,7 +38,7 @@ function DeletePasswordForm({ onSubmit, onCancel }: DeletePasswordFormProps) {
         <button
           type="submit"
           className="comment-btn-submit"
-          disabled={!password.trim()}
+          disabled={!password.trim() || isLoading}
         >
           확인
         </button>

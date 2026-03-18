@@ -1,17 +1,19 @@
 import type { Comment } from '@/types/comment';
+import type { UserInfo } from '@/api/auth/auth';
 import CommentForm from './component/CommentForm';
 import CommentItem from './component/CommentItem';
 
 interface CommentSectionViewProps {
   comments: Comment[];
-  replyTo: number | null;
-  highlightCommentId: number | null;
+  replyTo: string | null;
+  highlightCommentId: string | null;
   isOwner: boolean;
-  onReplyTo: (id: number | null) => void;
-  onAddComment: (author: string, password: string, content: string, parentId: number | null) => void;
-  onDeleteComment: (id: number, password?: string) => boolean;
-  onEditComment: (id: number, password: string, newContent: string) => boolean;
-  onCheckDeletePassword: (id: number, password: string) => boolean;
+  user: UserInfo | null;
+  onReplyTo: (id: string | null) => void;
+  onAddComment: (author: string, password: string, content: string, parentId: string | null) => void;
+  onDeleteComment: (id: string, password?: string) => Promise<boolean>;
+  onEditComment: (id: string, password: string, newContent: string) => Promise<boolean>;
+  onCheckDeletePassword: (id: string, password: string) => Promise<boolean>;
 }
 
 function CommentSectionView({
@@ -19,6 +21,7 @@ function CommentSectionView({
   replyTo,
   highlightCommentId,
   isOwner,
+  user,
   onReplyTo,
   onAddComment,
   onDeleteComment,
@@ -46,6 +49,7 @@ function CommentSectionView({
               replyTo={replyTo}
               highlightCommentId={highlightCommentId}
               isOwner={isOwner}
+              user={user}
               onReplyTo={onReplyTo}
               onAddComment={onAddComment}
               onDeleteComment={onDeleteComment}
@@ -61,6 +65,7 @@ function CommentSectionView({
       <div className="comment-form-wrapper">
         <p className="comment-form-label">댓글 작성</p>
         <CommentForm
+          user={user}
           onSubmit={(author, password, content) =>
             onAddComment(author, password, content, null)
           }

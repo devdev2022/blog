@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Comment } from '@/types/comment';
+import type { UserInfo } from '@/api/auth/auth';
 import CommentForm from './CommentForm';
 import EditForm from './EditForm';
 import DeletePasswordForm from './DeletePasswordForm';
@@ -15,14 +16,15 @@ export interface CommentItemProps {
   comment: Comment;
   allComments: Comment[];
   depth: number;
-  replyTo: number | null;
-  highlightCommentId: number | null;
+  replyTo: string | null;
+  highlightCommentId: string | null;
   isOwner: boolean;
-  onReplyTo: (id: number | null) => void;
-  onAddComment: (author: string, password: string, content: string, parentId: number | null) => void;
-  onDeleteComment: (id: number, password?: string) => boolean;
-  onEditComment: (id: number, password: string, newContent: string) => boolean;
-  onCheckDeletePassword: (id: number, password: string) => boolean;
+  user: UserInfo | null;
+  onReplyTo: (id: string | null) => void;
+  onAddComment: (author: string, password: string, content: string, parentId: string | null) => void;
+  onDeleteComment: (id: string, password?: string) => Promise<boolean>;
+  onEditComment: (id: string, password: string, newContent: string) => Promise<boolean>;
+  onCheckDeletePassword: (id: string, password: string) => Promise<boolean>;
 }
 
 function CommentItem({
@@ -32,6 +34,7 @@ function CommentItem({
   replyTo,
   highlightCommentId,
   isOwner,
+  user,
   onReplyTo,
   onAddComment,
   onDeleteComment,
@@ -44,7 +47,9 @@ function CommentItem({
 
   const children = allComments.filter((c) => c.parentId === comment.id);
   const isReplyOpen = replyTo === comment.id;
-  const indentPx = Math.min(depth, 3) * 24;
+  const parentAuthor = comment.parentId
+    ? (allComments.find((c) => c.id === comment.parentId)?.author ?? null)
+    : null;
 
   const handleReplyClick = () => {
     setActiveAction(null);
@@ -62,8 +67,8 @@ function CommentItem({
     setDeleteStep(isOwner ? 'confirm' : 'password');
   };
 
-  const handlePasswordSubmit = (password: string): boolean => {
-    const ok = onCheckDeletePassword(comment.id, password);
+  const handlePasswordSubmit = async (password: string): Promise<boolean> => {
+    const ok = await onCheckDeletePassword(comment.id, password);
     if (ok) {
       setPendingDeletePassword(password);
       setDeleteStep('confirm');
@@ -71,8 +76,8 @@ function CommentItem({
     return ok;
   };
 
-  const handleDeleteConfirm = () => {
-    onDeleteComment(comment.id, isOwner ? undefined : pendingDeletePassword);
+  const handleDeleteConfirm = async () => {
+    await onDeleteComment(comment.id, isOwner ? undefined : pendingDeletePassword);
     setDeleteStep(null);
     setPendingDeletePassword('');
   };
@@ -83,8 +88,7 @@ function CommentItem({
   };
 
   return (
-    <div id={`comment-${comment.id}`} className="comment-item" style={{ marginLeft: indentPx }}>
-      {depth > 0 && <div className="comment-indent-line" />}
+    <div id={`comment-${comment.id}`} className="comment-item">
 
       {deleteStep === 'confirm' && (
         <DeleteModal
@@ -149,12 +153,18 @@ function CommentItem({
         </div>
 
         {activeAction !== 'edit' && (
-          <p className="comment-content">{comment.content}</p>
+          <p className="comment-content">
+            {parentAuthor && (
+              <span className="comment-mention">@{parentAuthor}</span>
+            )}
+            {comment.content}
+          </p>
         )}
 
         {activeAction === 'edit' && (
           <EditForm
             initialContent={comment.content}
+            isOwner={isOwner}
             onSubmit={(password, newContent) =>
               onEditComment(comment.id, password, newContent)
             }
@@ -172,6 +182,7 @@ function CommentItem({
         {isReplyOpen && (
           <CommentForm
             isReply
+            user={user}
             onSubmit={(author, password, content) =>
               onAddComment(author, password, content, comment.id)
             }
@@ -191,6 +202,7 @@ function CommentItem({
               replyTo={replyTo}
               highlightCommentId={highlightCommentId}
               isOwner={isOwner}
+              user={user}
               onReplyTo={onReplyTo}
               onAddComment={onAddComment}
               onDeleteComment={onDeleteComment}
