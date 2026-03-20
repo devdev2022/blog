@@ -25,7 +25,7 @@ import WritePageView from "@/pages/Write/WritePageView";
 import { usePostDetail, usePostCategories, useUpdatePost, useSaveDraft, useUpdateDraft } from "@/query/posts";
 import { uploadImage } from "@/api/upload/upload";
 import { uploadVideo } from "@/api/upload/video";
-import type { PostListItem } from "@/api/posts/posts";
+import type { PostListItem } from "@/types/post";
 
 function base64ToFile(base64: string, index: number): File {
   const [header, data] = base64.split(",");

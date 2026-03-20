@@ -9,10 +9,14 @@ import {
   deletePost,
   saveDraft,
   updateDraft,
-  type PostListParams,
-  type UpdatePostBody,
 } from "@/api/posts/posts";
-import type { SaveDraftBody, CreatePostBody, CategoryListResponse } from "@/types/post";
+import type {
+  SaveDraftBody,
+  CreatePostBody,
+  CategoryListResponse,
+  PostListParams,
+  UpdatePostBody,
+} from "@/types/post";
 
 export const usePostList = (params: PostListParams = {}) =>
   useQuery({

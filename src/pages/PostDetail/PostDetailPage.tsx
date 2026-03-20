@@ -6,19 +6,8 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
 import { extractFirstImage } from "@/utils/extractFirstImage";
-import type { Post, PostCategory, CategoryListResponse } from "@/types/post";
-import type { PostListItem } from "@/api/posts/posts";
-
-function toReadingTime(html: string): number {
-  const text = html.replace(/<[^>]+>/g, "");
-  const words = text.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 200));
-}
-
-function toExcerpt(html: string): string {
-  const text = html.replace(/<[^>]+>/g, "").trim();
-  return text.length > 120 ? text.slice(0, 120) + "..." : text;
-}
+import type { Post, PostCategory, CategoryListResponse, PostListItem } from "@/types/post";
+import { toExcerpt, toReadingTime, toPostCategories } from "@/utils/postMapper";
 
 function toPost(item: PostListItem): Post {
   const mainName =
@@ -42,27 +31,6 @@ function toPost(item: PostListItem): Post {
     category,
     content: item.content,
   };
-}
-
-function toPostCategories(data: CategoryListResponse): PostCategory[] {
-  const all: PostCategory = {
-    name: "전체 보기",
-    slug: "all",
-    count: data.total,
-  };
-
-  const children = data.categories.map((c) => ({
-    name: c.name,
-    slug: c.slug,
-    count: c.postCount + c.subCategories.reduce((s, sc) => s + sc.postCount, 0),
-    children: c.subCategories.map((sc) => ({
-      name: sc.name,
-      slug: sc.slug,
-      count: sc.postCount,
-    })),
-  }));
-
-  return [all, ...children];
 }
 
 function PostDetailPage() {

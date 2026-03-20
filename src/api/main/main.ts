@@ -1,5 +1,5 @@
 import api from "../axiosInstance";
-import type { PostListItem } from "../posts/posts";
+import type { PostListItem } from "../../types/post";
 import type { TechStackItem } from "../about/about";
 
 export async function fetchMainRecentPosts(): Promise<PostListItem[]> {

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchMainRecentPosts, fetchMainTechStacks } from "@/api/main/main";
 import { calcReadingTime } from "@/utils/calcReadingTime";
 import type { Post } from "@/types/post";
-import type { PostListItem } from "@/api/posts/posts";
+import type { PostListItem } from "@/types/post";
 import HomePageView from "./HomePageView";
 
 function stripHtml(html: string): string {
