@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,7 +22,7 @@ import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
 import { FontSizeExtension } from '@/extensions/FontSizeExtension';
 
 import WritePageView from './WritePageView';
-import { usePostCategories } from '@/query/posts';
+import { usePostCategories, useSaveDraft, useUpdateDraft } from '@/query/posts';
 import { uploadImage } from '@/api/upload/upload';
 import { uploadVideo } from '@/api/upload/video';
 
@@ -38,6 +38,7 @@ function base64ToFile(base64: string, index: number): File {
 
 const TITLE_MAX_LENGTH = 200;
 const CONTENT_MAX_LENGTH = 100_000;
+const WRITE_DRAFT_KEY = 'draft_id_write';
 
 function WritePage() {
   const navigate = useNavigate();
@@ -47,9 +48,21 @@ function WritePage() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tempSaveCount, setTempSaveCount] = useState(0);
+  const [draftId, setDraftId] = useState<string | null>(
+    () => localStorage.getItem(WRITE_DRAFT_KEY),
+  );
   const [alertMessage, setAlertMessage] = useState('');
   const videoFilesRef = useRef<Map<string, File>>(new Map());
+  const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
   const { data: categoriesData } = usePostCategories();
+  const { mutateAsync: doSaveDraft } = useSaveDraft();
+  const { mutateAsync: doUpdateDraft } = useUpdateDraft();
+
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem(WRITE_DRAFT_KEY);
+    };
+  }, []);
 
   const editor = useEditor({
     extensions: [
@@ -96,9 +109,26 @@ function WritePage() {
     videoFilesRef.current.set(blobUrl, file);
   };
 
-  const handleTempSave = () => {
-    setTempSaveCount((prev) => prev + 1);
-    // TODO: API 연동
+  const isTempSaveDisabled =
+    lastSavedRef.current !== null &&
+    lastSavedRef.current.content === content &&
+    lastSavedRef.current.category === category;
+
+  const handleTempSave = async () => {
+    try {
+      const body = { title, content, categorySlug: category, tags };
+      if (draftId) {
+        await doUpdateDraft({ id: draftId, body, token: accessToken! });
+      } else {
+        const { id } = await doSaveDraft({ body, token: accessToken! });
+        setDraftId(id);
+        localStorage.setItem(WRITE_DRAFT_KEY, id);
+      }
+      lastSavedRef.current = { content, category };
+      setTempSaveCount((prev) => prev + 1);
+    } catch {
+      setAlertMessage('임시저장에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const handleCancel = () => {
@@ -138,6 +168,7 @@ function WritePage() {
       category={category}
       tags={tags}
       tempSaveCount={tempSaveCount}
+      isTempSaveDisabled={isTempSaveDisabled}
       categories={categoriesData ?? []}
       alertMessage={alertMessage}
       onTitleChange={handleTitleChange}

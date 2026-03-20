@@ -45,3 +45,14 @@ export interface CategoryItem {
     postCount: number;
   }[];
 }
+
+export interface SaveDraftBody {
+  title: string;
+  content: string;
+  categorySlug: string;
+  tags: string[];
+}
+
+export interface DraftSaveResponse {
+  id: string;
+}

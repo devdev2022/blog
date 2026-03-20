@@ -17,6 +17,7 @@ interface WritePageViewProps {
   category: string;
   tags: string[];
   tempSaveCount: number;
+  isTempSaveDisabled: boolean;
   categories: CategoryItem[];
   alertMessage: string;
   onTitleChange: (value: string) => void;
@@ -35,6 +36,7 @@ function WritePageView({
   category,
   tags,
   tempSaveCount,
+  isTempSaveDisabled,
   categories,
   alertMessage,
   onTitleChange,
@@ -93,7 +95,11 @@ function WritePageView({
 
         <div className="write-bottom-right">
           <PreviewModal title={title} editor={editor} />
-          <button className="write-temp-save-btn" onClick={onTempSave}>
+          <button
+            className="write-temp-save-btn"
+            onClick={onTempSave}
+            disabled={isTempSaveDisabled}
+          >
             임시저장
             <span className="write-temp-badge">{tempSaveCount}</span>
           </button>

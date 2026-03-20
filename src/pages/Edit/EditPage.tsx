@@ -22,7 +22,7 @@ import { CodeBlockExtension } from "@/extensions/CodeBlockExtension";
 import { FontSizeExtension } from "@/extensions/FontSizeExtension";
 
 import WritePageView from "@/pages/Write/WritePageView";
-import { usePostDetail, usePostCategories, useUpdatePost } from "@/query/posts";
+import { usePostDetail, usePostCategories, useUpdatePost, useSaveDraft, useUpdateDraft } from "@/query/posts";
 import { uploadImage } from "@/api/upload/upload";
 import { uploadVideo } from "@/api/upload/video";
 import type { PostListItem } from "@/api/posts/posts";
@@ -44,6 +44,9 @@ function toCategorySlug(post: PostListItem): string {
   return post.mainCategory?.name ?? "";
 }
 
+const TITLE_MAX_LENGTH = 200;
+const CONTENT_MAX_LENGTH = 100_000;
+
 // ── 데이터가 준비된 후에만 마운트되는 에디터 컴포넌트 ──────────────────────
 interface EditPageEditorProps {
   id: string;
@@ -63,9 +66,22 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
     initialPost.tags.map((t) => t.name),
   );
   const [content, setContent] = useState(initialPost.content);
+  const draftKey = `draft_id_edit_${id}`;
   const [tempSaveCount, setTempSaveCount] = useState(0);
+  const [draftId, setDraftId] = useState<string | null>(
+    () => localStorage.getItem(`draft_id_edit_${id}`),
+  );
   const [alertMessage, setAlertMessage] = useState("");
   const videoFilesRef = useRef<Map<string, File>>(new Map());
+  const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
+  const { mutateAsync: doSaveDraft } = useSaveDraft();
+  const { mutateAsync: doUpdateDraft } = useUpdateDraft();
+
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem(draftKey);
+    };
+  }, [draftKey]);
 
   // 에디터가 마운트될 때 initialPost.content로 초기화
   const editor = useEditor({
@@ -89,17 +105,49 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
     ],
     content: initialPost.content,
     onUpdate({ editor }) {
+      const textLength = editor.getText().length;
+      if (textLength > CONTENT_MAX_LENGTH) {
+        editor.commands.undo();
+        setAlertMessage(`본문은 최대 ${CONTENT_MAX_LENGTH.toLocaleString()}자까지 입력할 수 있습니다.`);
+        return;
+      }
       setContent(editor.getHTML());
     },
   });
+
+  const handleTitleChange = (value: string) => {
+    if (value.length > TITLE_MAX_LENGTH) {
+      setTitle(value.slice(0, TITLE_MAX_LENGTH));
+      setAlertMessage(`제목은 최대 ${TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`);
+      return;
+    }
+    setTitle(value);
+  };
 
   const handleVideoAdd = (blobUrl: string, file: File) => {
     videoFilesRef.current.set(blobUrl, file);
   };
 
-  const handleTempSave = () => {
-    setTempSaveCount((prev) => prev + 1);
-    // TODO: 임시저장 API 연동
+  const isTempSaveDisabled =
+    lastSavedRef.current !== null &&
+    lastSavedRef.current.content === content &&
+    lastSavedRef.current.category === category;
+
+  const handleTempSave = async () => {
+    try {
+      const body = { title, content, categorySlug: category, tags };
+      if (draftId) {
+        await doUpdateDraft({ id: draftId, body, token: accessToken! });
+      } else {
+        const { id } = await doSaveDraft({ body, token: accessToken! });
+        setDraftId(id);
+        localStorage.setItem(draftKey, id);
+      }
+      lastSavedRef.current = { content, category };
+      setTempSaveCount((prev) => prev + 1);
+    } catch {
+      setAlertMessage("임시저장에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   const handleCancel = () => {
@@ -143,8 +191,9 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
       category={category}
       tags={tags}
       tempSaveCount={tempSaveCount}
+      isTempSaveDisabled={isTempSaveDisabled}
       categories={categoryData ?? []}
-      onTitleChange={setTitle}
+      onTitleChange={handleTitleChange}
       onCategoryChange={setCategory}
       onTagsChange={setTags}
       onTempSave={handleTempSave}

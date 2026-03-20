@@ -5,9 +5,12 @@ import {
   fetchTags,
   fetchPostById,
   updatePost,
+  saveDraft,
+  updateDraft,
   type PostListParams,
   type UpdatePostBody,
 } from "@/api/posts/posts";
+import type { SaveDraftBody } from "@/types/post";
 
 export const usePostList = (params: PostListParams = {}) =>
   useQuery({
@@ -50,3 +53,15 @@ export const useUpdatePost = (id: string) => {
     },
   });
 };
+
+export const useSaveDraft = () =>
+  useMutation({
+    mutationFn: (data: { body: SaveDraftBody; token: string }) =>
+      saveDraft(data.body, data.token),
+  });
+
+export const useUpdateDraft = () =>
+  useMutation({
+    mutationFn: (data: { id: string; body: SaveDraftBody; token: string }) =>
+      updateDraft(data.id, data.body, data.token),
+  });
