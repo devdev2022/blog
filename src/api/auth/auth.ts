@@ -4,6 +4,7 @@ export interface UserInfo {
   github_id: number;
   username: string;
   profile_avatar: string;
+  blog_nickname: string | null;
 }
 
 export interface RefreshResult {

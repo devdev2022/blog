@@ -175,6 +175,52 @@
   padding-left: 36px; /* mobile base */
 }
 
+/* 블로그 닉네임 행 (입력 + 중복확인 버튼) */
+.account-nickname-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.account-nickname-row .account-username-input-wrap {
+  flex: 1;
+}
+
+.account-nickname-check-btn {
+  flex-shrink: 0;
+  padding: 0 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+  font-family: inherit;
+}
+
+.account-nickname-check-btn:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.account-nickname-check-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 블로그 닉네임 상태 텍스트 */
+.account-nickname-status--available {
+  color: #16a34a;
+}
+
+.account-nickname-status--taken,
+.account-nickname-status--invalid {
+  color: #ef4444;
+}
+
 /* 텍스트에어리어 */
 .account-field-textarea {
   width: 100%;
