@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
 import { extractFirstImage } from "@/utils/extractFirstImage";
-import type { Post, PostCategory, CategoryItem } from "@/types/post";
+import type { Post, PostCategory, CategoryListResponse } from "@/types/post";
 import type { PostListItem } from "@/api/posts/posts";
 
 function toReadingTime(html: string): number {
@@ -43,20 +43,14 @@ function toPost(item: PostListItem): Post {
   };
 }
 
-function toPostCategories(categories: CategoryItem[]): PostCategory[] {
+function toPostCategories(data: CategoryListResponse): PostCategory[] {
   const all: PostCategory = {
     name: "전체 보기",
     slug: "all",
-    count: categories.reduce(
-      (sum, c) =>
-        sum +
-        c.postCount +
-        c.subCategories.reduce((s, sc) => s + sc.postCount, 0),
-      0,
-    ),
+    count: data.total,
   };
 
-  const children = categories.map((c) => ({
+  const children = data.categories.map((c) => ({
     name: c.name,
     slug: c.slug,
     count: c.postCount + c.subCategories.reduce((s, sc) => s + sc.postCount, 0),

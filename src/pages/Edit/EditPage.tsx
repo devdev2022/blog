@@ -192,7 +192,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
       tags={tags}
       tempSaveCount={tempSaveCount}
       isTempSaveDisabled={isTempSaveDisabled}
-      categories={categoryData ?? []}
+      categories={categoryData?.categories ?? []}
       onTitleChange={handleTitleChange}
       onCategoryChange={setCategory}
       onTagsChange={setTags}

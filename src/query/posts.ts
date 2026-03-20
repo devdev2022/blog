@@ -5,12 +5,13 @@ import {
   fetchTags,
   fetchPostById,
   updatePost,
+  createPost,
   saveDraft,
   updateDraft,
   type PostListParams,
   type UpdatePostBody,
 } from "@/api/posts/posts";
-import type { SaveDraftBody } from "@/types/post";
+import type { SaveDraftBody, CreatePostBody, CategoryListResponse } from "@/types/post";
 
 export const usePostList = (params: PostListParams = {}) =>
   useQuery({
@@ -21,7 +22,7 @@ export const usePostList = (params: PostListParams = {}) =>
   });
 
 export const usePostCategories = () =>
-  useQuery({
+  useQuery<CategoryListResponse>({
     queryKey: ["posts", "categories"],
     queryFn: fetchCategories,
     staleTime: 1000 * 60 * 10,
@@ -53,6 +54,12 @@ export const useUpdatePost = (id: string) => {
     },
   });
 };
+
+export const useCreatePost = () =>
+  useMutation({
+    mutationFn: (data: { body: CreatePostBody; token: string }) =>
+      createPost(data.body, data.token),
+  });
 
 export const useSaveDraft = () =>
   useMutation({

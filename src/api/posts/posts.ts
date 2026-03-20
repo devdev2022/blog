@@ -1,5 +1,5 @@
 import api from "../axiosInstance";
-import type { CategoryItem, SaveDraftBody, DraftSaveResponse } from "../../types/post";
+import type { CategoryListResponse, SaveDraftBody, DraftSaveResponse, CreatePostBody, CreatePostResponse } from "../../types/post";
 
 // 서버 응답 타입 (백엔드 엔티티 기준)
 export interface PostMediaItem {
@@ -75,8 +75,8 @@ export async function fetchPosts(
   return res.data;
 }
 
-export async function fetchCategories(): Promise<CategoryItem[]> {
-  const res = await api.get<CategoryItem[]>("/posts/categories");
+export async function fetchCategories(): Promise<CategoryListResponse> {
+  const res = await api.get<CategoryListResponse>("/posts/categories");
   return res.data;
 }
 
@@ -93,6 +93,16 @@ export async function updatePost(
   await api.put(`/posts/${id}`, body, {
     headers: { Authorization: `Bearer ${token}` },
   });
+}
+
+export async function createPost(
+  body: CreatePostBody,
+  token: string,
+): Promise<CreatePostResponse> {
+  const res = await api.post<CreatePostResponse>("/posts", body, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
 }
 
 export async function saveDraft(

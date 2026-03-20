@@ -22,7 +22,7 @@ import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
 import { FontSizeExtension } from '@/extensions/FontSizeExtension';
 
 import WritePageView from './WritePageView';
-import { usePostCategories, useSaveDraft, useUpdateDraft } from '@/query/posts';
+import { usePostCategories, useCreatePost, useSaveDraft, useUpdateDraft } from '@/query/posts';
 import { uploadImage } from '@/api/upload/upload';
 import { uploadVideo } from '@/api/upload/video';
 
@@ -55,6 +55,7 @@ function WritePage() {
   const videoFilesRef = useRef<Map<string, File>>(new Map());
   const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
   const { data: categoriesData } = usePostCategories();
+  const { mutateAsync: doCreatePost } = useCreatePost();
   const { mutateAsync: doSaveDraft } = useSaveDraft();
   const { mutateAsync: doUpdateDraft } = useUpdateDraft();
 
@@ -157,8 +158,16 @@ function WritePage() {
     }
 
     const processedContent = doc.body.innerHTML;
-    console.log({ title, category, tags, content: processedContent }); // TODO: API 연동 후 이동
-    navigate('/posts');
+    try {
+      const { id } = await doCreatePost({
+        body: { title, content: processedContent, categorySlug: category, tags },
+        token: accessToken!,
+      });
+      localStorage.removeItem(WRITE_DRAFT_KEY);
+      navigate(`/posts/${id}`);
+    } catch {
+      setAlertMessage('게시글 발행에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
@@ -169,7 +178,7 @@ function WritePage() {
       tags={tags}
       tempSaveCount={tempSaveCount}
       isTempSaveDisabled={isTempSaveDisabled}
-      categories={categoriesData ?? []}
+      categories={categoriesData?.categories ?? []}
       alertMessage={alertMessage}
       onTitleChange={handleTitleChange}
       onCategoryChange={setCategory}

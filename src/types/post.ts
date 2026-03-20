@@ -46,6 +46,11 @@ export interface CategoryItem {
   }[];
 }
 
+export interface CategoryListResponse {
+  total: number;
+  categories: CategoryItem[];
+}
+
 export interface SaveDraftBody {
   title: string;
   content: string;
@@ -54,5 +59,16 @@ export interface SaveDraftBody {
 }
 
 export interface DraftSaveResponse {
+  id: string;
+}
+
+export interface CreatePostBody {
+  title: string;
+  content: string;
+  categorySlug: string;
+  tags: string[];
+}
+
+export interface CreatePostResponse {
   id: string;
 }

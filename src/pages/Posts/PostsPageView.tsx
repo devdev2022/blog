@@ -294,7 +294,7 @@ function PostsPageView({
                         )}
                       </div>
                       <div className="post-grid-body">
-                        <span className="post-grid-tag">{post.tag}</span>
+                        {post.tag && <span className="post-grid-tag">{post.tag}</span>}
                         <h3 className="post-grid-title">{post.title}</h3>
                         <p className="post-grid-excerpt">{post.excerpt}</p>
                         <div className="post-grid-meta">
@@ -322,7 +322,7 @@ function PostsPageView({
                         )}
                       </div>
                       <div className="post-thread-body">
-                        <span className="post-thread-tag">{post.tag}</span>
+                        {post.tag && <span className="post-thread-tag">{post.tag}</span>}
                         <h3 className="post-thread-title">{post.title}</h3>
                         <p className="post-thread-excerpt">{post.excerpt}</p>
                         <div className="post-thread-meta">
