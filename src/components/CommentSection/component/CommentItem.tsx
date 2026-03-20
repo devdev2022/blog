@@ -47,6 +47,7 @@ function CommentItem({
 
   const children = allComments.filter((c) => c.parentId === comment.id);
   const isReplyOpen = replyTo === comment.id;
+  const canEdit = !isOwner || comment.isOwnerComment;
   const parentAuthor = comment.parentId
     ? (allComments.find((c) => c.id === comment.parentId)?.author ?? null)
     : null;
@@ -134,15 +135,17 @@ function CommentItem({
               </svg>
               답글
             </button>
-            <button
-              className={`comment-edit-btn${activeAction === 'edit' ? ' active' : ''}`}
-              onClick={() => {
-                setDeleteStep(null);
-                setActiveAction((prev) => (prev === 'edit' ? null : 'edit'));
-              }}
-            >
-              수정
-            </button>
+            {canEdit && (
+              <button
+                className={`comment-edit-btn${activeAction === 'edit' ? ' active' : ''}`}
+                onClick={() => {
+                  setDeleteStep(null);
+                  setActiveAction((prev) => (prev === 'edit' ? null : 'edit'));
+                }}
+              >
+                수정
+              </button>
+            )}
             <button
               className={`comment-delete-btn${deleteStep !== null ? ' active' : ''}`}
               onClick={handleDeleteButtonClick}

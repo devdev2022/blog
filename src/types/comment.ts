@@ -6,4 +6,5 @@ export interface Comment {
   content: string;
   date: string;
   isEdited?: boolean;
+  isOwnerComment?: boolean;
 }

@@ -10,6 +10,7 @@ function toComment(item: any): Comment {
     content: item.content,
     date: item.createdAt.toString().slice(0, 10),
     isEdited: !!item.editedAt,
+    isOwnerComment: !!item.isOwnerComment,
   };
 }
 
