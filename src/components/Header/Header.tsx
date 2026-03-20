@@ -1,51 +1,20 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { openLoginModal } from "@/store/modalSlice";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNotification } from "@/contexts/NotificationContext";
 import HeaderView from "./HeaderView";
-
-//resources
-import { dummyComments } from "@/dummydata/dummyComments";
-
-export interface NotificationItem {
-  id: number;
-  type: "댓글" | "답글";
-  author: string;
-  content: string;
-  date: string;
-  postSlug: string;
-  commentId: number;
-}
 
 function Header() {
   const dispatch = useAppDispatch();
   const { user, isLoading, logout } = useAuth();
+  const { notifications, unreadCount, markAsRead } = useNotification();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
 
-  const ownerName = user?.username ?? "KHS";
-
-  const notifications = useMemo<NotificationItem[]>(() => {
-    return Object.entries(dummyComments)
-      .flatMap(([slug, comments]) =>
-        comments
-          .filter((c) => c.author !== ownerName)
-          .map((c) => ({
-            id: c.id,
-            type: (c.parentId === null ? "댓글" : "답글") as "댓글" | "답글",
-            author: c.author,
-            content: c.content,
-            date: c.date,
-            postSlug: slug,
-            commentId: c.id,
-          })),
-      )
-      .sort((a, b) => b.date.localeCompare(a.date));
-  }, [ownerName]);
-
-  const notificationCount = notifications.length;
+  const notificationCount = unreadCount;
   const dropdownRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -92,10 +61,13 @@ function Header() {
       onLogoutConfirm={handleLogoutConfirm}
       onLogoutCancel={() => setLogoutConfirmOpen(false)}
       onProfileClick={() => setDropdownOpen((prev) => !prev)}
-      onBellClick={() => setNotificationOpen((prev) => !prev)}
-      onNotificationClick={(slug: string, commentId: number) => {
+      onBellClick={async () => {
+        setNotificationOpen((prev) => !prev);
+        if (unreadCount > 0) await markAsRead();
+      }}
+      onNotificationClick={(postId: string, commentId: string) => {
         setNotificationOpen(false);
-        navigate(`/posts/${slug}#comment-${commentId}`);
+        navigate(`/posts/${postId}#comment-${commentId}`);
       }}
       onWriteClick={() => {
         setDropdownOpen(false);

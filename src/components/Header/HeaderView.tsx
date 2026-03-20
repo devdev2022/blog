@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
 import type { UserInfo } from "@/api/auth/auth";
-import type { NotificationItem } from "./Header";
+import type { NotificationItem } from "@/types/notification";
 
 interface HeaderViewProps {
   user: UserInfo | null;
@@ -18,7 +18,7 @@ interface HeaderViewProps {
   onLogoutCancel: () => void;
   onProfileClick: () => void;
   onBellClick: () => void;
-  onNotificationClick: (postSlug: string, commentId: number) => void;
+  onNotificationClick: (postId: string, commentId: string) => void;
   onWriteClick: () => void;
   onAccountClick: () => void;
   onAdminClick: () => void;
@@ -127,7 +127,7 @@ function HeaderView({
                             key={item.id}
                             className="notification-item"
                             onClick={() =>
-                              onNotificationClick(item.postSlug, item.commentId)
+                              onNotificationClick(item.postId, item.commentId)
                             }
                           >
                             <div className="notification-item-avatar">

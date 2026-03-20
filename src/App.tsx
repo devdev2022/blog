@@ -8,6 +8,7 @@ import { store } from "@/store/store";
 
 //context
 import { AuthProvider } from "@/contexts/AuthContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 //components
 import GlobalModal from "@/components/GlobalModal/GlobalModal";
@@ -54,7 +55,9 @@ function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <AppInner />
+          <NotificationProvider>
+            <AppInner />
+          </NotificationProvider>
         </AuthProvider>
       </QueryClientProvider>
     </Provider>
