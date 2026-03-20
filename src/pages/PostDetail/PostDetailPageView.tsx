@@ -137,6 +137,7 @@ interface PostDetailPageViewProps {
   nextPost: Post | null;
   recentPosts: Post[];
   categories: PostCategory[];
+  isLoggedIn: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
 }
@@ -148,18 +149,43 @@ function PostDetailPageView({
   nextPost,
   recentPosts,
   categories,
+  isLoggedIn,
   onEdit,
   onDelete,
 }: PostDetailPageViewProps) {
   const navigate = useNavigate();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   if (isLoading) return <PostDetailSkeleton />;
   if (!post) return null;
+
+  const handleDeleteClick = () => setShowDeleteConfirm(true);
+  const handleDeleteCancel = () => setShowDeleteConfirm(false);
+  const handleDeleteConfirm = () => {
+    setShowDeleteConfirm(false);
+    onDelete?.();
+  };
 
   const categoryLabel = post.category ? (CATEGORY_LABEL[post.category] ?? post.category) : null;
 
   return (
     <main className="post-detail-main">
+      {showDeleteConfirm && (
+        <div className="comment-modal-overlay" onClick={handleDeleteCancel}>
+          <div className="comment-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="comment-modal-title">게시글 삭제</p>
+            <p className="comment-modal-msg">삭제 하시겠습니까?</p>
+            <div className="comment-form-actions">
+              <button type="button" className="comment-btn-cancel" onClick={handleDeleteCancel}>
+                취소
+              </button>
+              <button type="button" className="comment-btn-danger" onClick={handleDeleteConfirm}>
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ===== 히어로 (텍스트 전용) ===== */}
       <div className="post-detail-hero-text">
         <nav className="post-detail-breadcrumb">
@@ -182,10 +208,10 @@ function PostDetailPageView({
           <span className="post-detail-date">{post.date}</span>
           <span className="meta-dot" />
           <span className="post-detail-reading">{post.readingTime}분 읽기</span>
-          {(onEdit || onDelete) && (
+          {isLoggedIn && (
             <PostActionMenu
               onEdit={onEdit ?? (() => {})}
-              onDelete={onDelete ?? (() => {})}
+              onDelete={handleDeleteClick}
             />
           )}
         </div>

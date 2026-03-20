@@ -1,6 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { usePostDetail, usePostCategories } from "@/query/posts";
+import { usePostDetail, usePostCategories, useDeletePost } from "@/query/posts";
+import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
@@ -68,9 +69,11 @@ function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { hash } = useLocation();
+  const { accessToken } = useAuth();
 
   const { data, isLoading } = usePostDetail(id ?? "");
   const { data: categoryData } = usePostCategories();
+  const { mutateAsync: doDeletePost } = useDeletePost();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -109,8 +112,12 @@ function PostDetailPage() {
         nextPost={nextPost}
         recentPosts={recentPosts}
         categories={categories}
+        isLoggedIn={!!accessToken}
         onEdit={() => navigate(`/posts/${id}/edit`)}
-        onDelete={() => {}}
+        onDelete={async () => {
+          await doDeletePost({ id: id!, token: accessToken! });
+          navigate("/posts");
+        }}
       />
       <Footer />
     </>

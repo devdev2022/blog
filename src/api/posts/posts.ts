@@ -95,6 +95,12 @@ export async function updatePost(
   });
 }
 
+export async function deletePost(id: string, token: string): Promise<void> {
+  await api.delete(`/posts/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
 export async function createPost(
   body: CreatePostBody,
   token: string,

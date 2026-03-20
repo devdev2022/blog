@@ -3,22 +3,51 @@ import { useParams, useNavigate } from 'react-router-dom';
 import TagPageView from '@pages/Tags/TagPageView';
 import Header from '@components/Header/Header';
 import Footer from '@components/Footer/Footer';
-import { allDummyPosts } from '@/dummydata/dummyPosts';
+import { usePostList } from '@/query/posts';
 import { extractFirstImage } from '@/utils/extractFirstImage';
+import type { Post } from '@/types/post';
+import type { PostListItem } from '@/api/posts/posts';
 
 const POSTS_PER_PAGE = 6;
+
+function toReadingTime(html: string): number {
+  const text = html.replace(/<[^>]+>/g, '');
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function toExcerpt(html: string): string {
+  const text = html.replace(/<[^>]+>/g, '').trim();
+  return text.length > 120 ? text.slice(0, 120) + '...' : text;
+}
+
+function toPost(item: PostListItem): Post {
+  const mainName = item.subCategory?.mainCategory?.name ?? item.mainCategory?.name ?? '';
+  const subName = item.subCategory?.name ?? '';
+  const category = mainName && subName ? `${mainName}/${subName}` : mainName;
+  const tags = item.tags.map((t) => t.name);
+  const thumbnail =
+    item.media.find((m) => m.type === 'image')?.url ?? extractFirstImage(item.content);
+
+  return {
+    id: item.id.replaceAll('-', ''),
+    title: item.title,
+    excerpt: toExcerpt(item.content),
+    tag: tags[0] ?? '',
+    tags,
+    date: item.createdAt.slice(0, 10),
+    readingTime: toReadingTime(item.content),
+    thumbnail,
+    category,
+    content: item.content,
+  };
+}
 
 function TagPage() {
   const { tag } = useParams<{ tag: string }>();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'thread'>('thread');
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, [tag]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -31,19 +60,15 @@ function TagPage() {
 
   const decodedTag = decodeURIComponent(tag);
 
-  const filteredPosts = allDummyPosts
-    .filter((post) => post.tags.includes(decodedTag))
-    .map((post) => ({
-      ...post,
-      thumbnail: post.thumbnail ?? extractFirstImage(post.content),
-    }));
+  const { data, isLoading } = usePostList({
+    page: currentPage,
+    limit: POSTS_PER_PAGE,
+    tag: decodedTag,
+  });
 
-  const totalPosts = filteredPosts.length;
+  const posts: Post[] = (data?.posts ?? []).map(toPost);
+  const totalPosts = data?.total ?? 0;
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-  const paginatedPosts = filteredPosts.slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE,
-  );
 
   return (
     <>
@@ -51,7 +76,7 @@ function TagPage() {
       <TagPageView
         isLoading={isLoading}
         tag={decodedTag}
-        posts={paginatedPosts}
+        posts={posts}
         viewMode={viewMode}
         currentPage={currentPage}
         totalPages={totalPages}

@@ -6,6 +6,7 @@ import {
   fetchPostById,
   updatePost,
   createPost,
+  deletePost,
   saveDraft,
   updateDraft,
   type PostListParams,
@@ -50,6 +51,17 @@ export const useUpdatePost = (id: string) => {
       updatePost(id, data.body, data.token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts", id] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { id: string; token: string }) =>
+      deletePost(data.id, data.token),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
