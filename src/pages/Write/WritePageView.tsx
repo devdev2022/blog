@@ -2,42 +2,53 @@ import type { Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
 
 //types
-import type { PostCategory } from "@/types/post";
+import type { CategoryItem } from "@/types/post";
 
 //components
 import Toolbar from "@/pages/Write/component/Toolbar";
 import CategorySelect from "@/pages/Write/component/CategorySelect";
 import PreviewModal from "@/pages/Write/component/PreviewModal";
+import TagInput from "@/pages/Write/component/TagInput";
+import AlertModal from "@/components/AlertModal/AlertModal";
 
 interface WritePageViewProps {
   editor: Editor | null;
   title: string;
   category: string;
+  tags: string[];
   tempSaveCount: number;
-  categories: PostCategory[];
+  categories: CategoryItem[];
+  alertMessage: string;
   onTitleChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
+  onTagsChange: (tags: string[]) => void;
   onTempSave: () => void;
   onPublish: () => void;
   onCancel: () => void;
   onVideoAdd: (blobUrl: string, file: File) => void;
+  onAlertClose: () => void;
 }
 
 function WritePageView({
   editor,
   title,
   category,
+  tags,
   tempSaveCount,
   categories,
+  alertMessage,
   onTitleChange,
   onCategoryChange,
+  onTagsChange,
   onTempSave,
   onPublish,
   onCancel,
   onVideoAdd,
+  onAlertClose,
 }: WritePageViewProps) {
   return (
     <div className="write-page">
+      {alertMessage && <AlertModal message={alertMessage} onClose={onAlertClose} />}
       {/* 상단 툴바 */}
       <Toolbar editor={editor} onVideoAdd={onVideoAdd} />
 
@@ -65,6 +76,10 @@ function WritePageView({
 
           {/* TipTap 에디터 */}
           <EditorContent editor={editor} className="write-editor-wrapper" />
+
+          {/* 태그 입력 */}
+          <hr className="write-divider write-tag-divider" />
+          <TagInput tags={tags} onChange={onTagsChange} />
         </div>
       </div>
 

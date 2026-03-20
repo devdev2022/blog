@@ -28,7 +28,7 @@
   - 태블릿: @media (min-width: 768px)
   - 데스크톱: @media (min-width: 1024px)
 - css는 컴포넌트/페이지 단위로 styles/ 폴더에 단일 파일로 관리한다 (pc/mobile 분리 없음).
-- css import는 main.tsx에서 import.meta.glob("./styles/*.css", { eager: true });를 사용하여 모든 css를 들고온다.
+- css import는 main.tsx에서 import.meta.glob("./styles/\*.css", { eager: true });를 사용하여 모든 css를 들고온다.
 
 ## Project Structure
 
@@ -45,6 +45,11 @@ src/
 ├── types/         # 타입스크립트 정의
 └── utils/         # 유틸리티 함수
 ```
+
+## TypeScript 규칙
+
+- 타입은 반드시 `src/types/`에서 정의하고 관리한다. API 함수 파일(`src/api/`)에 타입을 정의하지 않는다.
+- 타입을 이동하거나 경로를 변경할 때, 기존 import를 유지하기 위한 re-export(`export type { Foo }`)를 사용하지 않는다. 참조하는 모든 파일의 import 경로를 직접 수정한다.
 
 ## Reference (Project Structure 추가설명)
 

@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchPosts,
   fetchCategories,
   fetchTags,
   fetchPostById,
+  updatePost,
   type PostListParams,
+  type UpdatePostBody,
 } from "@/api/posts/posts";
 
 export const usePostList = (params: PostListParams = {}) =>
@@ -36,3 +38,15 @@ export const usePostDetail = (id: string) =>
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
+
+export const useUpdatePost = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { body: UpdatePostBody; token: string }) =>
+      updatePost(id, data.body, data.token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts", id] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+};

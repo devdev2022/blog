@@ -5,8 +5,8 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
 import { extractFirstImage } from "@/utils/extractFirstImage";
-import type { Post, PostCategory } from "@/types/post";
-import type { PostListItem, CategoryItem } from "@/api/posts/posts";
+import type { Post, PostCategory, CategoryItem } from "@/types/post";
+import type { PostListItem } from "@/api/posts/posts";
 
 function toReadingTime(html: string): number {
   const text = html.replace(/<[^>]+>/g, "");

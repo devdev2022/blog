@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 
-import type { PostCategory } from "@/types/post";
+import type { CategoryItem } from "@/types/post";
 
 interface DropdownProps {
   label: string;
@@ -46,7 +46,7 @@ function Dropdown({
 
 export interface CategorySelectProps {
   value: string;
-  categories: PostCategory[];
+  categories: CategoryItem[];
   onChange: (value: string) => void;
 }
 
@@ -59,7 +59,7 @@ function CategorySelect({ value, categories, onChange }: CategorySelectProps) {
   const mainCategories = categories.filter((c) => c.slug !== "all");
   const mainSlug = value.includes("/") ? value.split("/")[0] : value;
   const selectedMain = mainCategories.find((c) => c.slug === mainSlug) ?? null;
-  const subCategories = selectedMain?.children ?? [];
+  const subCategories = selectedMain?.subCategories ?? [];
   const hasChildren = subCategories.length > 0;
 
   const mainLabel = selectedMain?.name ?? "카테고리";

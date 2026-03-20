@@ -923,6 +923,72 @@
   font-weight: 600;
 }
 
+/* ===== 태그 입력 ===== */
+.write-tag-divider {
+  margin: 28px 0 20px;
+}
+
+.write-tag-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 0 24px;
+  cursor: text;
+}
+
+.write-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 12px;
+  background: var(--color-accent-light, #e8f4fd);
+  color: var(--color-accent, #0ea5e9);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.write-tag-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-accent, #0ea5e9);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.write-tag-remove:hover {
+  background: rgba(14, 165, 233, 0.15);
+}
+
+.write-tag-input {
+  flex: 1;
+  min-width: 180px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.write-tag-input::placeholder {
+  color: #c9cdd2;
+}
+
 /* ===== 하단 바 ===== */
 .write-bottom-bar {
   position: fixed;

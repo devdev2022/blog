@@ -32,3 +32,16 @@ export interface PostCategory {
   count?: number;
   children?: PostCategory[];
 }
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  postCount: number;
+  subCategories: {
+    id: string;
+    name: string;
+    slug: string;
+    postCount: number;
+  }[];
+}

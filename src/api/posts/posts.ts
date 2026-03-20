@@ -1,4 +1,5 @@
 import api from "../axiosInstance";
+import type { CategoryItem } from "../../types/post";
 
 // 서버 응답 타입 (백엔드 엔티티 기준)
 export interface PostMediaItem {
@@ -48,20 +49,12 @@ export interface PostListParams {
   subCategory?: string;
   tag?: string;
 }
-
-export interface CategoryItem {
-  id: string;
-  name: string;
-  slug: string;
-  postCount: number;
-  subCategories: {
-    id: string;
-    name: string;
-    slug: string;
-    postCount: number;
-  }[];
+export interface UpdatePostBody {
+  title: string;
+  content: string;
+  categorySlug: string;
+  tags: string[];
 }
-
 
 export interface PostDetailResponse {
   post: PostListItem;
@@ -90,4 +83,14 @@ export async function fetchCategories(): Promise<CategoryItem[]> {
 export async function fetchTags(): Promise<string[]> {
   const res = await api.get<string[]>("/posts/tags");
   return res.data;
+}
+
+export async function updatePost(
+  id: string,
+  body: UpdatePostBody,
+  token: string,
+): Promise<void> {
+  await api.put(`/posts/${id}`, body, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }

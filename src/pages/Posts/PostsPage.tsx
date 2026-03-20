@@ -4,8 +4,8 @@ import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
 import { extractFirstImage } from "@/utils/extractFirstImage";
 import { usePostList, usePostCategories, usePostTags } from "@/query/posts";
-import type { Post, PostCategory } from "@/types/post";
-import type { PostListItem, CategoryItem } from "@/api/posts/posts";
+import type { Post, PostCategory, CategoryItem } from "@/types/post";
+import type { PostListItem } from "@/api/posts/posts";
 
 const POSTS_PER_PAGE = 6;
 

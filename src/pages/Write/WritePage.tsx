@@ -22,7 +22,7 @@ import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
 import { FontSizeExtension } from '@/extensions/FontSizeExtension';
 
 import WritePageView from './WritePageView';
-import { postCategories } from '@/dummydata/dummyPosts';
+import { usePostCategories } from '@/query/posts';
 import { uploadImage } from '@/api/upload/upload';
 import { uploadVideo } from '@/api/upload/video';
 
@@ -36,14 +36,20 @@ function base64ToFile(base64: string, index: number): File {
   return new File([bytes], `image-${index}.${ext}`, { type: mime });
 }
 
+const TITLE_MAX_LENGTH = 200;
+const CONTENT_MAX_LENGTH = 100_000;
+
 function WritePage() {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
   const [tempSaveCount, setTempSaveCount] = useState(0);
+  const [alertMessage, setAlertMessage] = useState('');
   const videoFilesRef = useRef<Map<string, File>>(new Map());
+  const { data: categoriesData } = usePostCategories();
 
   const editor = useEditor({
     extensions: [
@@ -65,9 +71,26 @@ function WritePage() {
       FontSizeExtension,
     ],
     onUpdate({ editor }) {
+      const textLength = editor.getText().length;
+      if (textLength > CONTENT_MAX_LENGTH) {
+        editor.commands.undo();
+        setAlertMessage(`본문은 최대 ${CONTENT_MAX_LENGTH.toLocaleString()}자까지 입력할 수 있습니다.`);
+        return;
+      }
       setContent(editor.getHTML());
     },
   });
+
+  const handleTitleChange = (value: string) => {
+    if (value.length > TITLE_MAX_LENGTH) {
+      setTitle(value.slice(0, TITLE_MAX_LENGTH));
+      setAlertMessage(`제목은 최대 ${TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`);
+      return;
+    }
+    setTitle(value);
+  };
+
+  const handleAlertClose = () => setAlertMessage('');
 
   const handleVideoAdd = (blobUrl: string, file: File) => {
     videoFilesRef.current.set(blobUrl, file);
@@ -104,7 +127,7 @@ function WritePage() {
     }
 
     const processedContent = doc.body.innerHTML;
-    console.log(processedContent); // TODO: API 연동 후 이동
+    console.log({ title, category, tags, content: processedContent }); // TODO: API 연동 후 이동
     navigate('/posts');
   };
 
@@ -113,14 +136,18 @@ function WritePage() {
       editor={editor}
       title={title}
       category={category}
+      tags={tags}
       tempSaveCount={tempSaveCount}
-      categories={postCategories}
-      onTitleChange={setTitle}
+      categories={categoriesData ?? []}
+      alertMessage={alertMessage}
+      onTitleChange={handleTitleChange}
       onCategoryChange={setCategory}
+      onTagsChange={setTags}
       onTempSave={handleTempSave}
       onPublish={handlePublish}
       onCancel={handleCancel}
       onVideoAdd={handleVideoAdd}
+      onAlertClose={handleAlertClose}
     />
   );
 }
