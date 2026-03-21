@@ -48,10 +48,16 @@ function CommentSection({ postSlug }: CommentSectionProps) {
   };
 
   const handleDeleteComment = async (id: string, password?: string): Promise<boolean> => {
-    if (isOwner) {
-      return deleteCommentMutation({ id, accessToken: accessToken ?? undefined });
+    try {
+      if (isOwner) {
+        await deleteCommentMutation({ id, accessToken: accessToken ?? undefined });
+      } else {
+        await deleteCommentMutation({ id, password });
+      }
+      return true;
+    } catch {
+      return false;
     }
-    return deleteCommentMutation({ id, password });
   };
 
   const handleEditComment = async (
@@ -59,10 +65,16 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     password: string,
     newContent: string,
   ): Promise<boolean> => {
-    if (isOwner) {
-      return editCommentMutation({ id, content: newContent, accessToken: accessToken ?? undefined });
+    try {
+      if (isOwner) {
+        await editCommentMutation({ id, content: newContent, accessToken: accessToken ?? undefined });
+      } else {
+        await editCommentMutation({ id, content: newContent, password });
+      }
+      return true;
+    } catch {
+      return false;
     }
-    return editCommentMutation({ id, content: newContent, password });
   };
 
   const handleCheckDeletePassword = async (id: string, password: string): Promise<boolean> => {
