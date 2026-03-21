@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 
 //tiptap
 import { useEditor } from '@tiptap/react';
@@ -42,7 +41,6 @@ const WRITE_DRAFT_KEY = 'draft_id_write';
 
 function WritePage() {
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
@@ -119,9 +117,9 @@ function WritePage() {
     try {
       const body = { title, content, categorySlug: category, tags };
       if (draftId) {
-        await doUpdateDraft({ id: draftId, body, token: accessToken! });
+        await doUpdateDraft({ id: draftId, body });
       } else {
-        const { id } = await doSaveDraft({ body, token: accessToken! });
+        const { id } = await doSaveDraft(body);
         setDraftId(id);
         localStorage.setItem(WRITE_DRAFT_KEY, id);
       }
@@ -143,7 +141,7 @@ function WritePage() {
     for (let i = 0; i < base64Images.length; i++) {
       const img = base64Images[i];
       const file = base64ToFile(img.getAttribute('src')!, i);
-      const url = await uploadImage(file, accessToken!);
+      const url = await uploadImage(file);
       img.setAttribute('src', url);
     }
 
@@ -152,7 +150,7 @@ function WritePage() {
       const blobUrl = video.getAttribute('src')!;
       const file = videoFilesRef.current.get(blobUrl);
       if (!file) continue;
-      const url = await uploadVideo(file, accessToken!);
+      const url = await uploadVideo(file);
       video.setAttribute('src', url);
       URL.revokeObjectURL(blobUrl);
     }
@@ -160,8 +158,7 @@ function WritePage() {
     const processedContent = doc.body.innerHTML;
     try {
       const { id } = await doCreatePost({
-        body: { title, content: processedContent, categorySlug: category, tags },
-        token: accessToken!,
+        title, content: processedContent, categorySlug: category, tags,
       });
       localStorage.removeItem(WRITE_DRAFT_KEY);
       navigate(`/posts/${id}`);

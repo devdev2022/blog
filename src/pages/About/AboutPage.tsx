@@ -11,7 +11,7 @@ import {
 import { useAuth } from "@contexts/AuthContext";
 
 function AboutPage() {
-  const { user, accessToken } = useAuth();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { data: profile, isLoading: isProfileLoading } = useQuery({
@@ -35,16 +35,18 @@ function AboutPage() {
   });
 
   const { mutateAsync: saveBio, isPending: isBioSaving } = useMutation({
-    mutationFn: (bio: string) => updateBio(bio, accessToken!),
+    mutationFn: (bio: string) => updateBio(bio),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["about", "profile"] }),
   });
 
-  const { mutateAsync: saveAvatar, isPending: isAvatarUploading } = useMutation({
-    mutationFn: (file: File) => uploadBioAvatar(file, accessToken!),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["about", "profile"] }),
-  });
+  const { mutateAsync: saveAvatar, isPending: isAvatarUploading } = useMutation(
+    {
+      mutationFn: (file: File) => uploadBioAvatar(file),
+      onSuccess: () =>
+        queryClient.invalidateQueries({ queryKey: ["about", "profile"] }),
+    },
+  );
 
   return (
     <AboutPageView

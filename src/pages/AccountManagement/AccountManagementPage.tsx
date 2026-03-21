@@ -32,7 +32,7 @@ function AccountManagementPage() {
 
   useEffect(() => {
     if (!accessToken) return;
-    getMyProfile(accessToken).then((profile) => {
+    getMyProfile().then((profile) => {
       setNickname(profile.nickname);
       setBlogNickname(profile.blog_nickname ?? "");
       setOriginalBlogNickname(profile.blog_nickname ?? "");
@@ -61,7 +61,7 @@ function AccountManagementPage() {
     if (!accessToken || !blogNickname) return;
     setBlogNicknameStatus("checking");
     try {
-      const { available } = await checkBlogNickname(blogNickname, accessToken);
+      const { available } = await checkBlogNickname(blogNickname);
       setBlogNicknameStatus(available ? "available" : "taken");
     } catch {
       setBlogNicknameStatus("idle");
@@ -79,15 +79,12 @@ function AccountManagementPage() {
     }
     setIsSaving(true);
     try {
-      await updateMyProfile(
-        {
-          nickname,
-          blog_nickname: blogNickname || null,
-          bio: bio || null,
-          profile_avatar: avatarPreview,
-        },
-        accessToken
-      );
+      await updateMyProfile({
+        nickname,
+        blog_nickname: blogNickname || null,
+        bio: bio || null,
+        profile_avatar: avatarPreview,
+      });
       setBlogNicknameStatus("idle");
       setSaveAlertOpen(true);
     } finally {
@@ -97,7 +94,7 @@ function AccountManagementPage() {
 
   const handleWithdrawalConfirm = async () => {
     if (!accessToken) return;
-    await deleteMyAccount(accessToken);
+    await deleteMyAccount();
     logout();
     navigate("/");
   };

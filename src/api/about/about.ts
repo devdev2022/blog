@@ -40,20 +40,15 @@ export interface SideProjectItem {
   techStacks: TechStackItem[];
 }
 
-export async function updateBio(bio: string, accessToken: string): Promise<void> {
-  await api.patch("/about/profile/bio", { bio }, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+export async function updateBio(bio: string): Promise<void> {
+  await api.patch("/about/profile/bio", { bio });
 }
 
-export async function uploadBioAvatar(file: File, accessToken: string): Promise<{ bio_avatar: string }> {
+export async function uploadBioAvatar(file: File): Promise<{ bio_avatar: string }> {
   const formData = new FormData();
   formData.append("avatar", file);
   const res = await api.patch<{ bio_avatar: string }>("/about/profile/avatar", formData, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "multipart/form-data",
-    },
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;
 }

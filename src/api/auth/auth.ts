@@ -17,10 +17,6 @@ export async function refreshAccessToken(): Promise<RefreshResult> {
   return res.data;
 }
 
-export async function serverLogout(accessToken: string): Promise<void> {
-  await api.delete("/auth/logout", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export async function serverLogout(): Promise<void> {
+  await api.delete("/auth/logout");
 }

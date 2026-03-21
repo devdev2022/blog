@@ -83,7 +83,7 @@ function PostDetailPage() {
         isLoggedIn={!!accessToken}
         onEdit={() => navigate(`/posts/${id}/edit`)}
         onDelete={async () => {
-          await doDeletePost({ id: id!, token: accessToken! });
+          await doDeletePost(id!);
           navigate("/posts");
         }}
       />

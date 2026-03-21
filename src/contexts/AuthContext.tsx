@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { UserInfo, RefreshResult } from "@/api/auth/auth";
 import { refreshAccessToken, serverLogout } from "@/api/auth/auth";
+import { tokenStore } from "@/api/tokenStore";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const SESSION_QUERY_KEY = ["auth", "session"] as const;
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const { mutateAsync: logoutMutate } = useMutation({
-    mutationFn: (token: string) => serverLogout(token),
+    mutationFn: () => serverLogout(),
   });
 
   const user =
@@ -91,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     if (!accessToken) return;
     try {
-      await logoutMutate(accessToken);
+      await logoutMutate();
     } catch {
       // 서버 로그아웃 실패 시 쿠키는 남지만, 토큰 만료 후 자동 무효화됨
     } finally {
@@ -155,6 +156,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => timers.forEach(clearTimeout);
   }, [accessToken, queryClient]);
+
+  useEffect(() => {
+    tokenStore.set(accessToken);
+  }, [accessToken]);
 
   const setAuth = useCallback((userInfo: UserInfo, token: string) => {
     setExplicitUser(userInfo);

@@ -14,5 +14,5 @@ export const useRefreshAccessToken = () => useQuery(authSessionQueryOptions);
 
 export const useLogout = () =>
   useMutation({
-    mutationFn: (accessToken: string) => serverLogout(accessToken),
+    mutationFn: () => serverLogout(),
   });

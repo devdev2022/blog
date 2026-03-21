@@ -19,7 +19,7 @@ interface CommentSectionProps {
 function CommentSection({ postSlug }: CommentSectionProps) {
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const { hash } = useLocation();
-  const { user, accessToken } = useAuth();
+  const { user } = useAuth();
 
   const isOwner = Boolean(user && user.github_id === BLOG_OWNER_GITHUB_ID);
 
@@ -49,11 +49,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
 
   const handleDeleteComment = async (id: string, password?: string): Promise<boolean> => {
     try {
-      if (isOwner) {
-        await deleteCommentMutation({ id, accessToken: accessToken ?? undefined });
-      } else {
-        await deleteCommentMutation({ id, password });
-      }
+      await deleteCommentMutation({ id, password: isOwner ? undefined : password });
       return true;
     } catch {
       return false;
@@ -66,11 +62,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     newContent: string,
   ): Promise<boolean> => {
     try {
-      if (isOwner) {
-        await editCommentMutation({ id, content: newContent, accessToken: accessToken ?? undefined });
-      } else {
-        await editCommentMutation({ id, content: newContent, password });
-      }
+      await editCommentMutation({ id, content: newContent, password: isOwner ? undefined : password });
       return true;
     } catch {
       return false;

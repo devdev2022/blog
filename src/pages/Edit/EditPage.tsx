@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 // tiptap
 import { useEditor } from "@tiptap/react";
@@ -55,7 +54,6 @@ interface EditPageEditorProps {
 
 function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
   const navigate = useNavigate();
-  const { accessToken } = useAuth();
   const { data: categoryData } = usePostCategories();
   const { mutateAsync: doUpdatePost } = useUpdatePost(id);
 
@@ -137,9 +135,9 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
     try {
       const body = { title, content, categorySlug: category, tags };
       if (draftId) {
-        await doUpdateDraft({ id: draftId, body, token: accessToken! });
+        await doUpdateDraft({ id: draftId, body });
       } else {
-        const { id } = await doSaveDraft({ body, token: accessToken! });
+        const { id } = await doSaveDraft(body);
         setDraftId(id);
         localStorage.setItem(draftKey, id);
       }
@@ -161,7 +159,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
     for (let i = 0; i < base64Images.length; i++) {
       const img = base64Images[i];
       const file = base64ToFile(img.getAttribute("src")!, i);
-      const url = await uploadImage(file, accessToken!);
+      const url = await uploadImage(file);
       img.setAttribute("src", url);
     }
 
@@ -170,17 +168,14 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
       const blobUrl = video.getAttribute("src")!;
       const file = videoFilesRef.current.get(blobUrl);
       if (!file) continue;
-      const url = await uploadVideo(file, accessToken!);
+      const url = await uploadVideo(file);
       video.setAttribute("src", url);
       URL.revokeObjectURL(blobUrl);
     }
 
     const processedContent = doc.body.innerHTML;
 
-    await doUpdatePost({
-      body: { title, content: processedContent, categorySlug: category, tags },
-      token: accessToken!,
-    });
+    await doUpdatePost({ title, content: processedContent, categorySlug: category, tags });
 
     navigate(`/posts/${id}`);
   };

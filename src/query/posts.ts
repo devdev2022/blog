@@ -51,8 +51,7 @@ export const usePostDetail = (id: string) =>
 export const useUpdatePost = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { body: UpdatePostBody; token: string }) =>
-      updatePost(id, data.body, data.token),
+    mutationFn: (body: UpdatePostBody) => updatePost(id, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts", id] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
@@ -63,8 +62,7 @@ export const useUpdatePost = (id: string) => {
 export const useDeletePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; token: string }) =>
-      deletePost(data.id, data.token),
+    mutationFn: (id: string) => deletePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
@@ -73,18 +71,16 @@ export const useDeletePost = () => {
 
 export const useCreatePost = () =>
   useMutation({
-    mutationFn: (data: { body: CreatePostBody; token: string }) =>
-      createPost(data.body, data.token),
+    mutationFn: (body: CreatePostBody) => createPost(body),
   });
 
 export const useSaveDraft = () =>
   useMutation({
-    mutationFn: (data: { body: SaveDraftBody; token: string }) =>
-      saveDraft(data.body, data.token),
+    mutationFn: (body: SaveDraftBody) => saveDraft(body),
   });
 
 export const useUpdateDraft = () =>
   useMutation({
-    mutationFn: (data: { id: string; body: SaveDraftBody; token: string }) =>
-      updateDraft(data.id, data.body, data.token),
+    mutationFn: (data: { id: string; body: SaveDraftBody }) =>
+      updateDraft(data.id, data.body),
   });

@@ -26,8 +26,8 @@ export const useCreateComment = (postId: string) => {
 export const useEditComment = (postId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, content, password, accessToken }: { id: string; content: string; password?: string; accessToken?: string }) =>
-      editComment(id, content, password, accessToken),
+    mutationFn: ({ id, content, password }: { id: string; content: string; password?: string }) =>
+      editComment(id, content, password),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["comments", postId] }),
   });
 };
@@ -35,8 +35,8 @@ export const useEditComment = (postId: string) => {
 export const useDeleteComment = (postId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, password, accessToken }: { id: string; password?: string; accessToken?: string }) =>
-      deleteComment(id, password, accessToken),
+    mutationFn: ({ id, password }: { id: string; password?: string }) =>
+      deleteComment(id, password),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["comments", postId] }),
   });
 };

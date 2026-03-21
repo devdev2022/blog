@@ -44,20 +44,13 @@ export async function editComment(
   id: string,
   content: string,
   password?: string,
-  accessToken?: string,
 ): Promise<void> {
-  await api.patch(`/comments/${id}`, { password, content }, {
-    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-  });
+  await api.patch(`/comments/${id}`, { password, content });
 }
 
 export async function deleteComment(
   id: string,
   password?: string,
-  accessToken?: string,
 ): Promise<void> {
-  await api.delete(`/comments/${id}`, {
-    data: { password },
-    headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
-  });
+  await api.delete(`/comments/${id}`, { data: { password } });
 }
