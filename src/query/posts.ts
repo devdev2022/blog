@@ -9,6 +9,8 @@ import {
   deletePost,
   saveDraft,
   updateDraft,
+  fetchDrafts,
+  deleteDraft,
 } from "@/api/posts/posts";
 import type {
   SaveDraftBody,
@@ -74,13 +76,35 @@ export const useCreatePost = () =>
     mutationFn: (body: CreatePostBody) => createPost(body),
   });
 
-export const useSaveDraft = () =>
-  useMutation({
+export const useSaveDraft = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: (body: SaveDraftBody) => saveDraft(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["drafts"] });
+    },
   });
+};
 
 export const useUpdateDraft = () =>
   useMutation({
     mutationFn: (data: { id: string; body: SaveDraftBody }) =>
       updateDraft(data.id, data.body),
   });
+
+export const useDraftList = () =>
+  useQuery({
+    queryKey: ["drafts"],
+    queryFn: fetchDrafts,
+    staleTime: 0,
+  });
+
+export const useDeleteDraft = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteDraft(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["drafts"] });
+    },
+  });
+};

@@ -21,9 +21,10 @@ import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
 import { FontSizeExtension } from '@/extensions/FontSizeExtension';
 
 import WritePageView from './WritePageView';
-import { usePostCategories, useCreatePost, useSaveDraft, useUpdateDraft } from '@/query/posts';
+import { usePostCategories, useCreatePost, useSaveDraft, useUpdateDraft, useDeleteDraft, useDraftList } from '@/query/posts';
 import { uploadImage } from '@/api/upload/upload';
 import { uploadVideo } from '@/api/upload/video';
+import { fetchDraftById } from '@/api/posts/posts';
 
 function base64ToFile(base64: string, index: number): File {
   const [header, data] = base64.split(',');
@@ -45,17 +46,19 @@ function WritePage() {
   const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
-  const [tempSaveCount, setTempSaveCount] = useState(0);
   const [draftId, setDraftId] = useState<string | null>(
     () => localStorage.getItem(WRITE_DRAFT_KEY),
   );
   const [alertMessage, setAlertMessage] = useState('');
+  const [showDraftList, setShowDraftList] = useState(false);
   const videoFilesRef = useRef<Map<string, File>>(new Map());
   const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
   const { data: categoriesData } = usePostCategories();
+  const { data: draftListData, refetch: refetchDrafts } = useDraftList();
   const { mutateAsync: doCreatePost } = useCreatePost();
   const { mutateAsync: doSaveDraft } = useSaveDraft();
   const { mutateAsync: doUpdateDraft } = useUpdateDraft();
+  const { mutateAsync: doDeleteDraft } = useDeleteDraft();
 
   useEffect(() => {
     return () => {
@@ -124,9 +127,51 @@ function WritePage() {
         localStorage.setItem(WRITE_DRAFT_KEY, id);
       }
       lastSavedRef.current = { content, category };
-      setTempSaveCount((prev) => prev + 1);
     } catch {
       setAlertMessage('임시저장에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleDeleteDrafts = async (ids: string[]) => {
+    try {
+      await Promise.all(ids.map((id) => doDeleteDraft(id)));
+      if (ids.includes(draftId ?? '')) {
+        setDraftId(null);
+        localStorage.removeItem(WRITE_DRAFT_KEY);
+      }
+    } catch {
+      setAlertMessage('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleOpenDraftList = async () => {
+    await refetchDrafts();
+    setShowDraftList(true);
+  };
+  const handleCloseDraftList = () => setShowDraftList(false);
+
+  const handleLoadDraft = async (id: string) => {
+    try {
+      if (title || content) {
+        const body = { title, content, categorySlug: category, tags };
+        if (draftId) {
+          await doUpdateDraft({ id: draftId, body });
+        } else {
+          const { id: newId } = await doSaveDraft(body);
+          localStorage.setItem(WRITE_DRAFT_KEY, newId);
+        }
+      }
+      const draft = await fetchDraftById(id);
+      setTitle(draft.title);
+      setCategory(draft.categorySlug);
+      setTags(draft.tags);
+      setDraftId(id);
+      localStorage.setItem(WRITE_DRAFT_KEY, id);
+      editor?.commands.setContent(draft.content);
+      lastSavedRef.current = { content: draft.content, category: draft.categorySlug };
+      setShowDraftList(false);
+    } catch {
+      setAlertMessage('임시저장을 불러오는 중 오류가 발생했습니다.');
     }
   };
 
@@ -173,10 +218,14 @@ function WritePage() {
       title={title}
       category={category}
       tags={tags}
-      tempSaveCount={tempSaveCount}
+      tempSaveCount={draftListData?.total ?? 0}
+      draftListItems={draftListData?.drafts ?? []}
+      draftListTotal={draftListData?.total ?? 0}
       isTempSaveDisabled={isTempSaveDisabled}
       categories={categoriesData?.categories ?? []}
       alertMessage={alertMessage}
+      showDraftList={showDraftList}
+      currentDraftId={draftId}
       onTitleChange={handleTitleChange}
       onCategoryChange={setCategory}
       onTagsChange={setTags}
@@ -185,6 +234,10 @@ function WritePage() {
       onCancel={handleCancel}
       onVideoAdd={handleVideoAdd}
       onAlertClose={handleAlertClose}
+      onOpenDraftList={handleOpenDraftList}
+      onCloseDraftList={handleCloseDraftList}
+      onLoadDraft={handleLoadDraft}
+      onDeleteDrafts={handleDeleteDrafts}
     />
   );
 }

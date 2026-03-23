@@ -135,3 +135,23 @@ export interface CreatePostBody {
 export interface CreatePostResponse {
   id: string;
 }
+
+export interface DraftListItem {
+  id: string;
+  title: string;
+  createdAt: string;
+}
+
+export interface DraftListResponse {
+  total: number;
+  drafts: DraftListItem[];
+}
+
+export interface DraftDetailResponse {
+  id: string;
+  title: string;
+  content: string;
+  categorySlug: string;
+  tags: string[];
+  createdAt: string;
+}

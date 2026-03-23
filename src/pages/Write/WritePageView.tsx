@@ -2,7 +2,7 @@ import type { Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
 
 //types
-import type { CategoryItem } from "@/types/post";
+import type { CategoryItem, DraftListItem } from "@/types/post";
 
 //components
 import Toolbar from "@/pages/Write/component/Toolbar";
@@ -10,6 +10,7 @@ import CategorySelect from "@/pages/Write/component/CategorySelect";
 import PreviewModal from "@/pages/Write/component/PreviewModal";
 import TagInput from "@/pages/Write/component/TagInput";
 import AlertModal from "@/components/AlertModal/AlertModal";
+import DraftListModal from "@/pages/Write/component/DraftListModal";
 
 interface WritePageViewProps {
   editor: Editor | null;
@@ -20,6 +21,10 @@ interface WritePageViewProps {
   isTempSaveDisabled: boolean;
   categories: CategoryItem[];
   alertMessage: string;
+  showDraftList?: boolean;
+  currentDraftId?: string | null;
+  draftListItems?: DraftListItem[];
+  draftListTotal?: number;
   onTitleChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
   onTagsChange: (tags: string[]) => void;
@@ -28,6 +33,10 @@ interface WritePageViewProps {
   onCancel: () => void;
   onVideoAdd: (blobUrl: string, file: File) => void;
   onAlertClose: () => void;
+  onOpenDraftList?: () => void;
+  onCloseDraftList?: () => void;
+  onLoadDraft?: (id: string) => void;
+  onDeleteDrafts?: (ids: string[]) => void;
 }
 
 function WritePageView({
@@ -39,6 +48,10 @@ function WritePageView({
   isTempSaveDisabled,
   categories,
   alertMessage,
+  showDraftList,
+  currentDraftId,
+  draftListItems,
+  draftListTotal,
   onTitleChange,
   onCategoryChange,
   onTagsChange,
@@ -47,10 +60,24 @@ function WritePageView({
   onCancel,
   onVideoAdd,
   onAlertClose,
+  onOpenDraftList,
+  onCloseDraftList,
+  onLoadDraft,
+  onDeleteDrafts,
 }: WritePageViewProps) {
   return (
     <div className="write-page">
       {alertMessage && <AlertModal message={alertMessage} onClose={onAlertClose} />}
+      {showDraftList && onCloseDraftList && onLoadDraft && (
+        <DraftListModal
+          drafts={draftListItems ?? []}
+          total={draftListTotal ?? 0}
+          currentDraftId={currentDraftId ?? null}
+          onClose={onCloseDraftList}
+          onLoad={onLoadDraft}
+          onDelete={onDeleteDrafts}
+        />
+      )}
       {/* 상단 툴바 */}
       <Toolbar editor={editor} onVideoAdd={onVideoAdd} />
 
@@ -96,12 +123,16 @@ function WritePageView({
         <div className="write-bottom-right">
           <PreviewModal title={title} editor={editor} />
           <button
-            className="write-temp-save-btn"
-            onClick={onTempSave}
-            disabled={isTempSaveDisabled}
+            className={`write-temp-save-btn${isTempSaveDisabled ? ' is-disabled' : ''}`}
+            onClick={() => { if (!isTempSaveDisabled) onTempSave(); }}
           >
-            임시저장
-            <span className="write-temp-badge">{tempSaveCount}</span>
+            <span className="write-temp-save-text">임시저장</span>
+            <span
+              className="write-temp-badge"
+              onClick={(e) => { e.stopPropagation(); onOpenDraftList?.(); }}
+            >
+              {tempSaveCount}
+            </span>
           </button>
           <button className="write-publish-btn" onClick={onPublish}>
             완료

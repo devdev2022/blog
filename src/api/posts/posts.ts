@@ -9,6 +9,8 @@ import type {
   PostListParams,
   UpdatePostBody,
   PostDetailResponse,
+  DraftListResponse,
+  DraftDetailResponse,
 } from "../../types/post";
 
 export async function fetchPostById(id: string): Promise<PostDetailResponse> {
@@ -53,4 +55,18 @@ export async function saveDraft(body: SaveDraftBody): Promise<DraftSaveResponse>
 
 export async function updateDraft(id: string, body: SaveDraftBody): Promise<void> {
   await api.put(`/posts/drafts/${id}`, body);
+}
+
+export async function fetchDrafts(): Promise<DraftListResponse> {
+  const res = await api.get<DraftListResponse>("/posts/drafts");
+  return res.data;
+}
+
+export async function fetchDraftById(id: string): Promise<DraftDetailResponse> {
+  const res = await api.get<DraftDetailResponse>(`/posts/drafts/${id}`);
+  return res.data;
+}
+
+export async function deleteDraft(id: string): Promise<void> {
+  await api.delete(`/posts/drafts/${id}`);
 }
