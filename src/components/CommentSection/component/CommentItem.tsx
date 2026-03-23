@@ -5,12 +5,7 @@ import CommentForm from './CommentForm';
 import EditForm from './EditForm';
 import DeletePasswordForm from './DeletePasswordForm';
 import DeleteModal from './DeleteModal';
-import { getInitials } from '@/utils/getInitials';
-
-const AVATAR_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
-function getAvatarColor(name: string): string {
-  return AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
-}
+import { getInitials, getAvatarColor } from '@/utils/getInitials';
 
 export interface CommentItemProps {
   comment: Comment;

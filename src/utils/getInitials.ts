@@ -15,3 +15,9 @@ export function getInitials(nickname: string): string {
 
   return trimmed.charAt(0).toUpperCase();
 }
+
+const AVATAR_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+
+export function getAvatarColor(name: string): string {
+  return AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
+}

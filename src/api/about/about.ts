@@ -47,7 +47,7 @@ export async function updateBio(bio: string): Promise<void> {
 export async function uploadBioAvatar(file: File): Promise<{ bio_avatar: string }> {
   const formData = new FormData();
   formData.append("avatar", file);
-  const res = await api.patch<{ bio_avatar: string }>("/about/profile/avatar", formData, {
+  const res = await api.patch<{ bio_avatar: string }>("/about/profile/avatar?folder=introduction", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;

@@ -3,6 +3,7 @@ import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
 import ProjectCard from "@pages/About/component/ProjectCard";
 import AlertModal from "@components/AlertModal/AlertModal";
+import { getInitials, getAvatarColor } from "@/utils/getInitials";
 import type {
   ProfileResponse,
   WorkExperienceItem,
@@ -31,11 +32,10 @@ function formatPeriod(
   endDate: string | null,
   isCurrent: boolean,
 ) {
-  const fmt = (d: string) => d.slice(0, 7).replace("-", "."); // "2024-03-01" → "2024.03"
+  const fmt = (d: string) => d.replace("-", "."); // "2024-03" → "2024.03"
   return `${fmt(startDate)} – ${isCurrent ? "현재" : endDate ? fmt(endDate) : ""}`;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL as string;
 
 function toWebP(file: File): Promise<File> {
   return new Promise((resolve) => {
@@ -73,6 +73,7 @@ function AboutPageView({
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editBioValue, setEditBioValue] = useState("");
   const [showSizeAlert, setShowSizeAlert] = useState(false);
+  const [isAvatarImageLoaded, setIsAvatarImageLoaded] = useState(false);
 
   const handleEditOpen = () => {
     setEditBioValue(profile?.bio ?? "");
@@ -109,19 +110,25 @@ function AboutPageView({
         <section className="about-profile-section">
           <div
             className={`about-profile-avatar${isLoggedIn ? " about-profile-avatar--editable" : ""}${isAvatarUploading ? " about-profile-avatar--uploading" : ""}`}
+            style={!isProfileLoading && !profile?.bio_avatar ? { background: getAvatarColor(profile?.username ?? 'Dev') } : undefined}
             onClick={() => isLoggedIn && !isAvatarUploading && document.getElementById("avatar-upload")?.click()}
           >
-            {isProfileLoading ? (
+            {isProfileLoading || (profile?.bio_avatar && !isAvatarImageLoaded) ? (
               <span className="skeleton skeleton--circle" />
-            ) : profile?.bio_avatar ? (
+            ) : null}
+            {!isProfileLoading && profile?.bio_avatar ? (
               <img
-                src={`${API_BASE}${profile.bio_avatar}`}
+                src={profile.bio_avatar}
                 alt="프로필"
                 className="about-profile-avatar-img"
+                style={isAvatarImageLoaded ? undefined : { display: "none" }}
+                onLoad={() => setIsAvatarImageLoaded(true)}
               />
-            ) : (
-              <span className="about-profile-avatar-initials">Dev</span>
-            )}
+            ) : !isProfileLoading ? (
+              <span className="about-profile-avatar-initials">
+                {getInitials(profile?.username ?? 'Dev')}
+              </span>
+            ) : null}
             {isLoggedIn && !isProfileLoading && (
               <span className="about-profile-avatar-overlay">
                 {isAvatarUploading ? "업로드 중..." : "사진 변경"}
