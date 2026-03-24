@@ -10,8 +10,6 @@ import {
   verifyCommentPassword,
 } from "@/query/comments";
 
-const BLOG_OWNER_GITHUB_ID = Number(import.meta.env.VITE_BLOG_OWNER_GITHUB_ID);
-
 interface CommentSectionProps {
   postSlug: string;
 }
@@ -21,7 +19,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
   const { hash } = useLocation();
   const { user } = useAuth();
 
-  const isOwner = Boolean(user && user.github_id === BLOG_OWNER_GITHUB_ID);
+  const isOwner = Boolean(user?.is_owner);
 
   const { data: comments = [] } = useComments(postSlug);
   const { mutateAsync: addComment } = useCreateComment(postSlug);
