@@ -6,7 +6,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
 import { extractFirstImage } from "@/utils/extractFirstImage";
-import type { Post, PostCategory, CategoryListResponse, PostListItem } from "@/types/post";
+import type { Post, PostListItem } from "@/types/post";
 import { toExcerpt, toReadingTime, toPostCategories } from "@/utils/postMapper";
 
 function toPost(item: PostListItem): Post {
