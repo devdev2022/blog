@@ -1,9 +1,21 @@
 .tech-stack-section {
   background-color: var(--color-bg-secondary);
   border-radius: var(--radius-lg);
-  padding: 56px 56px;
+  padding: 28px 20px;
   margin-bottom: var(--spacing-section);
   border: 1px solid var(--color-border-light);
+}
+
+@media (min-width: 768px) {
+  .tech-stack-section {
+    padding: 40px 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tech-stack-section {
+    padding: 56px 56px;
+  }
 }
 
 .tech-categories {
