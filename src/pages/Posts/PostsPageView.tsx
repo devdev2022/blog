@@ -91,11 +91,12 @@ function PostsPageView({
           </div>
 
           {isLoading ? (
-            viewMode === "grid" ? (
-              <GridSkeleton />
-            ) : (
-              <ThreadSkeleton />
-            )
+            <>
+              <div className="posts-header">
+                <div className="skeleton skeleton-posts-count" />
+              </div>
+              {viewMode === "grid" ? <GridSkeleton /> : <ThreadSkeleton />}
+            </>
           ) : activeTab === "tags" ? (
             /* 태그 탭 */
             allTags.length === 0 ? (
