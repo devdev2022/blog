@@ -13,6 +13,7 @@ function PostsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTag, setSelectedTag] = useState("");
   const [activeTab, setActiveTab] = useState<"posts" | "tags">("posts");
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
 
   const [mainCategory, subCategory] =
     selectedCategory === "all" ? [] : selectedCategory.split("/");
@@ -44,6 +45,7 @@ function PostsPage() {
     setSelectedCategory(slug);
     setActiveTab("posts");
     setCurrentPage(1);
+    setCategoryDrawerOpen(false);
   };
 
   const handleTagChange = (tag: string) => {
@@ -67,11 +69,14 @@ function PostsPage() {
         selectedCategory={selectedCategory}
         selectedTag={selectedTag}
         activeTab={activeTab}
+        categoryDrawerOpen={categoryDrawerOpen}
         onViewModeChange={setViewMode}
         onPageChange={setCurrentPage}
         onCategoryChange={handleCategoryChange}
         onTagChange={handleTagChange}
         onTabChange={setActiveTab}
+        onCategoryDrawerToggle={() => setCategoryDrawerOpen((prev) => !prev)}
+        onCategoryDrawerClose={() => setCategoryDrawerOpen(false)}
       />
       <Footer />
     </>
