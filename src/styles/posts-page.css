@@ -595,7 +595,9 @@
   cursor: pointer;
   color: var(--color-text-secondary);
   border-radius: var(--radius-sm);
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
   flex-shrink: 0;
 }
 
@@ -626,8 +628,12 @@
 }
 
 @keyframes posts-drawer-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .posts-drawer {
@@ -676,7 +682,9 @@
   cursor: pointer;
   color: var(--color-text-secondary);
   border-radius: 50%;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
 .posts-drawer-close:hover {
@@ -716,6 +724,10 @@
   /* 사이드바 숨김 (카테고리는 탭 햄버거 버튼 드로어에서 제공) */
   .posts-sidebar {
     display: none;
+  }
+
+  .posts-content {
+    width: 100%;
   }
 
   /* 탭 */
