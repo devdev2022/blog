@@ -529,6 +529,16 @@
   background-color: #c53030;
 }
 
+/* ===== 우측 그룹 ===== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+/* 모바일: user area/login 유지, desktop 전용 스타일만 재정의 */
+
 /* ===== Tablet (768px+) ===== */
 @media (min-width: 768px) {
   .header-inner {
@@ -543,6 +553,10 @@
 
 /* ===== Desktop (1024px+) ===== */
 @media (min-width: 1024px) {
+  .header-nav {
+    display: flex;
+  }
+
   .header-inner {
     padding: 0 40px;
   }
