@@ -202,3 +202,32 @@
   height: 20px;
   width: 55%;
 }
+
+/* ============================================================
+   포스트 헤더 카운트 스켈레톤
+   실제: .posts-count-label { font-size: 1rem, line-height: 1.6 } ≈ 19px
+   ============================================================ */
+.skeleton-posts-count {
+  height: 19px;
+  width: 90px;
+}
+
+/* ============================================================
+   스레드 스켈레톤 모바일 반응형
+   실제 모바일: thumbnail 100×70, gap 14px, padding 16px 0, excerpt none
+   ============================================================ */
+@media (max-width: 767px) {
+  .post-thread-item-skeleton {
+    gap: 14px;
+    padding: 16px 0;
+  }
+
+  .post-thread-item-skeleton .skeleton-thumbnail {
+    width: 100px;
+    height: 70px;
+  }
+
+  .post-thread-item-skeleton .skeleton-excerpt {
+    display: none;
+  }
+}
