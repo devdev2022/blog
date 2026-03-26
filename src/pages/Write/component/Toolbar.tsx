@@ -175,9 +175,10 @@ function LinkModal({ defaultValue, onConfirm, onClose }: LinkModalProps) {
 export interface ToolbarProps {
   editor: Editor | null;
   onVideoAdd: (blobUrl: string, file: File) => void;
+  onImageAdd: (file: File) => void;
 }
 
-function Toolbar({ editor, onVideoAdd }: ToolbarProps) {
+function Toolbar({ editor, onVideoAdd, onImageAdd }: ToolbarProps) {
   const colorInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -222,13 +223,8 @@ function Toolbar({ editor, onVideoAdd }: ToolbarProps) {
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !editor) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      editor.chain().focus().setImage({ src: reader.result as string }).run();
-    };
-    reader.readAsDataURL(file);
+    if (!file) return;
+    onImageAdd(file);
     e.target.value = "";
   };
 

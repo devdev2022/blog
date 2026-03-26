@@ -26,15 +26,6 @@ import { uploadImage } from '@/api/upload/upload';
 import { uploadVideo } from '@/api/upload/video';
 import { fetchDraftById } from '@/api/posts/posts';
 
-function base64ToFile(base64: string, index: number): File {
-  const [header, data] = base64.split(',');
-  const mime = header.match(/:(.*?);/)?.[1] ?? 'image/png';
-  const ext = mime.split('/')[1] ?? 'png';
-  const binary = atob(data);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return new File([bytes], `image-${index}.${ext}`, { type: mime });
-}
 
 const TITLE_MAX_LENGTH = 200;
 const CONTENT_MAX_LENGTH = 100_000;
@@ -72,7 +63,7 @@ function WritePage() {
       CodeBlockExtension,
       Underline,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Image.configure({ allowBase64: true }),
+      Image.configure({ allowBase64: false }),
       VideoExtension,
       Link.configure({ openOnClick: false }),
       Table.configure({ resizable: true }),
@@ -85,6 +76,44 @@ function WritePage() {
       FontFamily,
       FontSizeExtension,
     ],
+    editorProps: {
+      handlePaste(view, event) {
+        const items = event.clipboardData?.items;
+        if (!items) return false;
+        for (const item of Array.from(items)) {
+          if (item.type.startsWith('image/')) {
+            const file = item.getAsFile();
+            if (!file) continue;
+            event.preventDefault();
+            uploadImage(file).then((url) => {
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  view.state.schema.nodes.image.create({ src: url })
+                )
+              );
+            });
+            return true;
+          }
+        }
+        return false;
+      },
+      handleDrop(view, event) {
+        const files = event.dataTransfer?.files;
+        if (!files?.length) return false;
+        const imageFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
+        if (!imageFiles.length) return false;
+        event.preventDefault();
+        const { pos } = view.posAtCoords({ left: event.clientX, top: event.clientY }) ?? { pos: view.state.selection.from };
+        imageFiles.forEach((file) => {
+          uploadImage(file).then((url) => {
+            view.dispatch(
+              view.state.tr.insert(pos, view.state.schema.nodes.image.create({ src: url }))
+            );
+          });
+        });
+        return true;
+      },
+    },
     onUpdate({ editor }) {
       const textLength = editor.getText().length;
       if (textLength > CONTENT_MAX_LENGTH) {
@@ -106,6 +135,11 @@ function WritePage() {
   };
 
   const handleAlertClose = () => setAlertMessage('');
+
+  const handleImageAdd = async (file: File) => {
+    const url = await uploadImage(file);
+    editor?.chain().focus().setImage({ src: url }).run();
+  };
 
   const handleVideoAdd = (blobUrl: string, file: File) => {
     videoFilesRef.current.set(blobUrl, file);
@@ -182,14 +216,6 @@ function WritePage() {
   const handlePublish = async () => {
     const doc = new DOMParser().parseFromString(content, 'text/html');
 
-    const base64Images = Array.from(doc.querySelectorAll('img[src^="data:"]'));
-    for (let i = 0; i < base64Images.length; i++) {
-      const img = base64Images[i];
-      const file = base64ToFile(img.getAttribute('src')!, i);
-      const url = await uploadImage(file);
-      img.setAttribute('src', url);
-    }
-
     const blobVideos = Array.from(doc.querySelectorAll('video[src^="blob:"]'));
     for (const video of blobVideos) {
       const blobUrl = video.getAttribute('src')!;
@@ -232,6 +258,7 @@ function WritePage() {
       onTempSave={handleTempSave}
       onPublish={handlePublish}
       onCancel={handleCancel}
+      onImageAdd={handleImageAdd}
       onVideoAdd={handleVideoAdd}
       onAlertClose={handleAlertClose}
       onOpenDraftList={handleOpenDraftList}
