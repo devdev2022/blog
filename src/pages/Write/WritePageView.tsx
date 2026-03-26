@@ -31,6 +31,7 @@ interface WritePageViewProps {
   onTempSave: () => void;
   onPublish: () => void;
   onCancel: () => void;
+  onImageAdd: (file: File) => void;
   onVideoAdd: (blobUrl: string, file: File) => void;
   onAlertClose: () => void;
   onOpenDraftList?: () => void;
@@ -58,6 +59,7 @@ function WritePageView({
   onTempSave,
   onPublish,
   onCancel,
+  onImageAdd,
   onVideoAdd,
   onAlertClose,
   onOpenDraftList,
@@ -79,7 +81,7 @@ function WritePageView({
         />
       )}
       {/* 상단 툴바 */}
-      <Toolbar editor={editor} onVideoAdd={onVideoAdd} />
+      <Toolbar editor={editor} onImageAdd={onImageAdd} onVideoAdd={onVideoAdd} />
 
       {/* 콘텐츠 영역 */}
       <div className="write-content">
