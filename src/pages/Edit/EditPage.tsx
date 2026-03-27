@@ -58,7 +58,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
   const draftKey = `draft_id_edit_${id}`;
   const [tempSaveCount, setTempSaveCount] = useState(0);
   const [draftId, setDraftId] = useState<string | null>(
-    () => localStorage.getItem(`draft_id_edit_${id}`),
+    () => sessionStorage.getItem(`draft_id_edit_${id}`),
   );
   const [alertMessage, setAlertMessage] = useState("");
   const videoFilesRef = useRef<Map<string, File>>(new Map());
@@ -68,7 +68,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
 
   useEffect(() => {
     return () => {
-      localStorage.removeItem(draftKey);
+      sessionStorage.removeItem(draftKey);
     };
   }, [draftKey]);
 
@@ -173,7 +173,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
       } else {
         const { id } = await doSaveDraft(body);
         setDraftId(id);
-        localStorage.setItem(draftKey, id);
+        sessionStorage.setItem(draftKey, id);
       }
       lastSavedRef.current = { content, category };
       setTempSaveCount((prev) => prev + 1);
