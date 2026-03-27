@@ -38,7 +38,7 @@ function WritePage() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [draftId, setDraftId] = useState<string | null>(
-    () => localStorage.getItem(WRITE_DRAFT_KEY),
+    () => sessionStorage.getItem(WRITE_DRAFT_KEY),
   );
   const [alertMessage, setAlertMessage] = useState('');
   const [showDraftList, setShowDraftList] = useState(false);
@@ -53,7 +53,7 @@ function WritePage() {
 
   useEffect(() => {
     return () => {
-      localStorage.removeItem(WRITE_DRAFT_KEY);
+      sessionStorage.removeItem(WRITE_DRAFT_KEY);
     };
   }, []);
 
@@ -158,7 +158,7 @@ function WritePage() {
       } else {
         const { id } = await doSaveDraft(body);
         setDraftId(id);
-        localStorage.setItem(WRITE_DRAFT_KEY, id);
+        sessionStorage.setItem(WRITE_DRAFT_KEY, id);
       }
       lastSavedRef.current = { content, category };
     } catch {
@@ -171,7 +171,7 @@ function WritePage() {
       await Promise.all(ids.map((id) => doDeleteDraft(id)));
       if (ids.includes(draftId ?? '')) {
         setDraftId(null);
-        localStorage.removeItem(WRITE_DRAFT_KEY);
+        sessionStorage.removeItem(WRITE_DRAFT_KEY);
       }
     } catch {
       setAlertMessage('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -192,7 +192,7 @@ function WritePage() {
           await doUpdateDraft({ id: draftId, body });
         } else {
           const { id: newId } = await doSaveDraft(body);
-          localStorage.setItem(WRITE_DRAFT_KEY, newId);
+          sessionStorage.setItem(WRITE_DRAFT_KEY, newId);
         }
       }
       const draft = await fetchDraftById(id);
@@ -200,7 +200,7 @@ function WritePage() {
       setCategory(draft.categorySlug);
       setTags(draft.tags);
       setDraftId(id);
-      localStorage.setItem(WRITE_DRAFT_KEY, id);
+      sessionStorage.setItem(WRITE_DRAFT_KEY, id);
       editor?.commands.setContent(draft.content);
       lastSavedRef.current = { content: draft.content, category: draft.categorySlug };
       setShowDraftList(false);
@@ -231,7 +231,7 @@ function WritePage() {
       const { id } = await doCreatePost({
         title, content: processedContent, categorySlug: category, tags,
       });
-      localStorage.removeItem(WRITE_DRAFT_KEY);
+      sessionStorage.removeItem(WRITE_DRAFT_KEY);
       navigate(`/posts/${id}`);
     } catch {
       setAlertMessage('게시글 발행에 실패했습니다. 다시 시도해주세요.');
