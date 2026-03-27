@@ -1,49 +1,58 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 //tiptap
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
-import { Table } from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table-row';
-import TableHeader from '@tiptap/extension-table-header';
-import TableCell from '@tiptap/extension-table-cell';
-import Placeholder from '@tiptap/extension-placeholder';
-import Color from '@tiptap/extension-color';
-import { TextStyle } from '@tiptap/extension-text-style';
-import FontFamily from '@tiptap/extension-font-family';
-import { VideoExtension } from '@/extensions/VideoExtension';
-import { CodeBlockExtension } from '@/extensions/CodeBlockExtension';
-import { FontSizeExtension } from '@/extensions/FontSizeExtension';
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import { Table } from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
+import Placeholder from "@tiptap/extension-placeholder";
+import Color from "@tiptap/extension-color";
+import { TextStyle } from "@tiptap/extension-text-style";
+import FontFamily from "@tiptap/extension-font-family";
+import { VideoExtension } from "@/extensions/VideoExtension";
+import { CodeBlockExtension } from "@/extensions/CodeBlockExtension";
+import { FontSizeExtension } from "@/extensions/FontSizeExtension";
 
-import WritePageView from './WritePageView';
-import { usePostCategories, useCreatePost, useSaveDraft, useUpdateDraft, useDeleteDraft, useDraftList } from '@/query/posts';
-import { uploadImage } from '@/api/upload/upload';
-import { uploadVideo } from '@/api/upload/video';
-import { fetchDraftById } from '@/api/posts/posts';
-
+import WritePageView from "./WritePageView";
+import {
+  usePostCategories,
+  useCreatePost,
+  useSaveDraft,
+  useUpdateDraft,
+  useDeleteDraft,
+  useDraftList,
+} from "@/query/posts";
+import { uploadImage } from "@/api/upload/upload";
+import { uploadVideo } from "@/api/upload/video";
+import { fetchDraftById } from "@/api/posts/posts";
 
 const TITLE_MAX_LENGTH = 200;
 const CONTENT_MAX_LENGTH = 100_000;
-const WRITE_DRAFT_KEY = 'draft_id_write';
+const WRITE_DRAFT_KEY = "draft_id_write";
 
 function WritePage() {
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [draftId, setDraftId] = useState<string | null>(
-    () => sessionStorage.getItem(WRITE_DRAFT_KEY),
+  const [draftId, setDraftId] = useState<string | null>(() =>
+    sessionStorage.getItem(WRITE_DRAFT_KEY),
   );
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState("");
   const [showDraftList, setShowDraftList] = useState(false);
   const videoFilesRef = useRef<Map<string, File>>(new Map());
-  const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
+  const lastSavedRef = useRef<{ content: string; category: string } | null>(
+    null,
+  );
+  const initialLoadDoneRef = useRef(false);
   const { data: categoriesData } = usePostCategories();
   const { data: draftListData, refetch: refetchDrafts } = useDraftList();
   const { mutateAsync: doCreatePost } = useCreatePost();
@@ -62,7 +71,7 @@ function WritePage() {
       StarterKit.configure({ codeBlock: false }),
       CodeBlockExtension,
       Underline,
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       Image.configure({ allowBase64: false }),
       VideoExtension,
       Link.configure({ openOnClick: false }),
@@ -70,7 +79,7 @@ function WritePage() {
       TableRow,
       TableHeader,
       TableCell,
-      Placeholder.configure({ placeholder: '내용을 입력하세요...' }),
+      Placeholder.configure({ placeholder: "내용을 입력하세요..." }),
       TextStyle,
       Color,
       FontFamily,
@@ -81,15 +90,15 @@ function WritePage() {
         const items = event.clipboardData?.items;
         if (!items) return false;
         for (const item of Array.from(items)) {
-          if (item.type.startsWith('image/')) {
+          if (item.type.startsWith("image/")) {
             const file = item.getAsFile();
             if (!file) continue;
             event.preventDefault();
             uploadImage(file).then((url) => {
               view.dispatch(
                 view.state.tr.replaceSelectionWith(
-                  view.state.schema.nodes.image.create({ src: url })
-                )
+                  view.state.schema.nodes.image.create({ src: url }),
+                ),
               );
             });
             return true;
@@ -100,14 +109,22 @@ function WritePage() {
       handleDrop(view, event) {
         const files = event.dataTransfer?.files;
         if (!files?.length) return false;
-        const imageFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
+        const imageFiles = Array.from(files).filter((f) =>
+          f.type.startsWith("image/"),
+        );
         if (!imageFiles.length) return false;
         event.preventDefault();
-        const { pos } = view.posAtCoords({ left: event.clientX, top: event.clientY }) ?? { pos: view.state.selection.from };
+        const { pos } = view.posAtCoords({
+          left: event.clientX,
+          top: event.clientY,
+        }) ?? { pos: view.state.selection.from };
         imageFiles.forEach((file) => {
           uploadImage(file).then((url) => {
             view.dispatch(
-              view.state.tr.insert(pos, view.state.schema.nodes.image.create({ src: url }))
+              view.state.tr.insert(
+                pos,
+                view.state.schema.nodes.image.create({ src: url }),
+              ),
             );
           });
         });
@@ -118,23 +135,48 @@ function WritePage() {
       const textLength = editor.getText().length;
       if (textLength > CONTENT_MAX_LENGTH) {
         editor.commands.undo();
-        setAlertMessage(`본문은 최대 ${CONTENT_MAX_LENGTH.toLocaleString()}자까지 입력할 수 있습니다.`);
+        setAlertMessage(
+          `본문은 최대 ${CONTENT_MAX_LENGTH.toLocaleString()}자까지 입력할 수 있습니다.`,
+        );
         return;
       }
       setContent(editor.getHTML());
     },
   });
 
+  useEffect(() => {
+    if (!draftId || initialLoadDoneRef.current || !editor) return;
+    initialLoadDoneRef.current = true;
+
+    fetchDraftById(draftId)
+      .then((draft) => {
+        setTitle(draft.title);
+        setCategory(draft.categorySlug);
+        setTags(draft.tags);
+        editor.commands.setContent(draft.content);
+        lastSavedRef.current = {
+          content: draft.content,
+          category: draft.categorySlug,
+        };
+      })
+      .catch(() => {
+        setDraftId(null);
+        sessionStorage.removeItem(WRITE_DRAFT_KEY);
+      });
+  }, [draftId, editor]);
+
   const handleTitleChange = (value: string) => {
     if (value.length > TITLE_MAX_LENGTH) {
       setTitle(value.slice(0, TITLE_MAX_LENGTH));
-      setAlertMessage(`제목은 최대 ${TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`);
+      setAlertMessage(
+        `제목은 최대 ${TITLE_MAX_LENGTH}자까지 입력할 수 있습니다.`,
+      );
       return;
     }
     setTitle(value);
   };
 
-  const handleAlertClose = () => setAlertMessage('');
+  const handleAlertClose = () => setAlertMessage("");
 
   const handleImageAdd = async (file: File) => {
     const url = await uploadImage(file);
@@ -162,19 +204,19 @@ function WritePage() {
       }
       lastSavedRef.current = { content, category };
     } catch {
-      setAlertMessage('임시저장에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage("임시저장에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   const handleDeleteDrafts = async (ids: string[]) => {
     try {
       await Promise.all(ids.map((id) => doDeleteDraft(id)));
-      if (ids.includes(draftId ?? '')) {
+      if (ids.includes(draftId ?? "")) {
         setDraftId(null);
         sessionStorage.removeItem(WRITE_DRAFT_KEY);
       }
     } catch {
-      setAlertMessage('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+      setAlertMessage("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -202,10 +244,13 @@ function WritePage() {
       setDraftId(id);
       sessionStorage.setItem(WRITE_DRAFT_KEY, id);
       editor?.commands.setContent(draft.content);
-      lastSavedRef.current = { content: draft.content, category: draft.categorySlug };
+      lastSavedRef.current = {
+        content: draft.content,
+        category: draft.categorySlug,
+      };
       setShowDraftList(false);
     } catch {
-      setAlertMessage('임시저장을 불러오는 중 오류가 발생했습니다.');
+      setAlertMessage("임시저장을 불러오는 중 오류가 발생했습니다.");
     }
   };
 
@@ -214,27 +259,30 @@ function WritePage() {
   };
 
   const handlePublish = async () => {
-    const doc = new DOMParser().parseFromString(content, 'text/html');
+    const doc = new DOMParser().parseFromString(content, "text/html");
 
     const blobVideos = Array.from(doc.querySelectorAll('video[src^="blob:"]'));
     for (const video of blobVideos) {
-      const blobUrl = video.getAttribute('src')!;
+      const blobUrl = video.getAttribute("src")!;
       const file = videoFilesRef.current.get(blobUrl);
       if (!file) continue;
       const url = await uploadVideo(file);
-      video.setAttribute('src', url);
+      video.setAttribute("src", url);
       URL.revokeObjectURL(blobUrl);
     }
 
     const processedContent = doc.body.innerHTML;
     try {
       const { id } = await doCreatePost({
-        title, content: processedContent, categorySlug: category, tags,
+        title,
+        content: processedContent,
+        categorySlug: category,
+        tags,
       });
       sessionStorage.removeItem(WRITE_DRAFT_KEY);
       navigate(`/posts/${id}`);
     } catch {
-      setAlertMessage('게시글 발행에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage("게시글 발행에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
