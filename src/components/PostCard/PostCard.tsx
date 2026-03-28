@@ -9,7 +9,7 @@ function PostCard({ post }: PostCardProps) {
   return (
     <Link to={`/posts/${post.id}`} className="post-card-link">
       <article className="post-card">
-        <span className="post-card-tag">{post.tag}</span>
+        {post.tag && <span className="post-card-tag">{post.tag}</span>}
         <h3 className="post-card-title">{post.title}</h3>
         <p className="post-card-excerpt">{post.excerpt}</p>
         <div className="post-card-meta">
