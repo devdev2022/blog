@@ -28,8 +28,9 @@ Backend:
 <br>
 laaS:
 ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=Supabase&logoColor=white)
-![Vultr](https://img.shields.io/badge/vultr-007BFC?style=flat&logo=vultr&logoColor=white)
 ![Cloudflare R2](https://img.shields.io/badge/cloudflare%20R2-F38020?style=flat&logo=cloudflare%20workers&logoColor=white)
+![Vultr](https://img.shields.io/badge/vultr-007BFC?style=flat&logo=vultr&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
 <br>
 Devops:
 ![Docker](https://img.shields.io/badge/docker-2496ED.svg?style=flat&logo=docker&logoColor=white)
