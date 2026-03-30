@@ -54,7 +54,7 @@ Devops:
 <br/><br/><br/>
 
 ### 시퀀스 다이어그램 (포스트 저장)
-포스트 작성 시 동영상 또는 이미지 첨부를 할 경우, 이미지 업로드부터 DB반영까지 처리되는 과정입니다. 
+포스트 작성 시 동영상 또는 이미지 첨부를 할 경우, 업로드부터 DB반영까지 처리되는 과정입니다. 
 
 <img width="987" height="2389" alt="Image" src="https://github.com/user-attachments/assets/8e01083d-9caf-4108-9df4-8a07a19ac0a2" />
 
