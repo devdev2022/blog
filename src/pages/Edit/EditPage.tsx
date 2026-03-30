@@ -62,6 +62,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
   );
   const [alertMessage, setAlertMessage] = useState("");
   const videoFilesRef = useRef<Map<string, File>>(new Map());
+  const imageFilesRef = useRef<Map<string, File>>(new Map());
   const lastSavedRef = useRef<{ content: string; category: string } | null>(null);
   const { mutateAsync: doSaveDraft } = useSaveDraft();
   const { mutateAsync: doUpdateDraft } = useUpdateDraft();
@@ -102,13 +103,13 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
             const file = item.getAsFile();
             if (!file) continue;
             event.preventDefault();
-            uploadImage(file).then((url) => {
-              view.dispatch(
-                view.state.tr.replaceSelectionWith(
-                  view.state.schema.nodes.image.create({ src: url })
-                )
-              );
-            });
+            const blobUrl = URL.createObjectURL(file);
+            imageFilesRef.current.set(blobUrl, file);
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                view.state.schema.nodes.image.create({ src: blobUrl })
+              )
+            );
             return true;
           }
         }
@@ -122,11 +123,11 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
         event.preventDefault();
         const { pos } = view.posAtCoords({ left: event.clientX, top: event.clientY }) ?? { pos: view.state.selection.from };
         imageFiles.forEach((file) => {
-          uploadImage(file).then((url) => {
-            view.dispatch(
-              view.state.tr.insert(pos, view.state.schema.nodes.image.create({ src: url }))
-            );
-          });
+          const blobUrl = URL.createObjectURL(file);
+          imageFilesRef.current.set(blobUrl, file);
+          view.dispatch(
+            view.state.tr.insert(pos, view.state.schema.nodes.image.create({ src: blobUrl }))
+          );
         });
         return true;
       },
@@ -151,9 +152,25 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
     setTitle(value);
   };
 
-  const handleImageAdd = async (file: File) => {
-    const url = await uploadImage(file);
-    editor?.chain().focus().setImage({ src: url }).run();
+  const handleImageAdd = (file: File) => {
+    const blobUrl = URL.createObjectURL(file);
+    imageFilesRef.current.set(blobUrl, file);
+    editor?.chain().focus().setImage({ src: blobUrl }).run();
+  };
+
+  const processBlobImages = async (htmlContent: string): Promise<string> => {
+    const doc = new DOMParser().parseFromString(htmlContent, "text/html");
+    const blobImages = Array.from(doc.querySelectorAll('img[src^="blob:"]'));
+    for (const img of blobImages) {
+      const blobUrl = img.getAttribute("src")!;
+      const file = imageFilesRef.current.get(blobUrl);
+      if (!file) continue;
+      const url = await uploadImage(file);
+      img.setAttribute("src", url);
+      URL.revokeObjectURL(blobUrl);
+      imageFilesRef.current.delete(blobUrl);
+    }
+    return doc.body.innerHTML;
   };
 
   const handleVideoAdd = (blobUrl: string, file: File) => {
@@ -167,7 +184,12 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
 
   const handleTempSave = async () => {
     try {
-      const body = { title, content, categorySlug: category, tags };
+      const processedContent = await processBlobImages(content);
+      if (processedContent !== content) {
+        editor?.commands.setContent(processedContent);
+        setContent(processedContent);
+      }
+      const body = { title, content: processedContent, categorySlug: category, tags };
       if (draftId) {
         await doUpdateDraft({ id: draftId, body });
       } else {
@@ -175,7 +197,7 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
         setDraftId(id);
         sessionStorage.setItem(draftKey, id);
       }
-      lastSavedRef.current = { content, category };
+      lastSavedRef.current = { content: processedContent, category };
       setTempSaveCount((prev) => prev + 1);
     } catch {
       setAlertMessage("임시저장에 실패했습니다. 다시 시도해주세요.");
@@ -187,7 +209,8 @@ function EditPageEditor({ id, initialPost }: EditPageEditorProps) {
   };
 
   const handlePublish = async () => {
-    const doc = new DOMParser().parseFromString(content, "text/html");
+    const imageProcessedContent = await processBlobImages(content);
+    const doc = new DOMParser().parseFromString(imageProcessedContent, "text/html");
 
     const blobVideos = Array.from(doc.querySelectorAll('video[src^="blob:"]'));
     for (const video of blobVideos) {
