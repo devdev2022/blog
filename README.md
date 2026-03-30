@@ -35,7 +35,7 @@ Backend:
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat&logo=Nginx&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/Postgre%20SQL-4169E1.svg?&style=flat&logo=PostgreSQL&logoColor=white)
 <br>
-laaS:
+IaaS:
 ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=Supabase&logoColor=white)
 ![Cloudflare R2](https://img.shields.io/badge/cloudflare%20R2-F38020?style=flat&logo=cloudflare%20workers&logoColor=white)
 ![Vultr](https://img.shields.io/badge/vultr-007BFC?style=flat&logo=vultr&logoColor=white)
