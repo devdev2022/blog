@@ -1,0 +1,161 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15" version="29.6.6">
+  <diagram name="Blue-Green CI/CD" id="eHIvtIMbdLmSLYYw0HbI">
+    <mxGraphModel dx="2270" dy="1373" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;arcSize=4;" value="" vertex="1">
+          <mxGeometry height="100" width="620" x="500" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#333333;" value="GitHub Repository" vertex="1">
+          <mxGeometry height="24" width="620" x="500" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;dev 브랜치 push&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="200" x="540" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&lt;b&gt;main 브랜치 push&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="200" x="880" y="84" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;arcSize=4;" value="" vertex="1">
+          <mxGeometry height="180" width="280" x="460" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-6" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=13;fontColor=#333333;" value="GitHub Actions (STG 배포)" vertex="1">
+          <mxGeometry height="24" width="280" x="460" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" value="① 이미지 빌드" vertex="1">
+          <mxGeometry height="30" width="240" x="480" y="258" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" value="② Docker Hub Push" vertex="1">
+          <mxGeometry height="30" width="240" x="480" y="298" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" value="③ SSH → STG 서버 deploy.sh" vertex="1">
+          <mxGeometry height="30" width="240" x="480" y="338" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#ae4132;fontSize=10;" value=".env.stg" vertex="1">
+          <mxGeometry height="10" width="240" x="480" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=4;" value="" vertex="1">
+          <mxGeometry height="180" width="280" x="880" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-12" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=13;fontColor=#333333;" value="GitHub Actions (PROD 배포)" vertex="1">
+          <mxGeometry height="24" width="280" x="880" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" value="① 이미지 빌드" vertex="1">
+          <mxGeometry height="30" width="240" x="900" y="258" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" value="② Docker Hub Push" vertex="1">
+          <mxGeometry height="30" width="240" x="900" y="298" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" value="③ SSH → PROD 서버 deploy.sh" vertex="1">
+          <mxGeometry height="30" width="240" x="900" y="338" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#ae4132;fontSize=10;" value=".env.prod" vertex="1">
+          <mxGeometry height="10" width="240" x="900" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=2;" value="" vertex="1">
+          <mxGeometry height="600" width="1220" x="200" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-18" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=15;fontColor=#333333;" value="서버 (STG / PROD)" vertex="1">
+          <mxGeometry height="28" width="1220" x="200" y="484" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;arcSize=3;" value="" vertex="1">
+          <mxGeometry height="380" width="860" x="380" y="524" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-20" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=13;fontColor=#333333;" value="deploy.sh 실행 흐름" vertex="1">
+          <mxGeometry height="24" width="860" x="380" y="528" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;align=center;" value="① 현재 활성 컨테이너 판별&lt;br&gt;blog-blue 실행 중 → 다음: blog-green (포트 3001)&lt;br&gt;blog-green 실행 중 → 다음: blog-blue (포트 3000)" vertex="1">
+          <mxGeometry height="50" width="820" x="400" y="562" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" value="② Docker Hub에서 새 이미지 Pull" vertex="1">
+          <mxGeometry height="36" width="820" x="400" y="622" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" value="③ 스탠바이 컨테이너 기동 (.env.stg / .env.prod 로드)" vertex="1">
+          <mxGeometry height="36" width="820" x="400" y="668" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-24" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="④ Health Check  GET /ping (최대 10회, 3초 간격)" vertex="1">
+          <mxGeometry height="60" width="640" x="490" y="714" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-25" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontColor=#00aa00;fontStyle=1;fontSize=11;" value="성공" vertex="1">
+          <mxGeometry height="20" width="60" x="1130" y="732" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="실패 → 새 컨테이너 정지 (자동 롤백)" vertex="1">
+          <mxGeometry height="40" width="160" x="320" y="724" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="⑤ upstream.conf 업데이트 → nginx reload (트래픽 무중단 전환)" vertex="1">
+          <mxGeometry height="36" width="820" x="400" y="784" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" value="⑥ 5초 대기 후 이전 컨테이너 정지" vertex="1">
+          <mxGeometry height="36" width="820" x="400" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-29" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" value="&lt;b&gt;blog-blue&lt;/b&gt;&#xa;포트 3000&#xa;(활성 / 스탠바이)" vertex="1">
+          <mxGeometry height="80" width="200" x="320" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-30" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" value="&lt;b&gt;blog-green&lt;/b&gt;&#xa;포트 3001&#xa;(스탠바이 / 활성)" vertex="1">
+          <mxGeometry height="80" width="200" x="560" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" value="upstream.conf&#xa;(동적 업데이트)" vertex="1">
+          <mxGeometry height="44" width="160" x="820" y="908" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=13;" value="&lt;b&gt;Nginx (80)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="44" width="160" x="1020" y="908" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-33" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;" value="외부 트래픽&#xa;(클라이언트 요청)" vertex="1">
+          <mxGeometry height="60" width="160" x="1020" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-34" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;" target="94uYUWwCmrYYc3xnX_uH-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-35" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;" target="94uYUWwCmrYYc3xnX_uH-11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-36" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;dashed=1;" target="94uYUWwCmrYYc3xnX_uH-17" value="SSH">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-37" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;" target="94uYUWwCmrYYc3xnX_uH-17" value="SSH">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-38" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;strokeWidth=1.5;" target="94uYUWwCmrYYc3xnX_uH-22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-39" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;strokeWidth=1.5;" target="94uYUWwCmrYYc3xnX_uH-23" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-40" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;strokeWidth=1.5;" target="94uYUWwCmrYYc3xnX_uH-24" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-41" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#00aa00;strokeWidth=1.5;fontColor=#00aa00;fontStyle=1;" target="94uYUWwCmrYYc3xnX_uH-27" value="성공">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-42" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#b85450;strokeWidth=1.5;fontColor=#b85450;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="94uYUWwCmrYYc3xnX_uH-26" value="실패">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-43" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;strokeWidth=1.5;" target="94uYUWwCmrYYc3xnX_uH-28" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-44" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#666666;strokeWidth=1.5;dashed=1;endArrow=block;startArrow=block;startFill=0;endFill=0;" target="94uYUWwCmrYYc3xnX_uH-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-46" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;strokeWidth=1.5;" target="94uYUWwCmrYYc3xnX_uH-31" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="930" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#D79B00;" value="" vertex="1">
+          <mxGeometry height="100" width="460" x="310" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-47" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#666666;strokeWidth=2;" target="94uYUWwCmrYYc3xnX_uH-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-48" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" target="94uYUWwCmrYYc3xnX_uH-33" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="94uYUWwCmrYYc3xnX_uH-45" edge="1" parent="1" source="94uYUWwCmrYYc3xnX_uH-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;strokeWidth=1.5;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;" target="94uYUWwCmrYYc3xnX_uH-31" value="upstream.conf">
+          <mxGeometry relative="1" x="-0.0175" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
