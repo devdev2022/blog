@@ -50,5 +50,5 @@ Devops:
 
 <br/>
 
-### CICD 파이프라인
+### CICD 파이프라인 (blue-green)
 <img width="1221" height="1121" alt="Image" src="https://github.com/user-attachments/assets/d8f97722-d2bb-4161-95e3-68c1023da68a" />
