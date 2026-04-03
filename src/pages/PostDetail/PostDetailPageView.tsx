@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { Post, PostCategory } from '@/types/post';
-import CommentSection from '@/components/CommentSection/CommentSection';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import type { Post, PostCategory } from "@/types/post";
+import CommentSection from "@/components/CommentSection/CommentSection";
 
 const CATEGORY_LABEL: Record<string, string> = {
-  'frontend/react': 'React',
-  'frontend/web': '웹',
-  frontend: '프론트엔드',
-  cs: 'CS지식',
-  database: '데이터베이스',
+  "frontend/react": "React",
+  "frontend/web": "웹",
+  frontend: "프론트엔드",
+  cs: "CS지식",
+  database: "데이터베이스",
 };
 
 // 더미 방문자 통계
@@ -29,7 +29,11 @@ function PostDetailSkeleton() {
       <div className="post-detail-layout">
         <div className="post-detail-content">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="skeleton skeleton-paragraph" style={{ marginBottom: 20 }} />
+            <div
+              key={i}
+              className="skeleton skeleton-paragraph"
+              style={{ marginBottom: 20 }}
+            />
           ))}
         </div>
         <aside className="post-detail-sidebar">
@@ -67,7 +71,10 @@ function SidebarCategoryTree({
             <ul className="sidebar-cat-children">
               {cat.children.map((child) => (
                 <li key={child.slug}>
-                  <button className="sidebar-cat-btn child" onClick={onNavigate}>
+                  <button
+                    className="sidebar-cat-btn child"
+                    onClick={onNavigate}
+                  >
                     <span className="sidebar-cat-name">{child.name}</span>
                     {child.count !== undefined && (
                       <span className="sidebar-cat-count">{child.count}</span>
@@ -101,8 +108,8 @@ function PostActionMenu({
         setOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
   return (
@@ -118,10 +125,22 @@ function PostActionMenu({
       </button>
       {open && (
         <div className="post-action-dropdown">
-          <button className="post-action-item" onClick={() => { setOpen(false); onEdit(); }}>
+          <button
+            className="post-action-item"
+            onClick={() => {
+              setOpen(false);
+              onEdit();
+            }}
+          >
             수정
           </button>
-<button className="post-action-item post-action-item--delete" onClick={() => { setOpen(false); onDelete(); }}>
+          <button
+            className="post-action-item post-action-item--delete"
+            onClick={() => {
+              setOpen(false);
+              onDelete();
+            }}
+          >
             삭제
           </button>
         </div>
@@ -166,7 +185,9 @@ function PostDetailPageView({
     onDelete?.();
   };
 
-  const categoryLabel = post.category ? (CATEGORY_LABEL[post.category] ?? post.category) : null;
+  const categoryLabel = post.category
+    ? (CATEGORY_LABEL[post.category] ?? post.category)
+    : null;
 
   return (
     <main className="post-detail-main">
@@ -176,10 +197,18 @@ function PostDetailPageView({
             <p className="comment-modal-title">게시글 삭제</p>
             <p className="comment-modal-msg">삭제 하시겠습니까?</p>
             <div className="comment-form-actions">
-              <button type="button" className="comment-btn-cancel" onClick={handleDeleteCancel}>
+              <button
+                type="button"
+                className="comment-btn-cancel"
+                onClick={handleDeleteCancel}
+              >
                 취소
               </button>
-              <button type="button" className="comment-btn-danger" onClick={handleDeleteConfirm}>
+              <button
+                type="button"
+                className="comment-btn-danger"
+                onClick={handleDeleteConfirm}
+              >
                 확인
               </button>
             </div>
@@ -189,9 +218,13 @@ function PostDetailPageView({
       {/* ===== 히어로 (텍스트 전용) ===== */}
       <div className="post-detail-hero-text">
         <nav className="post-detail-breadcrumb">
-          <button className="breadcrumb-btn" onClick={() => navigate('/')}>홈</button>
+          <button className="breadcrumb-btn" onClick={() => navigate("/")}>
+            홈
+          </button>
           <span className="breadcrumb-sep">›</span>
-          <button className="breadcrumb-btn" onClick={() => navigate('/posts')}>포스트</button>
+          <button className="breadcrumb-btn" onClick={() => navigate("/posts")}>
+            포스트
+          </button>
           {categoryLabel && (
             <>
               <span className="breadcrumb-sep">›</span>
@@ -258,7 +291,7 @@ function PostDetailPageView({
               <p className="sidebar-widget-title">분류</p>
               <SidebarCategoryTree
                 categories={categories}
-                onNavigate={() => navigate('/posts')}
+                onNavigate={() => navigate("/posts")}
               />
             </div>
 
@@ -283,7 +316,7 @@ function PostDetailPageView({
             )}
 
             {/* 방문자 통계 */}
-            <div className="sidebar-widget visitor-widget">
+            {/* <div className="sidebar-widget visitor-widget">
               <p className="sidebar-widget-title">전체 방문자</p>
               <div className="visitor-total">
                 <span className="visitor-total-count">
@@ -304,7 +337,7 @@ function PostDetailPageView({
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </aside>
       </div>
@@ -319,13 +352,21 @@ function PostDetailPageView({
             >
               <span className="post-nav-direction">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M9 2L4 7L9 12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 이전 글
               </span>
               <span className="post-nav-title">{prevPost.title}</span>
             </button>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
           {nextPost ? (
             <button
@@ -335,12 +376,20 @@ function PostDetailPageView({
               <span className="post-nav-direction">
                 다음 글
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M5 2L10 7L5 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M5 2L10 7L5 12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </span>
               <span className="post-nav-title">{nextPost.title}</span>
             </button>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
         </nav>
       )}
 
