@@ -12,7 +12,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 // 더미 방문자 통계
-const VISITOR_STATS = { total: 12847, today: 243, yesterday: 891 };
+//const VISITOR_STATS = { total: 12847, today: 243, yesterday: 891 };
 
 /* ---- 스켈레톤 ---- */
 function PostDetailSkeleton() {
