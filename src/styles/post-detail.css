@@ -1,10 +1,11 @@
 /* ===== 포스트 상세: 전체 레이아웃 ===== */
 .post-detail-main {
   width: 100%;
-  max-width: var(--max-width);
+  max-width: 100%; /* mobile base */
   margin: 0 auto;
   padding: 0 16px 60px; /* mobile base */
   flex: 1;
+  min-width: 0;
 }
 
 /* ===== 히어로 (텍스트 전용) ===== */
@@ -175,6 +176,7 @@
 .post-detail-content {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
 }
 
 /* ===== 마크다운 렌더러 타이포그래피 ===== */
@@ -182,6 +184,7 @@
   font-size: 1rem;
   line-height: 1.9;
   color: var(--color-text-secondary);
+  max-width: 100%;
 }
 
 .post-content-renderer h2 {
@@ -243,6 +246,7 @@
   padding: 16px; /* mobile base */
   margin: 24px 0;
   overflow-x: auto;
+  max-width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -589,6 +593,7 @@
 /* ===== Desktop (1024px+) ===== */
 @media (min-width: 1024px) {
   .post-detail-main {
+    max-width: var(--max-width);
     padding: 0 40px 80px;
   }
 
