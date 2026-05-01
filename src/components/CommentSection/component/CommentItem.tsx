@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import type { Comment } from '@/types/comment';
-import type { UserInfo } from '@/api/auth/auth';
-import CommentForm from './CommentForm';
-import EditForm from './EditForm';
-import DeletePasswordForm from './DeletePasswordForm';
-import DeleteModal from './DeleteModal';
-import { getInitials, getAvatarColor } from '@/utils/getInitials';
+import { useState, memo } from "react";
+import type { Comment } from "@/types/comment";
+import type { UserInfo } from "@/api/auth/auth";
+import CommentForm from "./CommentForm";
+import EditForm from "./EditForm";
+import DeletePasswordForm from "./DeletePasswordForm";
+import DeleteModal from "./DeleteModal";
+import { getInitials, getAvatarColor } from "@/utils/getInitials";
 
 export interface CommentItemProps {
   comment: Comment;
@@ -16,9 +16,18 @@ export interface CommentItemProps {
   isOwner: boolean;
   user: UserInfo | null;
   onReplyTo: (id: string | null) => void;
-  onAddComment: (author: string, password: string, content: string, parentId: string | null) => void;
+  onAddComment: (
+    author: string,
+    password: string,
+    content: string,
+    parentId: string | null,
+  ) => void;
   onDeleteComment: (id: string, password?: string) => Promise<boolean>;
-  onEditComment: (id: string, password: string, newContent: string) => Promise<boolean>;
+  onEditComment: (
+    id: string,
+    password: string,
+    newContent: string,
+  ) => Promise<boolean>;
   onCheckDeletePassword: (id: string, password: string) => Promise<boolean>;
 }
 
@@ -36,9 +45,11 @@ function CommentItem({
   onEditComment,
   onCheckDeletePassword,
 }: CommentItemProps) {
-  const [activeAction, setActiveAction] = useState<'edit' | null>(null);
-  const [deleteStep, setDeleteStep] = useState<'password' | 'confirm' | null>(null);
-  const [pendingDeletePassword, setPendingDeletePassword] = useState('');
+  const [activeAction, setActiveAction] = useState<"edit" | null>(null);
+  const [deleteStep, setDeleteStep] = useState<"password" | "confirm" | null>(
+    null,
+  );
+  const [pendingDeletePassword, setPendingDeletePassword] = useState("");
 
   const children = allComments.filter((c) => c.parentId === comment.id);
   const isReplyOpen = replyTo === comment.id;
@@ -56,44 +67,48 @@ function CommentItem({
   const handleDeleteButtonClick = () => {
     if (deleteStep !== null) {
       setDeleteStep(null);
-      setPendingDeletePassword('');
+      setPendingDeletePassword("");
       return;
     }
     setActiveAction(null);
-    setDeleteStep(isOwner ? 'confirm' : 'password');
+    setDeleteStep(isOwner ? "confirm" : "password");
   };
 
   const handlePasswordSubmit = async (password: string): Promise<boolean> => {
     const ok = await onCheckDeletePassword(comment.id, password);
     if (ok) {
       setPendingDeletePassword(password);
-      setDeleteStep('confirm');
+      setDeleteStep("confirm");
     }
     return ok;
   };
 
   const handleDeleteConfirm = async () => {
-    await onDeleteComment(comment.id, isOwner ? undefined : pendingDeletePassword);
+    await onDeleteComment(
+      comment.id,
+      isOwner ? undefined : pendingDeletePassword,
+    );
     setDeleteStep(null);
-    setPendingDeletePassword('');
+    setPendingDeletePassword("");
   };
 
   const handleDeleteCancel = () => {
     setDeleteStep(null);
-    setPendingDeletePassword('');
+    setPendingDeletePassword("");
   };
 
   return (
     <div id={`comment-${comment.id}`} className="comment-item">
-
-      {deleteStep === 'confirm' && (
+      {deleteStep === "confirm" && (
         <DeleteModal
           onConfirm={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
         />
       )}
 
-      <div className={`comment-box${highlightCommentId === comment.id ? ' comment-box--highlight' : ''}`}>
+      <div
+        className={`comment-box${highlightCommentId === comment.id ? " comment-box--highlight" : ""}`}
+      >
         <div className="comment-header">
           {comment.avatarUrl ? (
             <img
@@ -112,11 +127,13 @@ function CommentItem({
           <div className="comment-meta">
             <span className="comment-author">{comment.author}</span>
             <span className="comment-date">{comment.date}</span>
-            {comment.isEdited && <span className="comment-edited">(수정됨)</span>}
+            {comment.isEdited && (
+              <span className="comment-edited">(수정됨)</span>
+            )}
           </div>
           <div className="comment-action-buttons">
             <button
-              className={`comment-reply-btn${isReplyOpen ? ' active' : ''}`}
+              className={`comment-reply-btn${isReplyOpen ? " active" : ""}`}
               onClick={handleReplyClick}
             >
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -132,17 +149,17 @@ function CommentItem({
             </button>
             {canEdit && (
               <button
-                className={`comment-edit-btn${activeAction === 'edit' ? ' active' : ''}`}
+                className={`comment-edit-btn${activeAction === "edit" ? " active" : ""}`}
                 onClick={() => {
                   setDeleteStep(null);
-                  setActiveAction((prev) => (prev === 'edit' ? null : 'edit'));
+                  setActiveAction((prev) => (prev === "edit" ? null : "edit"));
                 }}
               >
                 수정
               </button>
             )}
             <button
-              className={`comment-delete-btn${deleteStep !== null ? ' active' : ''}`}
+              className={`comment-delete-btn${deleteStep !== null ? " active" : ""}`}
               onClick={handleDeleteButtonClick}
             >
               삭제
@@ -150,7 +167,7 @@ function CommentItem({
           </div>
         </div>
 
-        {activeAction !== 'edit' && (
+        {activeAction !== "edit" && (
           <p className="comment-content">
             {parentAuthor && (
               <span className="comment-mention">@{parentAuthor}</span>
@@ -159,7 +176,7 @@ function CommentItem({
           </p>
         )}
 
-        {activeAction === 'edit' && (
+        {activeAction === "edit" && (
           <EditForm
             initialContent={comment.content}
             isOwner={isOwner}
@@ -170,7 +187,7 @@ function CommentItem({
           />
         )}
 
-        {deleteStep === 'password' && (
+        {deleteStep === "password" && (
           <DeletePasswordForm
             onSubmit={handlePasswordSubmit}
             onCancel={handleDeleteCancel}
@@ -214,4 +231,74 @@ function CommentItem({
   );
 }
 
-export default CommentItem;
+function buildSubtreeIds(
+  commentId: string,
+  allComments: Comment[],
+): Set<string> {
+  const childrenMap = new Map<string, string[]>();
+  for (const c of allComments) {
+    if (c.parentId) {
+      if (!childrenMap.has(c.parentId)) childrenMap.set(c.parentId, []);
+      childrenMap.get(c.parentId)!.push(c.id);
+    }
+  }
+
+  const ids = new Set<string>();
+  const queue = childrenMap.get(commentId) ?? [];
+  for (const id of queue) ids.add(id);
+  let i = 0;
+  while (i < queue.length) {
+    const children = childrenMap.get(queue[i]) ?? [];
+    for (const id of children) {
+      ids.add(id);
+      queue.push(id);
+    }
+    i++;
+  }
+  return ids;
+}
+
+function areEqual(prev: CommentItemProps, next: CommentItemProps): boolean {
+  if (prev.comment !== next.comment) return false;
+  if (prev.depth !== next.depth) return false;
+  if (prev.highlightCommentId !== next.highlightCommentId) return false;
+  if (prev.isOwner !== next.isOwner) return false;
+  if (prev.user !== next.user) return false;
+  if (prev.onReplyTo !== next.onReplyTo) return false;
+  if (prev.onAddComment !== next.onAddComment) return false;
+  if (prev.onDeleteComment !== next.onDeleteComment) return false;
+  if (prev.onEditComment !== next.onEditComment) return false;
+  if (prev.onCheckDeletePassword !== next.onCheckDeletePassword) return false;
+
+  if (prev.allComments !== next.allComments) {
+    const commentId = next.comment.id;
+    const prevSubtreeIds = buildSubtreeIds(commentId, prev.allComments);
+    const nextSubtreeIds = buildSubtreeIds(commentId, next.allComments);
+
+    if (prevSubtreeIds.size !== nextSubtreeIds.size) return false;
+
+    const prevDescMap = new Map(
+      prev.allComments
+        .filter((c) => prevSubtreeIds.has(c.id))
+        .map((c) => [c.id, c]),
+    );
+    for (const c of next.allComments) {
+      if (nextSubtreeIds.has(c.id) && prevDescMap.get(c.id) !== c) return false;
+    }
+  }
+
+  if (prev.replyTo !== next.replyTo) {
+    const commentId = next.comment.id;
+    const subtreeIds = buildSubtreeIds(commentId, next.allComments);
+    const relevantIds = new Set([commentId, ...subtreeIds]);
+
+    const prevRelevant = prev.replyTo !== null && relevantIds.has(prev.replyTo);
+    const nextRelevant = next.replyTo !== null && relevantIds.has(next.replyTo);
+
+    if (prevRelevant || nextRelevant) return false;
+  }
+
+  return true;
+}
+
+export default memo(CommentItem, areEqual);

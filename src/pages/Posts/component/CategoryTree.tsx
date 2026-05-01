@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { PostCategory } from "@/types/post";
 
 interface CategoryTreeProps {
@@ -65,4 +66,4 @@ function CategoryTree({
   );
 }
 
-export default CategoryTree;
+export default memo(CategoryTree);
