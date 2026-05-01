@@ -18,6 +18,20 @@ CRUD, 미디어 업로드, 인증, 실시간 알림 등 웹 서비스의 핵심 
   | **태그 & 피드** | 태그별 포스트 필터링, 피드 페이지 |
   | **GitHub 잔디** | react-github-calendar를 활용한 GitHub 활동 시각화 |
 
+## 업데이트 내역
+
+<details>
+ <summary> ⚙️Version 업데이트 내역 보기</summary>
+
+### v1.0.1 Release [latest] [26.05.01]
+  - CommentSection 컴포넌트 useCallback/memo 적용으로 답글 클릭 시 리렌더 최소화 https://github.com/devdev2022/blog/issues/13
+
+---
+
+</details>
+
+<br/>
+
 ## 기술스택
 
 Language: ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=flat&logo=JavaScript&logoColor=white)
