@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import PostsPageView from "@pages/Posts/PostsPageView";
 import Header from "@components/Header/Header";
 import Footer from "@components/Footer/Footer";
@@ -41,18 +41,26 @@ function PostsPage() {
 
   const allTags = tagsData ?? [];
 
-  const handleCategoryChange = (slug: string) => {
+  const handleCategoryChange = useCallback((slug: string) => {
     setSelectedCategory(slug);
     setActiveTab("posts");
     setCurrentPage(1);
     setCategoryDrawerOpen(false);
-  };
+  }, []);
 
-  const handleTagChange = (tag: string) => {
+  const handleTagChange = useCallback((tag: string) => {
     setSelectedTag((prev) => (prev === tag ? "" : tag));
     setActiveTab("posts");
     setCurrentPage(1);
-  };
+  }, []);
+
+  const handleCategoryDrawerToggle = useCallback(() => {
+    setCategoryDrawerOpen((prev) => !prev);
+  }, []);
+
+  const handleCategoryDrawerClose = useCallback(() => {
+    setCategoryDrawerOpen(false);
+  }, []);
 
   return (
     <>
@@ -75,8 +83,8 @@ function PostsPage() {
         onCategoryChange={handleCategoryChange}
         onTagChange={handleTagChange}
         onTabChange={setActiveTab}
-        onCategoryDrawerToggle={() => setCategoryDrawerOpen((prev) => !prev)}
-        onCategoryDrawerClose={() => setCategoryDrawerOpen(false)}
+        onCategoryDrawerToggle={handleCategoryDrawerToggle}
+        onCategoryDrawerClose={handleCategoryDrawerClose}
       />
       <Footer />
     </>

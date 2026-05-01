@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import CommentSectionView from "./CommentSectionView";
@@ -30,46 +30,72 @@ function CommentSection({ postSlug }: CommentSectionProps) {
     ? hash.replace("#comment-", "")
     : null;
 
-  const handleAddComment = async (
-    author: string,
-    password: string,
-    content: string,
-    parentId: string | null,
-  ) => {
-    const avatarUrl = isOwner ? (user?.profile_avatar ?? null) : null;
-    await addComment({ postId: postSlug, parentId, nickname: author, password, content, avatarUrl });
-    setReplyTo(null);
-  };
+  const handleAddComment = useCallback(
+    async (
+      author: string,
+      password: string,
+      content: string,
+      parentId: string | null,
+    ) => {
+      const avatarUrl = isOwner ? (user?.profile_avatar ?? null) : null;
+      await addComment({
+        postId: postSlug,
+        parentId,
+        nickname: author,
+        password,
+        content,
+        avatarUrl,
+      });
+      setReplyTo(null);
+    },
+    [isOwner, user?.profile_avatar, addComment, postSlug],
+  );
 
-  const handleSetReplyTo = (id: string | null) => {
+  const handleSetReplyTo = useCallback((id: string | null) => {
     setReplyTo((prev) => (prev === id ? null : id));
-  };
+  }, []);
 
-  const handleDeleteComment = async (id: string, password?: string): Promise<boolean> => {
-    try {
-      await deleteCommentMutation({ id, password: isOwner ? undefined : password });
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  const handleDeleteComment = useCallback(
+    async (id: string, password?: string): Promise<boolean> => {
+      try {
+        await deleteCommentMutation({
+          id,
+          password: isOwner ? undefined : password,
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [deleteCommentMutation, isOwner],
+  );
 
-  const handleEditComment = async (
-    id: string,
-    password: string,
-    newContent: string,
-  ): Promise<boolean> => {
-    try {
-      await editCommentMutation({ id, content: newContent, password: isOwner ? undefined : password });
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  const handleEditComment = useCallback(
+    async (
+      id: string,
+      password: string,
+      newContent: string,
+    ): Promise<boolean> => {
+      try {
+        await editCommentMutation({
+          id,
+          content: newContent,
+          password: isOwner ? undefined : password,
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [editCommentMutation, isOwner],
+  );
 
-  const handleCheckDeletePassword = async (id: string, password: string): Promise<boolean> => {
-    return verifyCommentPassword(id, password);
-  };
+  const handleCheckDeletePassword = useCallback(
+    async (id: string, password: string): Promise<boolean> => {
+      return verifyCommentPassword(id, password);
+    },
+    [],
+  );
 
   return (
     <CommentSectionView
