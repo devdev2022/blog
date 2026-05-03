@@ -19,6 +19,7 @@ export default defineConfig({
       "@contexts": "/src/contexts",
       "@constants": "/src/constants",
       "react-dom$": "react-dom/profiling",
+      "react-dom/client": "react-dom/profiling",
     },
   },
 });
