@@ -10,23 +10,17 @@ export default defineConfig({
     port: 3001,
   },
   resolve: {
-    alias: [
-      { find: "@", replacement: "/src" },
-      { find: "@assets", replacement: "/src/assets" },
-      { find: "@components", replacement: "/src/components" },
-      { find: "@pages", replacement: "/src/pages" },
-      { find: "@data", replacement: "/src/data" },
-      { find: "@contexts", replacement: "/src/contexts" },
-      { find: "@constants", replacement: "/src/constants" },
-      { find: /^react-dom$/, replacement: "react-dom/profiling" },
-      { find: /^react-dom\/client$/, replacement: "react-dom/profiling" },
-      { find: "scheduler/tracing", replacement: "scheduler/tracing-profiling" },
-    ],
-  },
-  esbuild: {
-    keepNames: true,
-  },
-  build: {
-    minify: "esbuild",
+    alias: {
+      "@": "/src",
+      "@assets": "/src/assets",
+      "@components": "/src/components",
+      "@pages": "/src/pages",
+      "@data": "/src/data",
+      "@contexts": "/src/contexts",
+      "@constants": "/src/constants",
+      "react-dom$": "react-dom/profiling",
+      "react-dom/client": "react-dom/profiling",
+      "scheduler/tracing": "scheduler/tracing-profiling",
+    },
   },
 });
