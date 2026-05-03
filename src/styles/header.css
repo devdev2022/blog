@@ -368,18 +368,26 @@
   color: var(--color-text-secondary);
 }
 
+/* 가상 스크롤 컨테이너 */
+.notification-virtual-container {
+  position: relative;
+  width: 100%;
+}
+
 /* 알림 개별 항목 */
 .notification-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 12px;
   padding: 14px 20px;
   cursor: pointer;
   transition: background-color var(--transition-fast);
-}
-
-.notification-item:not(:last-child) {
   border-bottom: 1px solid var(--color-border);
+  box-sizing: border-box;
 }
 
 .notification-item:hover {
@@ -463,6 +471,27 @@
   font-size: 0.75rem;
   color: var(--color-text-secondary);
   margin-top: 2px;
+}
+
+.notification-load-more-spinner {
+  width: 20px;
+  height: 20px;
+  margin: 12px auto;
+  border: 2px solid var(--color-border);
+  border-top-color: #4299e1;
+  border-radius: 50%;
+  animation: notification-spin 0.7s linear infinite;
+}
+
+@keyframes notification-spin {
+  to { transform: rotate(360deg); }
+}
+
+.notification-no-more {
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
 }
 
 /* 로그아웃 확인 다이얼로그 */
