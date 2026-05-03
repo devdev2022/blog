@@ -18,6 +18,7 @@ export default defineConfig({
       "@data": "/src/data",
       "@contexts": "/src/contexts",
       "@constants": "/src/constants",
+      "react-dom$": "react-dom/profiling",
     },
   },
 });
