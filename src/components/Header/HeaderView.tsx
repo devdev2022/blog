@@ -1,4 +1,6 @@
+import { useRef, useEffect } from "react";
 import type { RefObject } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type { UserInfo } from "@/api/auth/auth";
 import type { NotificationItem } from "@/types/notification";
 
@@ -11,6 +13,8 @@ interface HeaderViewProps {
   notificationOpen: boolean;
   notificationCount: number;
   notifications: NotificationItem[];
+  hasMore: boolean;
+  isFetchingMore: boolean;
   bellRef: RefObject<HTMLDivElement | null>;
   onLoginClick: () => void;
   onLogoutClick: () => void;
@@ -19,6 +23,7 @@ interface HeaderViewProps {
   onProfileClick: () => void;
   onBellClick: () => void;
   onNotificationClick: (postId: string, commentId: string) => void;
+  onLoadMore: () => void;
   onWriteClick: () => void;
   onAccountClick: () => void;
   onAdminClick: () => void;
@@ -46,6 +51,8 @@ function HeaderView({
   notificationOpen,
   notificationCount,
   notifications,
+  hasMore,
+  isFetchingMore,
   bellRef,
   onLoginClick,
   onLogoutClick,
@@ -54,10 +61,31 @@ function HeaderView({
   onProfileClick,
   onBellClick,
   onNotificationClick,
+  onLoadMore,
   onWriteClick,
   onAccountClick,
   onAdminClick,
 }: HeaderViewProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: notifications.length,
+    getScrollElement: () => listRef.current,
+    estimateSize: () => 88,
+    overscan: 5,
+  });
+
+  const virtualItems = virtualizer.getVirtualItems();
+
+  useEffect(() => {
+    if (!notificationOpen) return;
+    const last = virtualItems[virtualItems.length - 1];
+    if (!last) return;
+    if (last.index >= notifications.length - 1 && hasMore && !isFetchingMore) {
+      onLoadMore();
+    }
+  }, [virtualItems, notifications.length, hasMore, isFetchingMore, notificationOpen, onLoadMore]);
+
   return (
     <>
       <header className="header">
@@ -117,54 +145,80 @@ function HeaderView({
                       <div className="notification-popup-header">
                         <span className="notification-popup-title">알림</span>
                       </div>
-                      <div className="notification-popup-list">
+                      <div className="notification-popup-list" ref={listRef}>
                         {notifications.length === 0 ? (
                           <p className="notification-popup-empty">
                             새 알림이 없습니다.
                           </p>
                         ) : (
-                          notifications.map((item) => (
+                          <>
                             <div
-                              key={item.id}
-                              className="notification-item"
-                              onClick={() =>
-                                onNotificationClick(item.postId, item.commentId)
-                              }
+                              className="notification-virtual-container"
+                              style={{ height: virtualizer.getTotalSize() }}
                             >
-                              <div className="notification-item-avatar">
-                                <div className="notification-item-avatar-placeholder">
-                                  {item.author.charAt(0)}
-                                </div>
-                                <span className="notification-item-type-badge">
-                                  <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
+                              {virtualItems.map((virtualItem) => {
+                                const item = notifications[virtualItem.index];
+                                return (
+                                  <div
+                                    key={item.id}
+                                    ref={virtualizer.measureElement}
+                                    data-index={virtualItem.index}
+                                    className="notification-item"
+                                    style={{
+                                      transform: `translateY(${virtualItem.start}px)`,
+                                    }}
+                                    onClick={() =>
+                                      onNotificationClick(
+                                        item.postId,
+                                        item.commentId,
+                                      )
+                                    }
                                   >
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                  </svg>
-                                </span>
-                              </div>
-                              <div className="notification-item-body">
-                                <span className="notification-item-label">
-                                  {item.type}
-                                </span>
-                                <p className="notification-item-text">
-                                  <strong>{item.author}</strong>님이 {item.type}
-                                  을 남겼어요
-                                </p>
-                                <p className="notification-item-preview">
-                                  {item.content}
-                                </p>
-                              </div>
-                              <span className="notification-item-date">
-                                {formatDate(item.date)}
-                              </span>
+                                    <div className="notification-item-avatar">
+                                      <div className="notification-item-avatar-placeholder">
+                                        {item.author.charAt(0)}
+                                      </div>
+                                      <span className="notification-item-type-badge">
+                                        <svg
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeWidth="2.5"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        >
+                                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                        </svg>
+                                      </span>
+                                    </div>
+                                    <div className="notification-item-body">
+                                      <span className="notification-item-label">
+                                        {item.type}
+                                      </span>
+                                      <p className="notification-item-text">
+                                        <strong>{item.author}</strong>님이{" "}
+                                        {item.type}을 남겼어요
+                                      </p>
+                                      <p className="notification-item-preview">
+                                        {item.content}
+                                      </p>
+                                    </div>
+                                    <span className="notification-item-date">
+                                      {formatDate(item.date)}
+                                    </span>
+                                  </div>
+                                );
+                              })}
                             </div>
-                          ))
+                            {isFetchingMore && (
+                              <div className="notification-load-more-spinner" />
+                            )}
+                            {!hasMore && notifications.length > 0 && (
+                              <p className="notification-no-more">
+                                모든 알림을 불러왔습니다.
+                              </p>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
