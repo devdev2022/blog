@@ -2,28 +2,34 @@ import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig({
-  plugins: [react(), svgr()],
-  server: {
-    host: "127.0.0.1",
-    open: true,
-    port: 3001,
-  },
-  resolve: {
-    alias: {
-      "@": "/src",
-      "@assets": "/src/assets",
-      "@components": "/src/components",
-      "@pages": "/src/pages",
-      "@data": "/src/data",
-      "@contexts": "/src/contexts",
-      "@constants": "/src/constants",
-      "react-dom$": "react-dom/profiling",
-      "react-dom/client": "react-dom/profiling",
-      "scheduler/tracing": "scheduler/tracing-profiling",
+export default defineConfig(({ mode }) => {
+  const isStg = mode === "stg";
+
+  return {
+    plugins: [react(), svgr()],
+    server: {
+      host: "127.0.0.1",
+      open: true,
+      port: 3001,
     },
-  },
-  esbuild: {
-    keepNames: true,
-  },
+    resolve: {
+      alias: {
+        "@": "/src",
+        "@assets": "/src/assets",
+        "@components": "/src/components",
+        "@pages": "/src/pages",
+        "@data": "/src/data",
+        "@contexts": "/src/contexts",
+        "@constants": "/src/constants",
+        ...(isStg && {
+          "react-dom$": "react-dom/profiling",
+          "react-dom/client": "react-dom/profiling",
+          "scheduler/tracing": "scheduler/tracing-profiling",
+        }),
+      },
+    },
+    esbuild: {
+      keepNames: true,
+    },
+  };
 });
