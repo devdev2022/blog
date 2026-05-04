@@ -24,7 +24,7 @@ CRUD, 미디어 업로드, 인증, 실시간 알림 등 웹 서비스의 핵심 
  <summary> ⚙️Version 업데이트 내역 보기</summary>
 
 ### v1.0.2 Release [latest] [26.05.04]
-- CommentSection virturalized List를 이용한 댓글 알림 리스트 렌더링 최적화 https://github.com/devdev2022/blog/issues/17
+- virturalized List를 이용한 댓글 알림 리스트 렌더링 최적화 https://github.com/devdev2022/blog/issues/17
 
 ### v1.0.1 Release [26.05.01]
 - CommentSection 컴포넌트 useCallback/memo 적용으로 답글 클릭 시 리렌더 최소화 https://github.com/devdev2022/blog/issues/13
