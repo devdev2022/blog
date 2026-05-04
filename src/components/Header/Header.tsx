@@ -9,7 +9,8 @@ import HeaderView from "./HeaderView";
 function Header() {
   const dispatch = useAppDispatch();
   const { user, isLoading, logout } = useAuth();
-  const { notifications, unreadCount, markAsRead } = useNotification();
+  const { notifications, unreadCount, hasMore, isFetchingMore, markAsRead, fetchMore } =
+    useNotification();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -55,6 +56,8 @@ function Header() {
       notificationOpen={notificationOpen}
       notificationCount={notificationCount}
       notifications={notifications}
+      hasMore={hasMore}
+      isFetchingMore={isFetchingMore}
       bellRef={bellRef}
       onLoginClick={() => dispatch(openLoginModal())}
       onLogoutClick={handleLogoutClick}
@@ -69,6 +72,7 @@ function Header() {
         setNotificationOpen(false);
         navigate(`/posts/${postId}#comment-${commentId}`);
       }}
+      onLoadMore={fetchMore}
       onWriteClick={() => {
         setDropdownOpen(false);
         navigate("/write");

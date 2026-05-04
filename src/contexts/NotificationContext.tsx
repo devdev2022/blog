@@ -36,7 +36,10 @@ function toNotificationItem(payload: SsePayload): NotificationItem {
 interface NotificationContextType {
   notifications: NotificationItem[];
   unreadCount: number;
+  hasMore: boolean;
+  isFetchingMore: boolean;
   markAsRead: () => Promise<void>;
+  fetchMore: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
@@ -45,6 +48,9 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const { user, accessToken } = useAuth();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const nextCursorRef = useRef<string | null>(null);
   const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeRef = useRef(false);
@@ -88,12 +94,17 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             try {
               const parsed = JSON.parse(dataLine);
               if (eventLine === "init") {
-                const { items, readAt } = parsed as {
-                  items: SsePayload[];
-                  readAt: string | null;
-                };
+                const { items, hasMore: initHasMore, nextCursor, readAt } =
+                  parsed as {
+                    items: SsePayload[];
+                    hasMore: boolean;
+                    nextCursor: string | null;
+                    readAt: string | null;
+                  };
                 const notificationItems = items.map(toNotificationItem);
                 setNotifications(notificationItems);
+                setHasMore(initHasMore);
+                nextCursorRef.current = nextCursor;
                 const unread = readAt
                   ? notificationItems.filter(
                       (n) => new Date(n.date) > new Date(readAt.slice(0, 10)),
@@ -143,6 +154,29 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     };
   }, [user, accessToken, connect]);
 
+  const fetchMore = useCallback(async () => {
+    if (!accessToken || !hasMore || isFetchingMore || !nextCursorRef.current)
+      return;
+    setIsFetchingMore(true);
+    try {
+      const res = await fetch(
+        `${API_BASE}/notifications?cursor=${encodeURIComponent(nextCursorRef.current)}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      if (!res.ok) return;
+      const data = (await res.json()) as {
+        items: SsePayload[];
+        hasMore: boolean;
+        nextCursor: string | null;
+      };
+      setNotifications((prev) => [...prev, ...data.items.map(toNotificationItem)]);
+      setHasMore(data.hasMore);
+      nextCursorRef.current = data.nextCursor;
+    } finally {
+      setIsFetchingMore(false);
+    }
+  }, [accessToken, hasMore, isFetchingMore]);
+
   const markAsRead = useCallback(async () => {
     if (!accessToken) return;
     try {
@@ -151,14 +185,15 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setUnreadCount(0);
-      // notifications 목록은 유지 (팝업에서 계속 보임)
     } catch {
       // 실패 시 무시
     }
   }, [accessToken]);
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead }}>
+    <NotificationContext.Provider
+      value={{ notifications, unreadCount, hasMore, isFetchingMore, markAsRead, fetchMore }}
+    >
       {children}
     </NotificationContext.Provider>
   );
