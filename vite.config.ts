@@ -3,7 +3,7 @@ import svgr from "vite-plugin-svgr";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig(({ mode }) => {
-  const isStg = mode === "stg";
+  const isStg = mode === "stg" || process.env.VERCEL_GIT_COMMIT_REF === "dev";
 
   return {
     plugins: [react(), svgr()],
