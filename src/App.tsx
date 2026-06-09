@@ -13,35 +13,38 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 //components
 import GlobalModal from "@/components/GlobalModal/GlobalModal";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import Layout from "@/components/Layout/Layout";
 
 //utils
-import { PageRouters } from "@/data/PageRoutes";
+import { LayoutRouters, BareRouters } from "@/data/PageRoutes";
 import createChildRoutes from "@/utils/createRoutes";
+import type { RouteMetaData } from "@/types/Routes";
+
+function renderRoute(paramObj: RouteMetaData) {
+  const { element: PathElement, path } = paramObj;
+  if (!PathElement) return null;
+  const pageElement = paramObj.protected ? (
+    <ProtectedRoute>
+      <PathElement />
+    </ProtectedRoute>
+  ) : (
+    <PathElement />
+  );
+  return (
+    <Route key={path} path={path} element={pageElement}>
+      {createChildRoutes(paramObj)}
+    </Route>
+  );
+}
 
 function AppInner() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route>
-          {PageRouters.map((paramObj) => {
-            const { element: PathElement, path } = paramObj;
-            if (!PathElement) return null;
-            const pageElement = paramObj.protected ? (
-              <ProtectedRoute>
-                <PathElement />
-              </ProtectedRoute>
-            ) : (
-              <PathElement />
-            );
-            return (
-              <Route key={path}>
-                <Route path={paramObj.path} element={pageElement}>
-                  {createChildRoutes(paramObj)}
-                </Route>
-              </Route>
-            );
-          })}
-        </Route>
+        {/* Header/Footer 공통 셸*/}
+        <Route element={<Layout />}>{LayoutRouters.map(renderRoute)}</Route>
+        {/* Layout 없이 단독 렌더 */}
+        {BareRouters.map(renderRoute)}
       </Routes>
       <GlobalModal />
     </BrowserRouter>

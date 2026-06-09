@@ -1,7 +1,5 @@
 import { useState, useCallback } from "react";
 import PostsPageView from "@pages/Posts/PostsPageView";
-import Header from "@components/Header/Header";
-import Footer from "@components/Footer/Footer";
 import { usePostList, usePostCategories, usePostTags } from "@/query/posts";
 import { toPost, toPostCategories } from "@/utils/postMapper";
 
@@ -64,7 +62,6 @@ function PostsPage() {
 
   return (
     <>
-      <Header />
       <PostsPageView
         isLoading={isLoading}
         posts={posts}
@@ -86,7 +83,6 @@ function PostsPage() {
         onCategoryDrawerToggle={handleCategoryDrawerToggle}
         onCategoryDrawerClose={handleCategoryDrawerClose}
       />
-      <Footer />
     </>
   );
 }

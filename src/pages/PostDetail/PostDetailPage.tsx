@@ -2,8 +2,6 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { usePostDetail, usePostCategories, useDeletePost } from "@/query/posts";
 import { useAuth } from "@/contexts/AuthContext";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
 import PostDetailPageView from "./PostDetailPageView";
 import { extractFirstImage } from "@/utils/extractFirstImage";
 import type { Post, PostListItem } from "@/types/post";
@@ -72,7 +70,6 @@ function PostDetailPage() {
 
   return (
     <>
-      <Header />
       <PostDetailPageView
         isLoading={isLoading}
         post={post}
@@ -87,7 +84,6 @@ function PostDetailPage() {
           navigate("/posts");
         }}
       />
-      <Footer />
     </>
   );
 }
