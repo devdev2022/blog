@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "@components/Header/Header";
-import Footer from "@components/Footer/Footer";
 import ProjectCard from "@pages/About/component/ProjectCard";
 import AlertModal from "@components/AlertModal/AlertModal";
 import { getInitials, getAvatarColor } from "@/utils/getInitials";
@@ -104,7 +102,6 @@ function AboutPageView({
 
   return (
     <>
-      <Header />
       <main className="about-main">
         {/* 프로필 섹션 */}
         <section className="about-profile-section">
@@ -399,7 +396,6 @@ function AboutPageView({
           })()}
         </section>
       </main>
-      <Footer />
       {showSizeAlert && (
         <AlertModal
           message="파일 크기가 5MB를 초과합니다."

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TagPageView from '@pages/Tags/TagPageView';
-import Header from '@components/Header/Header';
-import Footer from '@components/Footer/Footer';
 import { usePostList } from '@/query/posts';
 import type { Post } from '@/types/post';
 import { toPost } from '@/utils/postMapper';
@@ -38,7 +36,6 @@ function TagPage() {
 
   return (
     <>
-      <Header />
       <TagPageView
         isLoading={isLoading}
         tag={decodedTag}
@@ -50,7 +47,6 @@ function TagPage() {
         onViewModeChange={setViewMode}
         onPageChange={setCurrentPage}
       />
-      <Footer />
     </>
   );
 }

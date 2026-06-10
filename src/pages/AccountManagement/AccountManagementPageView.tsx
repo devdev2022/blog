@@ -1,6 +1,4 @@
 import type { RefObject } from "react";
-import Header from "@components/Header/Header";
-import Footer from "@components/Footer/Footer";
 import WithdrawalModal from "@pages/AccountManagement/component/WithdrawalModal";
 import AlertModal from "@components/AlertModal/AlertModal";
 
@@ -65,7 +63,6 @@ function AccountManagementPageView({
 
   return (
     <>
-      <Header />
       <main className="account-main">
         <div className="account-container">
           <h1 className="account-page-title">계정관리</h1>
@@ -231,8 +228,6 @@ function AccountManagementPageView({
           onClose={onSaveAlertClose}
         />
       )}
-
-      <Footer />
     </>
   );
 }

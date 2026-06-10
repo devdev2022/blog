@@ -1,7 +1,5 @@
 import type { Post } from "@/types/post";
 import type { TechStackItem } from "@/api/about/about";
-import Header from "@components/Header/Header";
-import Footer from "@components/Footer/Footer";
 import RecentPostsSection from "@components/RecentPostsSection/RecentPostsSection";
 import GithubContributionSection from "@components/GithubContribution/GithubContributionSection";
 
@@ -38,7 +36,6 @@ function HomePageView({
 }: HomePageViewProps) {
   return (
     <>
-      <Header />
       <main className="home-main">
         {/* Hero 섹션 */}
         <section className="hero-section">
@@ -117,7 +114,6 @@ function HomePageView({
           })()}
         </section>
       </main>
-      <Footer />
     </>
   );
 }
