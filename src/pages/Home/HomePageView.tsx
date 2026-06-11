@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Post } from "@/types/post";
 import type { TechStackItem } from "@/api/about/about";
 import RecentPostsSection from "@components/RecentPostsSection/RecentPostsSection";
@@ -54,9 +55,9 @@ function HomePageView({
             실전 경험과 삽질의 기록을 솔직하게 공유합니다.
           </p>
           <div className="hero-actions">
-            <a href="/posts" className="hero-btn-primary">
+            <Link to="/posts" className="hero-btn-primary">
               포스트 보기
-            </a>
+            </Link>
             <a
               href="https://github.com"
               target="_blank"

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { RefObject } from "react";
+import { Link } from "react-router-dom";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { UserInfo } from "@/api/auth/auth";
 import type { NotificationItem } from "@/types/notification";
@@ -90,16 +91,16 @@ function HeaderView({
     <>
       <header className="header">
         <div className="header-inner">
-          <a href="/" className="header-logo">
+          <Link to="/" className="header-logo">
             KHS.dev
-          </a>
+          </Link>
           <nav>
             <ul className="header-nav">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href} className="header-nav-link">
+                  <Link to={item.href} className="header-nav-link">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
