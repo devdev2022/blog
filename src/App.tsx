@@ -1,4 +1,5 @@
 import "./App.css";
+import { Suspense } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -14,6 +15,7 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import GlobalModal from "@/components/GlobalModal/GlobalModal";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import Layout from "@/components/Layout/Layout";
+import RouteErrorBoundary from "@/components/RouteErrorBoundary/RouteErrorBoundary";
 
 //utils
 import { LayoutRouters, BareRouters } from "@/data/PageRoutes";
@@ -21,14 +23,22 @@ import createChildRoutes from "@/utils/createRoutes";
 import type { RouteMetaData } from "@/types/Routes";
 
 function renderRoute(paramObj: RouteMetaData) {
-  const { element: PathElement, path } = paramObj;
+  const { element: PathElement, path, skeleton: Skeleton } = paramObj;
   if (!PathElement) return null;
-  const pageElement = paramObj.protected ? (
+  const content = paramObj.protected ? (
     <ProtectedRoute>
       <PathElement />
     </ProtectedRoute>
   ) : (
     <PathElement />
+  );
+  /* 라우트별 Suspense: 진입 시 청크 로딩 동안 페이지 전용 스켈레톤을 띄운다.
+   라우트 전환은 React Router v7이 startTransition으로 처리하므로 이전 화면이 유지된다.
+  ErrorBoundary로 한 겹 더 감싸 stale chunk 로딩 실패 시 자동 새로고침으로 복구한다.*/
+  const pageElement = (
+    <RouteErrorBoundary>
+      <Suspense fallback={Skeleton ? <Skeleton /> : null}>{content}</Suspense>
+    </RouteErrorBoundary>
   );
   return (
     <Route key={path} path={path} element={pageElement}>

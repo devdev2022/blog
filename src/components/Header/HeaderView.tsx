@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import type { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { prefetchPath } from "@/utils/prefetchRoute";
 import type { UserInfo } from "@/api/auth/auth";
 import type { NotificationItem } from "@/types/notification";
 
@@ -98,7 +99,12 @@ function HeaderView({
             <ul className="header-nav">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <Link to={item.href} className="header-nav-link">
+                  <Link
+                    to={item.href}
+                    className="header-nav-link"
+                    onMouseEnter={() => prefetchPath(item.href)}
+                    onFocus={() => prefetchPath(item.href)}
+                  >
                     {item.label}
                   </Link>
                 </li>
@@ -268,6 +274,8 @@ function HeaderView({
                             <button
                               className="header-dropdown-blog-action-btn"
                               onClick={onWriteClick}
+                              onMouseEnter={() => prefetchPath("/write")}
+                              onFocus={() => prefetchPath("/write")}
                               aria-label="글 작성"
                               title="글 작성"
                             >

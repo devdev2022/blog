@@ -3,31 +3,12 @@ import type { Post } from "@/types/post";
 import type { TechStackItem } from "@/api/about/about";
 import RecentPostsSection from "@components/RecentPostsSection/RecentPostsSection";
 import GithubContributionSection from "@components/GithubContribution/GithubContributionSection";
+import RecentPostsSkeleton from "@/pages/Home/component/RecentPostsSkeleton";
 
 interface HomePageViewProps {
   recentPosts: Post[];
   techStacks: TechStackItem[];
   isLoading: boolean;
-}
-
-function RecentPostsSkeleton() {
-  return (
-    <section className="recent-posts-section">
-      <div className="section-header">
-        <h2 className="section-title">최근 포스트</h2>
-      </div>
-      <div className="recent-posts-grid">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={`skeleton-card-${i}`} className="post-card-skeleton">
-            <div className="skeleton skeleton-tag" />
-            <div className="skeleton skeleton-title" />
-            <div className="skeleton skeleton-excerpt" />
-            <div className="skeleton skeleton-meta" />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
 }
 
 function HomePageView({

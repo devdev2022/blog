@@ -1,9 +1,34 @@
 import { ReactNodeViewRenderer, NodeViewWrapper, NodeViewContent } from '@tiptap/react';
 import type { NodeViewProps } from '@tiptap/react';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { createLowlight, common } from 'lowlight';
+import { createLowlight } from 'lowlight';
+// lowlight common(약 35개 언어) 대신 LANGUAGES에서 실제 쓰는 문법만 등록해
+// editor 청크에 묶이는 highlight.js 크기를 줄인다. (html은 xml의 alias)
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import python from 'highlight.js/lib/languages/python';
+import sql from 'highlight.js/lib/languages/sql';
+import xml from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import bash from 'highlight.js/lib/languages/bash';
+import json from 'highlight.js/lib/languages/json';
+import java from 'highlight.js/lib/languages/java';
+import go from 'highlight.js/lib/languages/go';
+import rust from 'highlight.js/lib/languages/rust';
 
-const lowlight = createLowlight(common);
+const lowlight = createLowlight({
+  javascript,
+  typescript,
+  python,
+  sql,
+  xml,
+  css,
+  bash,
+  json,
+  java,
+  go,
+  rust,
+});
 
 const LANGUAGES = [
   { label: '자동 감지', value: '' },
