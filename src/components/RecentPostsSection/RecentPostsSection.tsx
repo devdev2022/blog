@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Post } from "@/types/post";
 import PostCard from "@components/PostCard/PostCard";
 
@@ -11,9 +12,9 @@ function RecentPostsSection({ posts }: RecentPostsSectionProps) {
       <div className="section-header">
         <h2 className="section-title">최근 포스트</h2>
         {posts.length > 0 && (
-          <a href="/posts" className="section-link">
+          <Link to="/posts" className="section-link">
             전체 보기 →
-          </a>
+          </Link>
         )}
       </div>
       {posts.length === 0 ? (
@@ -44,9 +45,9 @@ function RecentPostsSection({ posts }: RecentPostsSectionProps) {
           <p className="recent-posts-empty-title">
             아직 작성된 포스트가 없습니다
           </p>
-          <a href="/posts" className="recent-posts-empty-link">
+          <Link to="/posts" className="recent-posts-empty-link">
             포스트 페이지로 이동
-          </a>
+          </Link>
         </div>
       ) : (
         <>
@@ -56,9 +57,9 @@ function RecentPostsSection({ posts }: RecentPostsSectionProps) {
             ))}
           </div>
           <div className="posts-more-btn-wrap">
-            <a href="/posts" className="posts-more-btn">
+            <Link to="/posts" className="posts-more-btn">
               모든 포스트 보기
-            </a>
+            </Link>
           </div>
         </>
       )}
