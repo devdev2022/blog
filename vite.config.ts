@@ -45,5 +45,34 @@ export default defineConfig(({ mode }) => {
     esbuild: {
       keepNames: true,
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // 모든 페이지가 공통으로 쓰는 vendor를 변경 빈도 기준으로 분리하여 앱 코드 배포 시에도 vendor 청크 해시가 유지
+          // 주의: 특정 페이지만 쓰는 라이브러리(tiptap, floating-ui, date-fns 등)는 여기서 반환하지 않아 Rollup이 기존 lazy 청크에 그대로 둠
+          manualChunks(id) {
+            if (!id.includes("node_modules")) return;
+            if (
+              /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)
+            )
+              return "vendor-react";
+            if (
+              /[\\/]node_modules[\\/](react-router|react-router-dom|@remix-run)[\\/]/.test(
+                id,
+              )
+            )
+              return "vendor-router";
+            if (
+              /[\\/]node_modules[\\/](@tanstack|@reduxjs|redux|react-redux|immer|use-sync-external-store)[\\/]/.test(
+                id,
+              )
+            )
+              return "vendor-state";
+            if (/[\\/]node_modules[\\/]axios[\\/]/.test(id))
+              return "vendor-http";
+          },
+        },
+      },
+    },
   };
 });

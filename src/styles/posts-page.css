@@ -144,6 +144,16 @@
   object-fit: cover;
 }
 
+/* 썸네일 로드 완료 전엔 컨테이너 회색 placeholder만 보이고, 디코드 완료 시 페이드인 */
+.post-thumbnail-img {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.post-thumbnail-img.is-loaded {
+  opacity: 1;
+}
+
 .post-grid-thumbnail-placeholder {
   width: 100%;
   height: 100%;

@@ -4,6 +4,7 @@ import { getPaginationItems } from "@/utils/getPaginationItems";
 import GridSkeleton from "@/pages/Posts/component/GridSkeleton";
 import ThreadSkeleton from "@/pages/Posts/component/ThreadSkeleton";
 import CategoryTree from "@/pages/Posts/component/CategoryTree";
+import PostThumbnail from "@/components/PostThumbnail/PostThumbnail";
 
 interface PostsPageViewProps {
   isLoading: boolean;
@@ -26,7 +27,6 @@ interface PostsPageViewProps {
   onCategoryDrawerToggle: () => void;
   onCategoryDrawerClose: () => void;
 }
-
 
 function PostsPageView({
   isLoading,
@@ -58,7 +58,6 @@ function PostsPageView({
 
   return (
     <main className="posts-main">
-
       <div className="posts-layout">
         {/* 콘텐츠 영역 */}
         <section className="posts-content">
@@ -82,7 +81,14 @@ function PostsPageView({
               onClick={onCategoryDrawerToggle}
               aria-label="카테고리"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -102,9 +108,23 @@ function PostsPageView({
             allTags.length === 0 ? (
               <div className="tags-empty">
                 <div className="posts-empty-icon">
-                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 20a4 4 0 0 1 4-4h20l20 16-20 16H14a4 4 0 0 1-4-4V20z" stroke="currentColor" strokeWidth="2.5" />
-                    <circle cx="20" cy="32" r="3" fill="currentColor" opacity="0.5" />
+                  <svg
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 20a4 4 0 0 1 4-4h20l20 16-20 16H14a4 4 0 0 1-4-4V20z"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    />
+                    <circle
+                      cx="20"
+                      cy="32"
+                      r="3"
+                      fill="currentColor"
+                      opacity="0.5"
+                    />
                   </svg>
                 </div>
                 <p className="posts-empty-title">태그가 없습니다</p>
@@ -146,7 +166,12 @@ function PostsPageView({
                 <span className="posts-count-label">
                   {selectedCategoryName} <strong>{totalPosts}</strong>
                 </span>
-                <div className="posts-view-toggle" style={{ visibility: totalPosts === 0 ? "hidden" : "visible" }}>
+                <div
+                  className="posts-view-toggle"
+                  style={{
+                    visibility: totalPosts === 0 ? "hidden" : "visible",
+                  }}
+                >
                   <button
                     className={`view-toggle-btn${viewMode === "grid" ? " active" : ""}`}
                     onClick={() => onViewModeChange("grid")}
@@ -160,10 +185,38 @@ function PostsPageView({
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <rect x="2" y="2" width="8" height="8" rx="1.5" fill="currentColor" />
-                      <rect x="12" y="2" width="8" height="8" rx="1.5" fill="currentColor" />
-                      <rect x="2" y="12" width="8" height="8" rx="1.5" fill="currentColor" />
-                      <rect x="12" y="12" width="8" height="8" rx="1.5" fill="currentColor" />
+                      <rect
+                        x="2"
+                        y="2"
+                        width="8"
+                        height="8"
+                        rx="1.5"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="12"
+                        y="2"
+                        width="8"
+                        height="8"
+                        rx="1.5"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="2"
+                        y="12"
+                        width="8"
+                        height="8"
+                        rx="1.5"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="12"
+                        y="12"
+                        width="8"
+                        height="8"
+                        rx="1.5"
+                        fill="currentColor"
+                      />
                     </svg>
                   </button>
                   <button
@@ -179,12 +232,54 @@ function PostsPageView({
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <rect x="2" y="2" width="5" height="5" rx="1" fill="currentColor" />
-                      <rect x="9" y="3.5" width="11" height="2" rx="1" fill="currentColor" />
-                      <rect x="2" y="8.5" width="5" height="5" rx="1" fill="currentColor" />
-                      <rect x="9" y="10" width="11" height="2" rx="1" fill="currentColor" />
-                      <rect x="2" y="15" width="5" height="5" rx="1" fill="currentColor" />
-                      <rect x="9" y="16.5" width="11" height="2" rx="1" fill="currentColor" />
+                      <rect
+                        x="2"
+                        y="2"
+                        width="5"
+                        height="5"
+                        rx="1"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="9"
+                        y="3.5"
+                        width="11"
+                        height="2"
+                        rx="1"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="2"
+                        y="8.5"
+                        width="5"
+                        height="5"
+                        rx="1"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="9"
+                        y="10"
+                        width="11"
+                        height="2"
+                        rx="1"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="2"
+                        y="15"
+                        width="5"
+                        height="5"
+                        rx="1"
+                        fill="currentColor"
+                      />
+                      <rect
+                        x="9"
+                        y="16.5"
+                        width="11"
+                        height="2"
+                        rx="1"
+                        fill="currentColor"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -194,10 +289,32 @@ function PostsPageView({
               {posts.length === 0 ? (
                 <div className="posts-empty">
                   <div className="posts-empty-icon">
-                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="10" y="12" width="44" height="40" rx="4" stroke="currentColor" strokeWidth="2.5" />
-                      <path d="M22 28h20M22 36h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                      <path d="M22 20h8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <svg
+                      viewBox="0 0 64 64"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="10"
+                        y="12"
+                        width="44"
+                        height="40"
+                        rx="4"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      />
+                      <path
+                        d="M22 28h20M22 36h14"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M22 20h8"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
                     </svg>
                   </div>
                   <p className="posts-empty-title">포스트가 없습니다</p>
@@ -214,15 +331,16 @@ function PostsPageView({
                       onClick={() => navigate(`/posts/${post.id}`)}
                       style={{ cursor: "pointer" }}
                     >
-                      <div className="post-grid-thumbnail">
-                        {post.thumbnail ? (
-                          <img src={post.thumbnail} alt={post.title} />
-                        ) : (
-                          <div className="post-grid-thumbnail-placeholder" />
-                        )}
-                      </div>
+                      <PostThumbnail
+                        thumbnail={post.thumbnail}
+                        title={post.title}
+                        className="post-grid-thumbnail"
+                        placeholderClassName="post-grid-thumbnail-placeholder"
+                      />
                       <div className="post-grid-body">
-                        {post.tag && <span className="post-grid-tag">{post.tag}</span>}
+                        {post.tag && (
+                          <span className="post-grid-tag">{post.tag}</span>
+                        )}
                         <h3 className="post-grid-title">{post.title}</h3>
                         <p className="post-grid-excerpt">{post.excerpt}</p>
                         <div className="post-grid-meta">
@@ -242,15 +360,16 @@ function PostsPageView({
                       onClick={() => navigate(`/posts/${post.id}`)}
                       style={{ cursor: "pointer" }}
                     >
-                      <div className="post-thread-thumbnail">
-                        {post.thumbnail ? (
-                          <img src={post.thumbnail} alt={post.title} />
-                        ) : (
-                          <div className="post-thread-thumbnail-placeholder" />
-                        )}
-                      </div>
+                      <PostThumbnail
+                        thumbnail={post.thumbnail}
+                        title={post.title}
+                        className="post-thread-thumbnail"
+                        placeholderClassName="post-thread-thumbnail-placeholder"
+                      />
                       <div className="post-thread-body">
-                        {post.tag && <span className="post-thread-tag">{post.tag}</span>}
+                        {post.tag && (
+                          <span className="post-thread-tag">{post.tag}</span>
+                        )}
                         <h3 className="post-thread-title">{post.title}</h3>
                         <p className="post-thread-excerpt">{post.excerpt}</p>
                         <div className="post-thread-meta">
@@ -273,13 +392,24 @@ function PostsPageView({
                     aria-label="이전 페이지"
                   >
                     <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-                      <path d="M6 1L1 6L6 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M6 1L1 6L6 11"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
 
                   {paginationItems.map((item, idx) =>
                     item === "..." ? (
-                      <span key={`ellipsis-${idx}`} className="pagination-ellipsis">…</span>
+                      <span
+                        key={`ellipsis-${idx}`}
+                        className="pagination-ellipsis"
+                      >
+                        …
+                      </span>
                     ) : (
                       <button
                         key={item}
@@ -293,12 +423,20 @@ function PostsPageView({
 
                   <button
                     className="pagination-btn pagination-arrow"
-                    onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+                    onClick={() =>
+                      onPageChange(Math.min(totalPages, currentPage + 1))
+                    }
                     disabled={currentPage === totalPages}
                     aria-label="다음 페이지"
                   >
                     <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-                      <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M1 1L6 6L1 11"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
                 </nav>
@@ -330,7 +468,14 @@ function PostsPageView({
             onClick={onCategoryDrawerClose}
             aria-label="닫기"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
