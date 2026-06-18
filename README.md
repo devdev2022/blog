@@ -23,6 +23,12 @@ CRUD, 미디어 업로드, 인증, 실시간 알림 등 웹 서비스의 핵심 
 <details>
  <summary> ⚙️Version 업데이트 내역 보기</summary>
 
+### v1.0.4 Release [latest] [26.06.17]
+- 이미지 비동기 디코드/페인트 노출 대응 https://github.com/devdev2022/blog/issues/23
+
+### v1.0.3 Release [latest] [26.06.11]
+- 코드 스플리팅 https://github.com/devdev2022/blog/issues/22
+
 ### v1.0.2 Release [latest] [26.05.04]
 - virturalized List를 이용한 댓글 알림 리스트 렌더링 최적화 https://github.com/devdev2022/blog/issues/17
 
