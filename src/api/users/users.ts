@@ -17,6 +17,15 @@ export async function updateMyProfile(payload: UpdateProfilePayload): Promise<vo
   await api.patch("/users/me", payload);
 }
 
+export async function uploadMyAvatar(file: File): Promise<{ profile_avatar: string }> {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  const res = await api.patch<{ profile_avatar: string }>("/users/me/avatar", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+}
+
 export async function deleteMyAccount(): Promise<void> {
   await api.delete("/users/me");
 }
