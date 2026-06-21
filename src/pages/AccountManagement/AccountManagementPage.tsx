@@ -8,11 +8,12 @@ import {
   updateMyProfile,
   deleteMyAccount,
 } from "@/api/users/users";
+import { refreshAccessToken } from "@/api/auth/auth";
 
 type BlogNicknameStatus = "idle" | "checking" | "available" | "taken";
 
 function AccountManagementPage() {
-  const { user, accessToken, logout } = useAuth();
+  const { user, accessToken, logout, setAuth } = useAuth();
   const navigate = useNavigate();
 
   const [nickname, setNickname] = useState(user?.username ?? "");
@@ -85,6 +86,11 @@ function AccountManagementPage() {
         bio: bio || null,
         profile_avatar: avatarPreview,
       });
+      // 저장된 프로필을 서버에서 다시 읽어 auth context를 갱신한다.
+      // (Header·댓글 등 캐시된 user를 쓰는 곳의 stale 방지)
+      const { accessToken: refreshedToken, user: refreshedUser } =
+        await refreshAccessToken();
+      setAuth(refreshedUser, refreshedToken);
       setBlogNicknameStatus("idle");
       setSaveAlertOpen(true);
     } finally {
