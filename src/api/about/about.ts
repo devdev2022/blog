@@ -14,7 +14,7 @@ export interface TechStackItem {
 
 export interface ProfileResponse {
   username: string;
-  bio_avatar: string | null;
+  profile_avatar: string | null;
   bio: string | null;
   role: string;
 }
@@ -38,19 +38,6 @@ export interface SideProjectItem {
   endDate: string | null;
   link: string | null;
   techStacks: TechStackItem[];
-}
-
-export async function updateBio(bio: string): Promise<void> {
-  await api.patch("/about/profile/bio", { bio });
-}
-
-export async function uploadBioAvatar(file: File): Promise<{ bio_avatar: string }> {
-  const formData = new FormData();
-  formData.append("avatar", file);
-  const res = await api.patch<{ bio_avatar: string }>("/about/profile/avatar?folder=introduction", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return res.data;
 }
 
 export async function fetchProfile(): Promise<ProfileResponse> {
