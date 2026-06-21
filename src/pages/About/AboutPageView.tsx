@@ -1,6 +1,5 @@
 import { useState } from "react";
 import ProjectCard from "@pages/About/component/ProjectCard";
-import AlertModal from "@components/AlertModal/AlertModal";
 import { getInitials, getAvatarColor } from "@/utils/getInitials";
 import type {
   ProfileResponse,
@@ -18,11 +17,6 @@ interface Props {
   isWorkLoading: boolean;
   isProjectsLoading: boolean;
   isTechLoading: boolean;
-  isLoggedIn: boolean;
-  onBioSave: (bio: string) => Promise<void>;
-  isBioSaving: boolean;
-  onAvatarUpload: (file: File) => Promise<unknown>;
-  isAvatarUploading: boolean;
 }
 
 function formatPeriod(
@@ -35,24 +29,6 @@ function formatPeriod(
 }
 
 
-function toWebP(file: File): Promise<File> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      canvas.getContext("2d")!.drawImage(img, 0, 0);
-      canvas.toBlob((blob) => {
-        URL.revokeObjectURL(url);
-        resolve(new File([blob!], "avatar.webp", { type: "image/webp" }));
-      }, "image/webp", 0.9);
-    };
-    img.src = url;
-  });
-}
-
 function AboutPageView({
   profile,
   workExperiences,
@@ -62,43 +38,8 @@ function AboutPageView({
   isWorkLoading,
   isProjectsLoading,
   isTechLoading,
-  isLoggedIn,
-  onBioSave,
-  isBioSaving,
-  onAvatarUpload,
-  isAvatarUploading,
 }: Props) {
-  const [isEditingBio, setIsEditingBio] = useState(false);
-  const [editBioValue, setEditBioValue] = useState("");
-  const [showSizeAlert, setShowSizeAlert] = useState(false);
   const [isAvatarImageLoaded, setIsAvatarImageLoaded] = useState(false);
-
-  const handleEditOpen = () => {
-    setEditBioValue(profile?.bio ?? "");
-    setIsEditingBio(true);
-  };
-
-  const handleEditSave = async () => {
-    await onBioSave(editBioValue);
-    setIsEditingBio(false);
-  };
-
-  const handleEditCancel = () => {
-    setIsEditingBio(false);
-  };
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setShowSizeAlert(true);
-      e.target.value = "";
-      return;
-    }
-    const webpFile = await toWebP(file);
-    await onAvatarUpload(webpFile);
-    e.target.value = "";
-  };
 
   return (
     <>
@@ -106,16 +47,15 @@ function AboutPageView({
         {/* 프로필 섹션 */}
         <section className="about-profile-section">
           <div
-            className={`about-profile-avatar${isLoggedIn ? " about-profile-avatar--editable" : ""}${isAvatarUploading ? " about-profile-avatar--uploading" : ""}`}
-            style={!isProfileLoading && !profile?.bio_avatar ? { background: getAvatarColor(profile?.username ?? 'Dev') } : undefined}
-            onClick={() => isLoggedIn && !isAvatarUploading && document.getElementById("avatar-upload")?.click()}
+            className="about-profile-avatar"
+            style={!isProfileLoading && !profile?.profile_avatar ? { background: getAvatarColor(profile?.username ?? 'Dev') } : undefined}
           >
-            {isProfileLoading || (profile?.bio_avatar && !isAvatarImageLoaded) ? (
+            {isProfileLoading || (profile?.profile_avatar && !isAvatarImageLoaded) ? (
               <span className="skeleton skeleton--circle" />
             ) : null}
-            {!isProfileLoading && profile?.bio_avatar ? (
+            {!isProfileLoading && profile?.profile_avatar ? (
               <img
-                src={profile.bio_avatar}
+                src={profile.profile_avatar}
                 alt="프로필"
                 className="about-profile-avatar-img"
                 style={isAvatarImageLoaded ? undefined : { display: "none" }}
@@ -126,20 +66,6 @@ function AboutPageView({
                 {getInitials(profile?.username ?? 'Dev')}
               </span>
             ) : null}
-            {isLoggedIn && !isProfileLoading && (
-              <span className="about-profile-avatar-overlay">
-                {isAvatarUploading ? "업로드 중..." : "사진 변경"}
-              </span>
-            )}
-            {isLoggedIn && (
-              <input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleAvatarChange}
-              />
-            )}
           </div>
           <div className="about-profile-info">
             {isProfileLoading ? (
@@ -158,69 +84,18 @@ function AboutPageView({
                 </span>
                 <h1 className="about-profile-name">{profile.username}</h1>
                 <p className="about-profile-role">{profile.role}</p>
-                <div className="about-bio-wrapper">
-                  {isEditingBio ? (
-                    <div className="about-bio-edit">
-                      <textarea
-                        className="about-bio-textarea"
-                        value={editBioValue}
-                        onChange={(e) => setEditBioValue(e.target.value)}
-                        rows={4}
-                        autoFocus
-                      />
-                      <div className="about-bio-edit-actions">
-                        <button
-                          className="about-bio-btn about-bio-btn--save"
-                          onClick={handleEditSave}
-                          disabled={isBioSaving}
-                        >
-                          {isBioSaving ? "저장 중..." : "저장"}
-                        </button>
-                        <button
-                          className="about-bio-btn about-bio-btn--cancel"
-                          onClick={handleEditCancel}
-                          disabled={isBioSaving}
-                        >
-                          취소
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="about-bio-text-wrap">
-                      {profile.bio && (
-                        <p className="about-profile-bio">
-                          {profile.bio.split("\n").map((line, i) => (
-                            <span key={i}>
-                              {line}
-                              <br />
-                            </span>
-                          ))}
-                        </p>
-                      )}
-                      {isLoggedIn && (
-                        <button
-                          className="about-bio-edit-btn"
-                          onClick={handleEditOpen}
-                          title="자기소개 수정"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
+                {profile.bio && (
+                  <div className="about-bio-wrapper">
+                    <p className="about-profile-bio">
+                      {profile.bio.split("\n").map((line, i) => (
+                        <span key={i}>
+                          {line}
+                          <br />
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                )}
                 <div className="about-profile-links">
                   <a
                     href="https://github.com"
@@ -396,12 +271,6 @@ function AboutPageView({
           })()}
         </section>
       </main>
-      {showSizeAlert && (
-        <AlertModal
-          message="파일 크기가 5MB를 초과합니다."
-          onClose={() => setShowSizeAlert(false)}
-        />
-      )}
     </>
   );
 }

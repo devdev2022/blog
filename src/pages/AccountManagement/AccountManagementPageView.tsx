@@ -17,6 +17,8 @@ interface AccountManagementPageViewProps {
   saveAlertOpen: boolean;
   isSaving: boolean;
   onSaveAlertClose: () => void;
+  alertMessage: string | null;
+  onAlertClose: () => void;
   onNicknameChange: (value: string) => void;
   onBlogNicknameChange: (value: string) => void;
   onCheckBlogNickname: () => void;
@@ -57,6 +59,8 @@ function AccountManagementPageView({
   onWithdrawalCancel,
   saveAlertOpen,
   onSaveAlertClose,
+  alertMessage,
+  onAlertClose,
 }: AccountManagementPageViewProps) {
   const isNicknameInvalid = nickname.length > 0 && !NICKNAME_REGEX.test(nickname);
   const isFormatInvalid = blogNickname.length > 0 && !NICKNAME_REGEX.test(blogNickname);
@@ -227,6 +231,10 @@ function AccountManagementPageView({
           message="프로필이 수정되었습니다."
           onClose={onSaveAlertClose}
         />
+      )}
+
+      {alertMessage && (
+        <AlertModal message={alertMessage} onClose={onAlertClose} />
       )}
     </>
   );
