@@ -7,9 +7,8 @@ export function toExcerpt(html: string): string {
 }
 
 export function toReadingTime(html: string): number {
-  const text = html.replace(/<[^>]+>/g, "");
-  const words = text.trim().split(/\s+/).length;
-  return Math.max(1, Math.round(words / 200));
+  const text = html.replace(/<[^>]+>/g, "").replace(/\s/g, "");
+  return Math.max(1, Math.ceil(text.length / 500));
 }
 
 export function toPost(item: PostListItem): Post {
