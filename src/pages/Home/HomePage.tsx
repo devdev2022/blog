@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchMainRecentPosts, fetchMainTechStacks } from "@/api/main/main";
-import { calcReadingTime } from "@/utils/calcReadingTime";
+import { toReadingTime } from "@/utils/postMapper";
 import type { Post } from "@/types/post";
 import type { PostListItem } from "@/types/post";
 import HomePageView from "./HomePageView";
@@ -18,7 +18,7 @@ function toPost(item: PostListItem): Post {
     tag: item.tags[0]?.name ?? item.mainCategory?.name ?? "",
     tags: item.tags.map((t) => t.name),
     date: item.createdAt.slice(0, 10),
-    readingTime: calcReadingTime(plainText),
+    readingTime: toReadingTime(item.content),
   };
 }
 
