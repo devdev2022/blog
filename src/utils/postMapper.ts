@@ -2,7 +2,7 @@ import { extractFirstImage } from "@/utils/extractFirstImage";
 import type { Post, PostCategory, CategoryListResponse, PostListItem } from "@/types/post";
 
 export function toExcerpt(html: string): string {
-  const text = html.replace(/<[^>]+>/g, "").trim();
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   return text.length > 120 ? text.slice(0, 120) + "..." : text;
 }
 
@@ -22,7 +22,7 @@ export function toPost(item: PostListItem): Post {
     extractFirstImage(item.content);
 
   return {
-    id: item.id.replaceAll("-", ""),
+    id: item.id,
     title: item.title,
     excerpt: toExcerpt(item.content),
     tag: tags[0] ?? "",
