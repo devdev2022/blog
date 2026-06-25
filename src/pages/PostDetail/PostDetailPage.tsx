@@ -4,6 +4,7 @@ import { usePostDetail, usePostCategories, useDeletePost } from "@/query/posts";
 import { useAuth } from "@/contexts/AuthContext";
 import PostDetailPageView from "./PostDetailPageView";
 import { toPost, toPostCategories } from "@/utils/postMapper";
+import { applyCodeHighlight } from "@/utils/highlightCode";
 
 function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +37,10 @@ function PostDetailPage() {
     }
   }, [data, isLoading, navigate]);
 
-  const post = data ? toPost(data.post) : null;
+  const rawPost = data ? toPost(data.post) : null;
+  const post = rawPost
+    ? { ...rawPost, content: rawPost.content ? applyCodeHighlight(rawPost.content) : rawPost.content }
+    : null;
   const prevPost = data?.prevPost ? toPost(data.prevPost) : null;
   const nextPost = data?.nextPost ? toPost(data.nextPost) : null;
   const recentPosts = data?.recentPosts.map(toPost) ?? [];
