@@ -3,33 +3,7 @@ import { useEffect } from "react";
 import { usePostDetail, usePostCategories, useDeletePost } from "@/query/posts";
 import { useAuth } from "@/contexts/AuthContext";
 import PostDetailPageView from "./PostDetailPageView";
-import { extractFirstImage } from "@/utils/extractFirstImage";
-import type { Post, PostListItem } from "@/types/post";
-import { toExcerpt, toReadingTime, toPostCategories } from "@/utils/postMapper";
-
-function toPost(item: PostListItem): Post {
-  const mainName =
-    item.subCategory?.mainCategory?.name ?? item.mainCategory?.name ?? "";
-  const subName = item.subCategory?.name ?? "";
-  const category = mainName && subName ? `${mainName}/${subName}` : mainName;
-  const tags = item.tags.map((t) => t.name);
-  const thumbnail =
-    item.media.find((m) => m.type === "image")?.url ??
-    extractFirstImage(item.content);
-
-  return {
-    id: item.id,
-    title: item.title,
-    excerpt: toExcerpt(item.content),
-    tag: tags[0] ?? "",
-    tags,
-    date: item.createdAt.toString().slice(0, 10),
-    readingTime: toReadingTime(item.content),
-    thumbnail,
-    category,
-    content: item.content,
-  };
-}
+import { toPost, toPostCategories } from "@/utils/postMapper";
 
 function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
