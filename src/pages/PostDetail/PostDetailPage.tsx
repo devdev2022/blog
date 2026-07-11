@@ -41,8 +41,14 @@ function PostDetailPage() {
   const post = rawPost
     ? { ...rawPost, content: rawPost.content ? applyCodeHighlight(rawPost.content) : rawPost.content }
     : null;
-  const prevPost = data?.prevPost ? toPost(data.prevPost) : null;
-  const nextPost = data?.nextPost ? toPost(data.nextPost) : null;
+  const prevPost =
+    data?.prevPost && data.prevPost.id !== data.post.id
+      ? toPost(data.prevPost)
+      : null;
+  const nextPost =
+    data?.nextPost && data.nextPost.id !== data.post.id
+      ? toPost(data.nextPost)
+      : null;
   const recentPosts = data?.recentPosts.map(toPost) ?? [];
   const categories = categoryData ? toPostCategories(categoryData) : [];
 
