@@ -240,6 +240,61 @@
 }
 
 /* ============================================================
+   글쓰기/수정 라우트 진입(청크 로딩) 스켈레톤
+   실제: .write-toolbar(52px) / .write-inner(max-width 760px) / .write-bottom-bar(60px, fixed)
+   ============================================================ */
+.write-skeleton-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 52px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* 실제 .write-toolbar-btn: min-width/height 32px */
+.write-skeleton-toolbar-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* 실제 .write-category-dropdown: min-width 180px, margin-bottom 28px */
+.write-skeleton-category {
+  height: 38px;
+  width: 180px;
+  margin-bottom: 28px;
+}
+
+/* 실제 .write-title-input: font-size 1.5rem(24px) × line-height 1.4 + padding 6px×2 ≈ 46px */
+.write-skeleton-title {
+  height: 34px;
+  width: 70%;
+  margin-bottom: 6px;
+}
+
+/* 실제 .ProseMirror p: font-size 1rem(16px) × line-height 1.85 ≈ 30px */
+.write-skeleton-editor-line {
+  height: 18px;
+  margin-bottom: 14px;
+}
+
+/* 실제 태그 칩: padding 4px 10px + font-size 0.875rem ≈ height 32px, border-radius 20px */
+.write-skeleton-tag {
+  height: 32px;
+  width: 72px;
+  border-radius: 999px;
+}
+
+/* 실제 하단 바 버튼: padding 8px 14~20px, border-radius 24px */
+.write-skeleton-bottom-btn {
+  height: 32px;
+  border-radius: 24px;
+}
+
+/* ============================================================
    스레드 스켈레톤 모바일 반응형
    실제 모바일: thumbnail 100×70, gap 14px, padding 16px 0, excerpt none
    ============================================================ */

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Post, PostCategory } from "@/types/post";
 import CommentSection from "@/components/CommentSection/CommentSection";
 import PostDetailSkeleton from "@/pages/PostDetail/component/PostDetailSkeleton";
+import { prefetchPath } from "@/utils/prefetchRoute";
 
 const CATEGORY_LABEL: Record<string, string> = {
   "frontend/react": "React",
@@ -58,9 +59,11 @@ function SidebarCategoryTree({
 
 /* ---- 수정/삭제 메뉴 ---- */
 function PostActionMenu({
+  postId,
   onEdit,
   onDelete,
 }: {
+  postId: string;
   onEdit: () => void;
   onDelete: () => void;
 }) {
@@ -97,6 +100,8 @@ function PostActionMenu({
               setOpen(false);
               onEdit();
             }}
+            onMouseEnter={() => prefetchPath(`/posts/${postId}/edit`)}
+            onFocus={() => prefetchPath(`/posts/${postId}/edit`)}
           >
             수정
           </button>
@@ -209,6 +214,7 @@ function PostDetailPageView({
           <span className="post-detail-reading">{post.readingTime}분 읽기</span>
           {isLoggedIn && (
             <PostActionMenu
+              postId={post.id}
               onEdit={onEdit ?? (() => {})}
               onDelete={handleDeleteClick}
             />
