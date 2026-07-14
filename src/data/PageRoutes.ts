@@ -7,6 +7,7 @@ import HomeSkeleton from "@pages/Home/component/HomeSkeleton";
 import PostsSkeleton from "@pages/Posts/component/PostsSkeleton";
 import PostDetailSkeleton from "@pages/PostDetail/component/PostDetailSkeleton";
 import TagPageSkeleton from "@pages/Tags/component/TagPageSkeleton";
+import EditSkeleton from "@pages/Edit/component/EditSkeleton";
 
 // import thunk를 한 번만 정의해 element(lazy)와 load(prefetch)가 같은 함수를 공유
 // → prefetch가 호출하는 import와 실제 lazy import가 동일해 브라우저/Vite가 자동 dedupe.
@@ -67,6 +68,7 @@ export const PageRouters: RouteMetaData[] = [
   {
     path: "/posts/:id/edit",
     ...lazyRoute(() => import("@pages/Edit/EditPage")),
+    skeleton: EditSkeleton,
     id: "08",
     linkName: "",
     protected: true,
