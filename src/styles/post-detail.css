@@ -187,6 +187,20 @@
   max-width: 100%;
 }
 
+.post-content-renderer h1 {
+  font-size: 1.35rem; /* mobile base */
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 44px 0 14px; /* mobile base */
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+  scroll-margin-top: 88px;
+}
+
+.post-content-renderer h1:first-child {
+  margin-top: 0;
+}
+
 .post-content-renderer h2 {
   font-size: 1.2rem; /* mobile base */
   font-weight: 700;
@@ -635,6 +649,11 @@
 
   .post-content-renderer pre code {
     font-size: 0.875rem;
+  }
+
+  .post-content-renderer h1 {
+    font-size: 1.6rem;
+    margin: 56px 0 18px;
   }
 
   .post-content-renderer h2 {
