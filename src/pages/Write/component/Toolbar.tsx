@@ -261,6 +261,38 @@ function Toolbar({ editor, onVideoAdd, onImageAdd }: ToolbarProps) {
       .run();
   };
 
+  // 코드블록 버튼:
+  // - 코드블록 안이면 토글 해제
+  // - 목록 항목 안이면 라벨(문단)은 두고 그 항목 안에 코드블록을 새로 추가 (번호 유지)
+  // - 그 외에는 기본 toggleCodeBlock (현재 줄을 코드블록으로 변환)
+  const handleCodeBlockToggle = () => {
+    if (!editor) return;
+    if (editor.isActive("codeBlock")) {
+      editor.chain().focus().toggleCodeBlock().run();
+      return;
+    }
+    const { $from } = editor.state.selection;
+    let listItemDepth = -1;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      if ($from.node(depth).type.name === "listItem") {
+        listItemDepth = depth;
+        break;
+      }
+    }
+    if (listItemDepth === -1) {
+      editor.chain().focus().toggleCodeBlock().run();
+      return;
+    }
+    // 현재 목록 항목 내용 끝(닫는 태그 직전)에 빈 코드블록을 추가하고 커서를 그 안으로 이동
+    const insertPos = $from.end(listItemDepth);
+    editor
+      .chain()
+      .focus()
+      .insertContentAt(insertPos, { type: "codeBlock" })
+      .setTextSelection(insertPos + 1)
+      .run();
+  };
+
   const currentTextType = getTextTypeValue(editor);
   const currentFontFamily = editor?.getAttributes("textStyle").fontFamily ?? "";
   const currentFontSize = getCurrentFontSize(editor);
@@ -529,7 +561,7 @@ function Toolbar({ editor, onVideoAdd, onImageAdd }: ToolbarProps) {
       {/* 코드 스니펫 */}
       <button
         className={`write-toolbar-btn${editor?.isActive("codeBlock") ? " is-active" : ""}`}
-        onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
+        onClick={handleCodeBlockToggle}
         title="코드 스니펫"
       >
         &lt;/&gt;
