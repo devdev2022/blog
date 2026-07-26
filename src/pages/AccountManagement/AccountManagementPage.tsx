@@ -1,23 +1,25 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { useMyProfile, MY_PROFILE_QUERY_KEY } from "@/query/users";
 import AccountManagementPageView from "@pages/AccountManagement/AccountManagementPageView";
 import {
-  getMyProfile,
   checkBlogNickname,
   updateMyProfile,
   uploadMyAvatar,
   deleteMyAccount,
 } from "@/api/users/users";
-import { refreshAccessToken } from "@/api/auth/auth";
 
 type BlogNicknameStatus = "idle" | "checking" | "available" | "taken";
 
 const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
 
 function AccountManagementPage() {
-  const { user, accessToken, logout, setAuth } = useAuth();
+  const { user, accessToken, logout } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data: profile } = useMyProfile(!!accessToken);
 
   const [nickname, setNickname] = useState(user?.username ?? "");
   const [blogNickname, setBlogNickname] = useState(user?.blog_nickname ?? "");
@@ -37,16 +39,15 @@ function AccountManagementPage() {
   // 선택한 아바타 파일은 제출 전까지 보관만 한다. (게시글 이미지 삽입과 동일 패턴)
   const avatarFileRef = useRef<File | null>(null);
 
+  // 프로필 단일 소스(useMyProfile)가 로드되면 편집용 로컬 상태에 시딩한다.
   useEffect(() => {
-    if (!accessToken) return;
-    getMyProfile().then((profile) => {
-      setNickname(profile.nickname);
-      setBlogNickname(profile.blog_nickname ?? "");
-      setOriginalBlogNickname(profile.blog_nickname ?? "");
-      setBio(profile.bio ?? "");
-      setAvatarPreview(profile.profile_avatar);
-    });
-  }, [accessToken]);
+    if (!profile) return;
+    setNickname(profile.nickname);
+    setBlogNickname(profile.blog_nickname ?? "");
+    setOriginalBlogNickname(profile.blog_nickname ?? "");
+    setBio(profile.bio ?? "");
+    setAvatarPreview(profile.profile_avatar);
+  }, [profile]);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -108,11 +109,9 @@ function AccountManagementPage() {
         bio: bio || null,
         profile_avatar: avatarUrl,
       });
-      // 저장된 프로필을 서버에서 다시 읽어 auth context를 갱신한다.
-      // (Header·댓글 등 캐시된 user를 쓰는 곳의 stale 방지)
-      const { accessToken: refreshedToken, user: refreshedUser } =
-        await refreshAccessToken();
-      setAuth(refreshedUser, refreshedToken);
+      // 프로필 단일 소스를 무효화 → Header·댓글 등 소비처가 자동으로 최신 값 refetch.
+      // (기존의 refreshAccessToken 토큰 회전 없이 프로필만 갱신)
+      await queryClient.invalidateQueries({ queryKey: MY_PROFILE_QUERY_KEY });
       setBlogNicknameStatus("idle");
       setSaveAlertOpen(true);
     } catch {

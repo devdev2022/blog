@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useMyProfile } from "@/query/users";
 import CommentSectionView from "./CommentSectionView";
 import {
   useComments,
@@ -18,8 +19,18 @@ function CommentSection({ postSlug }: CommentSectionProps) {
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const { hash } = useLocation();
   const { user } = useAuth();
+  const { data: profile } = useMyProfile(!!user);
 
   const isOwner = Boolean(user?.is_owner);
+
+  // auth 블롭엔 신원만 신뢰하고, 노출되는 nickname·avatar는 프로필 쿼리에서 덮는다.
+  const displayUser = user
+    ? {
+        ...user,
+        username: profile?.nickname ?? user.username,
+        profile_avatar: profile?.profile_avatar ?? user.profile_avatar,
+      }
+    : null;
 
   const { data: comments = [] } = useComments(postSlug);
   const { mutateAsync: addComment } = useCreateComment(postSlug);
@@ -37,7 +48,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
       content: string,
       parentId: string | null,
     ) => {
-      const avatarUrl = isOwner ? (user?.profile_avatar ?? null) : null;
+      const avatarUrl = isOwner ? (displayUser?.profile_avatar ?? null) : null;
       await addComment({
         postId: postSlug,
         parentId,
@@ -48,7 +59,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
       });
       setReplyTo(null);
     },
-    [isOwner, user?.profile_avatar, addComment, postSlug],
+    [isOwner, displayUser?.profile_avatar, addComment, postSlug],
   );
 
   const handleSetReplyTo = useCallback((id: string | null) => {
@@ -103,7 +114,7 @@ function CommentSection({ postSlug }: CommentSectionProps) {
       replyTo={replyTo}
       highlightCommentId={highlightCommentId}
       isOwner={isOwner}
-      user={user}
+      user={displayUser}
       onReplyTo={handleSetReplyTo}
       onAddComment={handleAddComment}
       onDeleteComment={handleDeleteComment}
