@@ -4,11 +4,22 @@ import { useAppDispatch } from "@/store/hooks";
 import { openLoginModal } from "@/store/modalSlice";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotification } from "@/contexts/NotificationContext";
+import { useMyProfile } from "@/query/users";
 import HeaderView from "./HeaderView";
 
 function Header() {
   const dispatch = useAppDispatch();
   const { user, isLoading, logout } = useAuth();
+  const { data: profile } = useMyProfile(!!user);
+
+  // auth 블롭엔 신원만 신뢰하고, 노출되는 nickname·avatar는 프로필 쿼리에서 덮는다.
+  const displayUser = user
+    ? {
+        ...user,
+        username: profile?.nickname ?? user.username,
+        profile_avatar: profile?.profile_avatar ?? user.profile_avatar,
+      }
+    : null;
   const { notifications, unreadCount, hasMore, isFetchingMore, markAsRead, fetchMore } =
     useNotification();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -48,7 +59,7 @@ function Header() {
 
   return (
     <HeaderView
-      user={user}
+      user={displayUser}
       isLoading={isLoading}
       dropdownOpen={dropdownOpen}
       dropdownRef={dropdownRef}
