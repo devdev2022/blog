@@ -1,21 +1,9 @@
 import api from "../axiosInstance";
-import type { Comment } from "@/types/comment";
-
-function toComment(item: any): Comment {
-  return {
-    id: item.id,
-    parentId: item.parentId ?? null,
-    author: item.nickname,
-    avatarUrl: item.avatarUrl ?? null,
-    content: item.content,
-    date: item.createdAt.toString().slice(0, 10),
-    isEdited: !!item.editedAt,
-    isOwnerComment: !!item.isOwnerComment,
-  };
-}
+import type { Comment, CommentResponse } from "@/types/comment";
+import { toComment } from "@/utils/commentMapper";
 
 export async function fetchComments(postId: string): Promise<Comment[]> {
-  const res = await api.get<any[]>(`/comments/${postId}`);
+  const res = await api.get<CommentResponse[]>(`/comments/${postId}`);
   return res.data.map(toComment);
 }
 
@@ -28,7 +16,7 @@ export async function createComment(data: {
   avatarUrl?: string | null;
 }): Promise<Comment> {
   const { postId, ...body } = data;
-  const res = await api.post<any>(`/comments/${postId}`, body);
+  const res = await api.post<CommentResponse>(`/comments/${postId}`, body);
   return toComment(res.data);
 }
 
