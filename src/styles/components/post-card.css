@@ -65,3 +65,43 @@
   font-size: 0.8rem;
   color: var(--color-text-muted);
 }
+
+/* ============================================================
+   메인 포스트 카드 스켈레톤 (썸네일 없음)
+   실제: .post-card { padding: 28px }
+   전역 line-height: 1.6, box-sizing: border-box 기준
+   ============================================================ */
+.post-card-skeleton {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tag: 0.75rem(12px) × 1.6 + padding 4px×2 = 27px | margin-bottom: 16px */
+.post-card-skeleton .skeleton-tag {
+  height: 27px;
+  width: 60px;
+  margin-bottom: 16px;
+}
+
+/* title: 1.0625rem(17px) × 1.45 × 1줄 ≈ 25px | margin-bottom: 10px */
+.post-card-skeleton .skeleton-title {
+  height: 25px;
+  width: 88%;
+  margin-bottom: 10px;
+}
+
+/* excerpt: 0.875rem(14px) × 1.65 × 3줄 = 69px */
+.post-card-skeleton .skeleton-excerpt {
+  height: 69px;
+  flex: 1;
+}
+
+/* meta: margin-top 20px + padding-top 16px + 0.8rem(12.8px) × 1.6 ≈ 20px → margin-top 36px */
+.post-card-skeleton .skeleton-meta {
+  height: 20px;
+  margin-top: 36px;
+}

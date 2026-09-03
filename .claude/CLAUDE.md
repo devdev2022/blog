@@ -28,7 +28,10 @@
   - 태블릿: @media (min-width: 768px)
   - 데스크톱: @media (min-width: 1024px)
 - css는 컴포넌트/페이지 단위로 styles/ 폴더에 단일 파일로 관리한다 (pc/mobile 분리 없음).
-- css import는 main.tsx에서 import.meta.glob("./styles/\*.css", { eager: true });를 사용하여 모든 css를 들고온다.
+- styles/ 안은 `components/`, `pages/` 로 나눈다. 파일명은 대상 폴더명을 kebab-case로 옮긴 것으로 맞춘다.
+  (예: `components/Header` → `styles/components/header.css`, `pages/PostDetail` → `styles/pages/post-detail.css`)
+- 여러 페이지가 공유하고 특정 컴포넌트에 속하지 않는 css만 styles/ 루트에 둔다. (skeleton.css, tech-stack.css)
+- css import는 main.tsx에서 import.meta.glob("./styles/\*\*/\*.css", { eager: true });를 사용하여 모든 css를 들고온다.
 
 ## Project Structure
 
@@ -38,7 +41,7 @@ src/
 ├── components/    # 공통 컴포넌트(Header, Footer)
 ├── pages/         # 페이지
 ├── contexts/      # 전역 컨텍스트
-├── styles/        # 컴포넌트/페이지별 CSS (mobile-first, 단일 파일)
+├── styles/        # CSS (mobile-first, 단일 파일) — components/, pages/ 로 분리
 ├── data/          # 페이지 라우트 데이터
 ├── dummydata/     # 디자인 구현용 더미용 데이터
 ├── constants/     # 에러코드 또는 에러 메세지 모음

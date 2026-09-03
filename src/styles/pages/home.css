@@ -1,3 +1,29 @@
+/* ============================================================
+   홈 페이지 레이아웃
+   ============================================================ */
+.home-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .home-main {
+    padding: 0 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-main {
+    padding: 0 40px;
+  }
+}
+
+/* ============================================================
+   히어로 섹션
+   ============================================================ */
 .hero-section {
   padding: 56px 0 40px;
   text-align: center;
@@ -187,4 +213,31 @@
   font-size: 0.8125rem;
   color: var(--color-text-muted);
   font-weight: 500;
+}
+
+/* ============================================================
+   홈 라우트 진입(청크 로딩) hero 스켈레톤
+   실제 .hero-section은 text-align:center 이므로 flex로 중앙 정렬
+   ============================================================ */
+.home-hero-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-hero-skeleton-badge {
+  height: 28px;
+  width: 120px;
+  border-radius: 999px;
+}
+
+.home-hero-skeleton-title {
+  height: 40px;
+  width: min(420px, 80%);
+}
+
+.home-hero-skeleton-text {
+  height: 18px;
+  width: min(320px, 70%);
 }
