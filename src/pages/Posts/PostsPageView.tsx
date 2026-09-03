@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import type { Post, PostCategory } from "@/types/post";
-import { getPaginationItems } from "@/utils/getPaginationItems";
 import GridSkeleton from "@/pages/Posts/component/GridSkeleton";
 import ThreadSkeleton from "@/pages/Posts/component/ThreadSkeleton";
 import CategoryTree from "@/pages/Posts/component/CategoryTree";
 import PostThumbnail from "@/components/PostThumbnail/PostThumbnail";
+import Pagination from "@/components/Pagination/Pagination";
 
 interface PostsPageViewProps {
   isLoading: boolean;
@@ -50,7 +50,6 @@ function PostsPageView({
   onCategoryDrawerClose,
 }: PostsPageViewProps) {
   const navigate = useNavigate();
-  const paginationItems = getPaginationItems(currentPage, totalPages);
   const selectedCategoryName =
     categories
       .flatMap((cat) => [cat, ...(cat.children ?? [])])
@@ -383,64 +382,11 @@ function PostsPageView({
               )}
 
               {/* 페이지네이션 */}
-              {totalPages > 1 && (
-                <nav className="posts-pagination">
-                  <button
-                    className="pagination-btn pagination-arrow"
-                    onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                    aria-label="이전 페이지"
-                  >
-                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-                      <path
-                        d="M6 1L1 6L6 11"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-
-                  {paginationItems.map((item, idx) =>
-                    item === "..." ? (
-                      <span
-                        key={`ellipsis-${idx}`}
-                        className="pagination-ellipsis"
-                      >
-                        …
-                      </span>
-                    ) : (
-                      <button
-                        key={item}
-                        className={`pagination-btn${currentPage === item ? " active" : ""}`}
-                        onClick={() => onPageChange(item)}
-                      >
-                        {item}
-                      </button>
-                    ),
-                  )}
-
-                  <button
-                    className="pagination-btn pagination-arrow"
-                    onClick={() =>
-                      onPageChange(Math.min(totalPages, currentPage + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    aria-label="다음 페이지"
-                  >
-                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-                      <path
-                        d="M1 1L6 6L1 11"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </nav>
-              )}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+              />
             </>
           )}
         </section>
