@@ -450,63 +450,7 @@
   color: var(--color-accent);
 }
 
-/* ===== 페이지네이션 ===== */
-.posts-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.pagination-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 8px;
-  border-radius: 50%;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition:
-    background-color var(--transition-fast),
-    color var(--transition-fast);
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background-color: var(--color-border-light);
-  color: var(--color-text-primary);
-}
-
-.pagination-btn.active {
-  background-color: var(--color-accent);
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.pagination-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.pagination-arrow {
-  color: var(--color-text-muted);
-}
-
-.pagination-ellipsis {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-  letter-spacing: 1px;
-}
+/* 페이지네이션 스타일은 styles/pagination.css 로 이동 */
 
 /* ===== 사이드바 ===== */
 .posts-sidebar {
