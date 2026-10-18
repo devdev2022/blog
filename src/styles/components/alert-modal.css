@@ -1,0 +1,60 @@
+/* ============================================================
+   알림 모달 (components/AlertModal)
+   modal-fade-in / modal-slide-up 키프레임은 components/login-modal.css 에 정의
+   ============================================================ */
+.alert-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  animation: modal-fade-in 0.15s ease;
+}
+
+.alert-modal {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px 20px 20px; /* mobile base */
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modal-slide-up 0.18s ease;
+}
+
+.alert-modal-message {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.alert-modal-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.alert-modal-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background-color: #1c1c2e;
+  color: #ffffff;
+  transition: background-color var(--transition-fast);
+}
+
+.alert-modal-btn:hover {
+  background-color: #2e2e46;
+}
+
+@media (min-width: 1024px) {
+  .alert-modal {
+    padding: 28px 28px 24px;
+  }
+}

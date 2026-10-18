@@ -5,11 +5,11 @@ interface AlertModalProps {
 
 function AlertModal({ message, onClose }: AlertModalProps) {
   return (
-    <div className="write-alert-overlay" onClick={onClose}>
-      <div className="write-alert" onClick={(e) => e.stopPropagation()}>
-        <p className="write-alert-message">{message}</p>
-        <div className="write-alert-actions">
-          <button className="write-alert-btn" onClick={onClose}>
+    <div className="alert-modal-overlay" onClick={onClose}>
+      <div className="alert-modal" onClick={(e) => e.stopPropagation()}>
+        <p className="alert-modal-message">{message}</p>
+        <div className="alert-modal-actions">
+          <button className="alert-modal-btn" onClick={onClose}>
             확인
           </button>
         </div>

@@ -98,7 +98,7 @@ function AboutPageView({
                 )}
                 <div className="about-profile-links">
                   <a
-                    href="https://github.com"
+                    href="https://github.com/devdev2022"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="about-link-btn about-link-btn--primary"
